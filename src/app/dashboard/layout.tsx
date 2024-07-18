@@ -13,7 +13,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <>
       <div className="flex flex-row px-4  h-[70px] w-full justify-between  items-center">
         <Image src={adminLogo} width={100} height={65} alt="adminLogo" />
-        <div className="flex flex-row w-1/3 items-center gap-3">
+        <div className="flex flex-row w-1/3 justify-start gap-3">
           <IoIosMenu size={40} />
           <Input placeholder="Search" variant="bordered" className="border-none" />
         </div>
@@ -21,7 +21,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <FaBell fill="#3D42DF" size={30} />
           <Select
             placeholder="Select the languange"
-            selectedKeys={["english"]}
+            defaultSelectedKeys={["english"]}
             className="w-[150px] bg-white rounded-none"
           >
             {languange.map((animal: any) => (

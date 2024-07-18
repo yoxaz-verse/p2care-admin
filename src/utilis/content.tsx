@@ -18,11 +18,11 @@ export const SideBarLink = [
   },
   {
     name: "Hospitals",
-    link: "/dashboard/hospital"
+    link: "/dashboard/hospitals"
   },
   {
     name: "Departments",
-    link: "/dashboard/department"
+    link: "/dashboard/departments"
   },
   {
     name: "Services",
