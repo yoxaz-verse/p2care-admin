@@ -24,7 +24,7 @@ export default function LogoutModal({ isOpen, onOpenChange }: ModalProps) {
                 <Button color="primary" variant="light" onPress={onClose}>
                   No
                 </Button>
-                <Button color="danger" onPress={() => router.push("/admin")}>
+                <Button color="danger" onPress={() => router.push("/")}>
                   Yes
                 </Button>
               </ModalFooter>

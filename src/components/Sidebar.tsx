@@ -2,13 +2,17 @@
 import { SideBarLink, SideBarLinkProps } from "@/utilis/content";
 import Link from "next/link";
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { IoIosSettings } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
 import { Button, Divider, useDisclosure } from "@nextui-org/react";
 import LogoutModal from "./Modals/Logout";
 
-export default function SideBar() {
+interface ViewProps {
+  view: boolean
+}
+
+export default function SideBar({ view }: ViewProps) {
   const router = useRouter();
   const [name, setName] = useState("Dashboard");
   const handleChange = (s: SideBarLinkProps) => {
@@ -26,7 +30,7 @@ export default function SideBar() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <>
-      <div className="w-1/8 bg-white flex flex-col h-[90vh] justify-between px-4 gap-4">
+      <div className={`w-1/8 ${view ? "block" : "hidden"} md:block bg-white flex flex-col h-[80vh] justify-around rounded-lg shadow-md px-4 gap-4`}>
         <div className="flex flex-col gap-4 w-full items-center justify-center">
           {SideBarLink.map((s: SideBarLinkProps) => {
             return (
@@ -37,7 +41,7 @@ export default function SideBar() {
           })}
         </div>
 
-        <div className="flex flex-col items-center justify-around gap-4 w-full">
+        <div className="flex flex-col h-1/2 items-center justify-center gap-4 w-full">
           <Divider orientation="horizontal" />
           <Button className="flex bg-inherit flex-row cursor-pointer gap-2 text-xl items-center">
             <IoIosSettings size={20} />

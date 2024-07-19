@@ -14,11 +14,12 @@ export default function CommonTable(props: {
   isLoading: boolean;
   isSuccess: boolean;
 }) {
-
+  console.log(props.tableData);
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Table
         shadow="md"
+        className="overflow-x-scroll"
         style={{
           outline: "none",
           border: "none",

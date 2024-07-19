@@ -7,17 +7,19 @@ import { IoIosMenu } from "react-icons/io";
 import { Input, Select, SelectItem } from "@nextui-org/react";
 import { FaBell } from "react-icons/fa";
 import { languange } from "@/utilis/content";
+import { useState } from "react";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const [view, setView] = useState(false);
   return (
     <>
       <div className="flex flex-row px-4  h-[70px] w-full justify-between  items-center">
         <Image src={adminLogo} width={100} height={65} alt="adminLogo" />
-        <div className="flex flex-row w-1/3 justify-start gap-3">
-          <IoIosMenu size={40} />
+        <div className="flex flex-row w-full md:w-1/3 justify-start gap-3">
+          <IoIosMenu onClick={() => setView(!view)} className="cursor-pointer" size={40} />
           <Input placeholder="Search" variant="bordered" className="border-none" />
         </div>
-        <div className="flex flex-row items-center gap-2">
+        <div className="hidden md:flex flex-row items-center gap-2">
           <FaBell fill="#3D42DF" size={30} />
           <Select
             placeholder="Select the languange"
@@ -38,7 +40,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </div>
       <div className="flex bg-[#F5F6FA] h-full flex-row gap-4">
-        <SideBar />
+        <SideBar view={view} />
         {children}
       </div>
     </>

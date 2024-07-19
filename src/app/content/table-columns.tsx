@@ -1,4 +1,5 @@
-import { Avatar, Chip, Button } from "@nextui-org/react";
+import { Statuses } from "@/utilis/content";
+import { Avatar, Chip, Button, Select, SelectItem } from "@nextui-org/react";
 import { FaEye } from "react-icons/fa";
 
 
@@ -13,6 +14,514 @@ interface TotalColums {
   [key: string]: Columns[];
 }
 
+export const generateTabColumns = ({ onView, type, tableName, setData }: { onView: () => any; tableName: string; type: string; setData: (item: any) => any }): any[] => {
+  if (tableName === "Consulation") {
+    return [
+      {
+        key: "Name",
+        label: "Name",
+        logic: (item: any) => (
+          <div className="flex flex-row items-center text-tableContent gap-2">
+            <Avatar src={item.image[0].src} />
+            <h3>{item.name}</h3>
+          </div>
+        ),
+      },
+      {
+        key: "Doctor Name",
+        label: "Doctor Name",
+        logic: (item: any) => (
+          <div className="flex flex-row items-center text-tableContent gap-2">
+            <Avatar src={item.docimage[0].src} />
+            <h3>{item.docName}</h3>
+          </div>
+        ),
+      },
+      {
+        key: "Email",
+        label: "Email",
+        logic: (item: any) => <h3 className="text-tableContent">{item.email}</h3>,
+      },
+      {
+        key: "Time",
+        label: "Time",
+        logic: (item: any) => (
+          <h3 className="flex flex-row items-center text-tableContent gap-2"> {item.time}</h3>
+        ),
+      },
+      {
+        key: "Date",
+        label: "Date",
+        logic: (item: any) => <h3 className="text-tableContent">{item.date}</h3>,
+      },
+      {
+        key: "Status",
+        label: "Status",
+        logic: (item: any) => (
+          <Select
+            placeholder="Update the Status"
+            description="Update the status from here"
+            defaultSelectedKeys={[item.status]}
+            className="max-w-xs"
+          >
+            {Statuses.map((status: any) => (
+              <SelectItem key={status} value={status}>
+                {status}
+              </SelectItem>
+            ))}
+          </Select>
+        ),
+      },
+      {
+        key: "Actions",
+        label: "Actions",
+        logic: (item: any) =>
+          item.action === "View" ? (
+            <Button
+              isIconOnly
+              onPress={() => {
+                onView();
+                console.log(item);
+                setData(item);
+              }}
+              className="bg-inherit shadow-xl"
+              radius="full"
+            >
+              <FaEye />
+            </Button>
+          ) : null,
+      },
+    ];
+  }
+  if ((type === "Status 1" && tableName === "Doctors by Hospitals") || (type === "Status 2" && tableName === "Doctors by Hospitals") || type === "Status 3" && tableName === "Doctors by Hospitals") {
+    return [
+      {
+        key: "Name",
+        label: "Name",
+        logic: (item: any) => (
+          <div className="flex flex-row items-center text-tableContent gap-2">
+            <Avatar src={item.image[0].src} />
+            <h3>{item.name}</h3>
+          </div>
+        ),
+      },
+      {
+        key: "Hospital Name",
+        label: "Hospital Name",
+        logic: (item: any) => (
+          <div className="flex flex-row items-center text-tableContent gap-2">
+            <Avatar src={item.hosimage[0].src} />
+            <h3>{item.hosName}</h3>
+          </div>
+        ),
+      },
+      {
+        key: "Doctor Name",
+        label: "Doctor Name",
+        logic: (item: any) => (
+          <div className="flex flex-row items-center text-tableContent gap-2">
+            <Avatar src={item.docimage[0].src} />
+            <h3>{item.docName}</h3>
+          </div>
+        ),
+      },
+      {
+        key: "Email",
+        label: "Email",
+        logic: (item: any) => <h3 className="text-tableContent">{item.email}</h3>,
+      },
+      {
+        key: "Date",
+        label: "Date",
+        logic: (item: any) => <h3 className="text-tableContent">{item.date}</h3>,
+      },
+      {
+        key: "Status",
+        label: "Status",
+        logic: (item: any) => (
+          <Select
+            placeholder="Update the Status"
+            description="Update the status from here"
+            defaultSelectedKeys={[item.status]}
+            className="max-w-xs"
+          >
+            {Statuses.map((status: any) => (
+              <SelectItem key={status} value={status}>
+                {status}
+              </SelectItem>
+            ))}
+          </Select>
+        ),
+      },
+      {
+        key: "Actions",
+        label: "Actions",
+        logic: (item: any) =>
+          item.action === "View" ? (
+            <Button
+              isIconOnly
+              onPress={() => {
+                onView();
+                setData(item);
+              }}
+              className="bg-inherit shadow-xl"
+              radius="full"
+            >
+              <FaEye />
+            </Button>
+          ) : null,
+      },
+    ];
+  }
+  if (tableName === "Departments") {
+    if (type === "Status 1" || type === "Status 2" || type === "Status 3") {
+      return [
+        {
+          key: "Name",
+          label: "Name",
+          logic: (item: any) => {
+            return (
+              <div className="flex flex-row items-center text-tableContent gap-2">
+                <Avatar src={item.image[0].src} />
+                <h3>{item.name}</h3>
+              </div>
+            );
+          },
+        },
+        {
+          key: "Department Name",
+          label: "Department Name",
+          logic: (item: any) => {
+            return (
+              <div className="flex flex-row items-center text-tableContent gap-2">
+                <h3>{item.departmentName}</h3>
+              </div>
+            );
+          },
+        },
+        {
+          key: "Email",
+          label: "Email",
+          logic: (item: any) => {
+            return <h3 className="text-tableContent">{item.email}</h3>;
+          },
+        },
+        {
+          key: "Date",
+          label: "Date",
+          logic: (item: any) => {
+            return <h3 className="text-tableContent">{item.date}</h3>;
+          },
+        },
+        {
+          key: "Status",
+          label: "Status",
+          logic: (item: any) => {
+            return (
+              <Select
+                placeholder="Update the Status"
+                description="Update the status from here"
+                defaultSelectedKeys={[item.status]}
+                className="max-w-xs"
+              >
+                {Statuses.map((animal: any) => (
+                  <SelectItem key={animal} value={animal}>
+                    {animal}
+                  </SelectItem>
+                ))}
+              </Select>
+            );
+          },
+        },
+        {
+          key: "Actions",
+          label: "Actions",
+          logic: (item: any) => {
+            if (item.action === "View") {
+              return (
+                <Button
+                  isIconOnly
+                  onPress={() => {
+                    onView();
+                    setData(item);
+                  }}
+                  className="bg-inherit shadow-xl"
+                  radius="full"
+                >
+                  <FaEye />
+                </Button>
+              );
+            }
+            return null;
+          },
+        },
+      ];
+    }
+  }
+
+  if (tableName === "Services") {
+    if (type === "Status 1" || type === "Status 2" || type === "Status 3") {
+      return [
+        {
+          key: "Name",
+          label: "Name",
+          logic: (item: any) => {
+            return (
+              <div className="flex flex-row items-center text-tableContent gap-2">
+                <Avatar src={item.image[0].src} />
+                <h3>{item.name}</h3>
+              </div>
+            );
+          },
+        },
+        {
+          key: "Service Name",
+          label: "Service Name",
+          logic: (item: any) => {
+            return (
+              <h3 className="flex flex-row items-center text-tableContent gap-2">
+                {item.serviceName}
+              </h3>
+            );
+          },
+        },
+        {
+          key: "Email",
+          label: "Email",
+          logic: (item: any) => {
+            return <h3 className="text-tableContent">{item.email}</h3>;
+          },
+        },
+        {
+          key: "Date",
+          label: "Date",
+          logic: (item: any) => {
+            return <h3 className="text-tableContent">{item.date}</h3>;
+          },
+        },
+        {
+          key: "Status",
+          label: "Status",
+          logic: (item: any) => {
+            return (
+              <Select
+                placeholder="Update the Status"
+                description="Update the status from here"
+                defaultSelectedKeys={[item.status]}
+                className="max-w-xs"
+              >
+                {Statuses.map((animal: any) => (
+                  <SelectItem key={animal} value={animal}>
+                    {animal}
+                  </SelectItem>
+                ))}
+              </Select>
+            );
+          },
+        },
+        {
+          key: "Actions",
+          label: "Actions",
+          logic: (item: any) => {
+            if (item.action === "View") {
+              return (
+                <Button
+                  isIconOnly
+                  onPress={() => {
+                    onView();
+                    setData(item);
+                  }}
+                  className="bg-inherit shadow-xl"
+                  radius="full"
+                >
+                  <FaEye />
+                </Button>
+              );
+            }
+            return null;
+          },
+        },
+      ];
+    }
+  }
+
+  if (tableName === "Hospitals") {
+    if (type === "Status 1" || type === "Status 2" || type === "Status 3") {
+      return [
+        {
+          key: "Name",
+          label: "Name",
+          logic: (item: any) => {
+            return (
+              <div className="flex flex-row items-center text-tableContent gap-2">
+                <Avatar src={item.image[0].src} />
+                <h3>{item.name}</h3>
+              </div>
+            );
+          },
+        },
+        {
+          key: "Hospital Name",
+          label: "Hospital Name",
+          logic: (item: any) => {
+            return (
+              <div className="flex flex-row items-center text-tableContent gap-2">
+                <Avatar src={item.hosimage[0].src} />
+                <h3>{item.hosName}</h3>
+              </div>
+            );
+          },
+        },
+        {
+          key: "Email",
+          label: "Email",
+          logic: (item: any) => {
+            return <h3 className="text-tableContent">{item.email}</h3>;
+          },
+        },
+        {
+          key: "Date",
+          label: "Date",
+          logic: (item: any) => {
+            return <h3 className="text-tableContent">{item.date}</h3>;
+          },
+        },
+        {
+          key: "Status",
+          label: "Status",
+          logic: (item: any) => {
+            return (
+              <Select
+                placeholder="Update the Status"
+                description="Update the status from here"
+                defaultSelectedKeys={[item.status]}
+                className="max-w-xs"
+              >
+                {Statuses.map((animal: any) => (
+                  <SelectItem key={animal} value={animal}>
+                    {animal}
+                  </SelectItem>
+                ))}
+              </Select>
+            );
+          },
+        },
+        {
+          key: "Actions",
+          label: "Actions",
+          logic: (item: any) => {
+            if (item.action === "View") {
+              return (
+                <Button
+                  isIconOnly
+                  onPress={() => {
+                    onView();
+                    setData(item);
+                  }}
+                  className="bg-inherit shadow-xl"
+                  radius="full"
+                >
+                  <FaEye />
+                </Button>
+              );
+            }
+            return null;
+          },
+        },
+      ];
+    }
+  }
+
+  if (tableName === "Doctors") {
+    if (type === "Status 1" || type === "Status 2" || type === "Status 3") {
+      return [
+        {
+          key: "Name",
+          label: "Name",
+          logic: (item: any) => {
+            console.log(item);
+            return (
+              <div className="flex flex-row items-center text-tableContent gap-2">
+                <Avatar src={item.image[0].src} />
+                <h3>{item.name}</h3>
+              </div>
+            );
+          },
+        },
+        {
+          key: "Doctor Name",
+          label: "Doctor Name",
+          logic: (item: any) => {
+            return (
+              <div className="flex flex-row items-center text-tableContent gap-2">
+                <Avatar src={item.docimage[0].src} />
+                <h3>{item.docName}</h3>
+              </div>
+            );
+          },
+        },
+        {
+          key: "Email",
+          label: "Email",
+          logic: (item: any) => {
+            return <h3 className="text-tableContent">{item.email}</h3>;
+          },
+        },
+        {
+          key: "Date",
+          label: "Date",
+          logic: (item: any) => {
+            return <h3 className="text-tableContent">{item.date}</h3>;
+          },
+        },
+        {
+          key: "Status",
+          label: "Status",
+          logic: (item: any) => {
+            return (
+              <Select
+                placeholder="Update the Status"
+                description="Update the status from here"
+                defaultSelectedKeys={[item.status]}
+                className="max-w-xs"
+              >
+                {Statuses.map((animal: any) => (
+                  <SelectItem key={animal} value={animal}>
+                    {animal}
+                  </SelectItem>
+                ))}
+              </Select>
+            );
+          },
+        },
+        {
+          key: "Actions",
+          label: "Actions",
+          logic: (item: any) => {
+            if (item.action === "View") {
+              return (
+                <Button
+                  isIconOnly
+                  onPress={() => {
+                    onView();
+                    setData(item);
+                  }}
+                  className="bg-inherit shadow-xl"
+                  radius="full"
+                >
+                  <FaEye />
+                </Button>
+              );
+            }
+            return null;
+          },
+        },
+      ];
+    }
+  }
+
+  return [];
+};
 
 export const tablecolums: TotalColums = {
   "Deals": [
@@ -76,77 +585,6 @@ export const tablecolums: TotalColums = {
       }
     }
   ],
+
 };
 
-export function DoctorsData({ handleOpenView, handleDelete }: { handleOpenView: () => any, handleDelete: () => any }) {
-  return [
-    {
-      key: "Hospital Name",
-      label: "Hospital Name",
-      logic: (item: any) => {
-        return (
-          <div className="flex flex-row items-center text-tableContent gap-2">
-            <Avatar src={item.image[0].src} />
-            <h3>{item.name}</h3>
-          </div>
-        );
-      }
-    },
-    {
-      key: "Location",
-      label: "Location",
-      logic: (item: any) => {
-        return (
-          <h3 className="text-tableContent">{item.Location}</h3>
-        );
-      }
-    },
-    {
-      key: "Amount",
-      label: "Amount",
-      logic: (item: any) => {
-        return (
-          <h3 className="text-tableContent">₹{item.amount}</h3>
-        );
-      }
-    },
-    {
-      key: "No of doctors",
-      label: "No of Doctors",
-      logic: (item: any) => {
-        console.log(item);
-        return (
-          <h3 className="text-tableContent">{item.NoofDocs}</h3>
-        )
-      }
-    },
-    {
-      key: "No of Speciality",
-      label: "No of Speciality",
-      logic: (item: any) => {
-        console.log(item);
-        return (
-          <h3 className="text-tableContent">{item.NoofSepciality}</h3>
-        )
-      }
-    },
-    {
-      key: "Actions",
-      label: "Actions",
-      logic: (item: any) => {
-        <div className="flex flex-row">
-          {item.actions[0] === "View" && (
-            <Button onPress={handleOpenView} radius="full">
-              <FaEye /> View
-            </Button>
-          )}
-          {item.actions[1] === "Delete" && (
-            <Button onPress={handleDelete} radius="full">
-              <FaEye /> Delete
-            </Button>
-          )}
-        </div>
-      }
-    }
-  ]
-}

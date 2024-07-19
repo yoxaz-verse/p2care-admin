@@ -1,4 +1,4 @@
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Input, useDisclosure } from "@nextui-org/react";
 
 export default function AddModal({ title }: { title: string }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -11,19 +11,17 @@ export default function AddModal({ title }: { title: string }) {
             <>
               <ModalHeader className="flex flex-col gap-1">Add {title}</ModalHeader>
               <ModalBody>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-
+                <Input label="Hospital Name" />
+                <Input label="Location" />
+                <Input label="No of Specialities" />
+                <Input label="No of Amount" />
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
                   Close
                 </Button>
                 <Button color="primary" onPress={onClose}>
-                  Action
+                  Create
                 </Button>
               </ModalFooter>
             </>

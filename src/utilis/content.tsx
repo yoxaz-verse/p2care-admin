@@ -5,6 +5,7 @@ import { FaHandHoldingHeart } from "react-icons/fa";
 import { ImUsers } from "react-icons/im";
 import { FaUserDoctor } from "react-icons/fa6";
 import { FaHeartbeat } from "react-icons/fa";
+import CommonTable from "@/components/CommonTable";
 
 export interface SideBarLinkProps {
   name: string,
@@ -128,4 +129,54 @@ export const CountCardsList: CountCardProps[] = [
     )
   }
 ]
+export const TableHeadings: string[] = [
+  "Departments",
+  "Doctors",
+  "Services",
+  "Hospitals",
+  "Doctors by Hospitals",
+]
+export const TabsNames: string[] = [
+  "Status 1",
+  "Status 2",
+  "Status 3"
+]
+interface TableProps {
+  columns: {
+    key: string;
+    label: string;
+    logic: (item: any) => any;
+  }[];
+  tableData: any;
+  totalItems: number;
+  onPageChange: (page: number) => void;
+  currentPage: number;
+  isError: boolean;
+  isLoading: boolean;
+  isSuccess: boolean;
+}
+
+
+export const Statuses: string[] = [
+  "Status 1",
+  "Status 2",
+  "Active",
+  "Inactive"
+]
+
+interface generateTable extends TableProps {
+  case: string
+}
+
+export const generateTable = ({ totalItems, currentPage, columns, tableData, isLoading, isError, isSuccess, onPageChange }: TableProps) => {
+  return <CommonTable
+    totalItems={totalItems}
+    currentPage={currentPage}
+    isSuccess={isSuccess}
+    isError={isError}
+    columns={columns}
+    isLoading={isLoading}
+    tableData={tableData}
+    onPageChange={onPageChange} />
+}
 

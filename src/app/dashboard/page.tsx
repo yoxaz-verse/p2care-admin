@@ -13,18 +13,20 @@ export default function Dashboard() {
   const handlePagination = (page: number) => {
     setPage(page + 1);
   }
+
   return (
     <>
       <div className="flex flex-col gap-4 w-full">
-        <h3 className="font-extrabold text-[44px]">Dashboard</h3>
-        <div className="grid  grid-cols-3 md:grid-cols-4 gap-2 xl:grid-cols-5">
+        <h3 className="font-extrabold text-[20px] md:text-[44px]">Dashboard</h3>
+        <div className="grid  grid-cols-2 md:grid-cols-4 gap-2 xl:grid-cols-5">
           {CountCardsList.map((c: CountCardProps, index: number) => (
             <CountCard key={index} count={c.count} title={c.title} icon={c.icon} />
           ))}
         </div>
         <GraphCard />
+
         <div className="bg-white rounded-xl">
-          <div className="flex flex-row justify-between p-[1rem]">
+          <div className="flex w-full flex-row justify-between p-[1rem]">
             <h3 className="text-[24px] font-semibold">Deals Details</h3>
             <Select
               variant="bordered"
