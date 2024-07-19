@@ -2,22 +2,24 @@
 import { SideBarLink, SideBarLinkProps } from "@/utilis/content";
 import Link from "next/link";
 import { useRouter } from "next/navigation"
-import { SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IoIosSettings } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
 import { Button, Divider, useDisclosure } from "@nextui-org/react";
 import LogoutModal from "./Modals/Logout";
 
 interface ViewProps {
-  view: boolean
+  view: boolean,
+  setView: Dispatch<SetStateAction<boolean>>
 }
 
-export default function SideBar({ view }: ViewProps) {
+export default function SideBar({ view, setView }: ViewProps) {
   const router = useRouter();
   const [name, setName] = useState("Dashboard");
   const handleChange = (s: SideBarLinkProps) => {
     setName(s.name);
     router.push(s.link);
+    setView(!view);
   }
   useEffect(() => {
     if (window.location.href.split('/').length !== 4) {
@@ -30,7 +32,7 @@ export default function SideBar({ view }: ViewProps) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <>
-      <div className={`w-1/8 ${view ? "block" : "hidden"} md:block bg-white flex flex-col h-[80vh] justify-around rounded-lg shadow-md px-4 gap-4`}>
+      <div className={`w-1/8 ${view ? "absolute" : "hidden"} md:block bg-white z-50 flex flex-col h-[80vh] justify-around rounded-lg shadow-md px-4 gap-4`}>
         <div className="flex flex-col gap-4 w-full items-center justify-center">
           {SideBarLink.map((s: SideBarLinkProps) => {
             return (

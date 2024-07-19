@@ -1,10 +1,39 @@
+"use client";
+import { generateTabColumns } from '@/app/content/table-columns';
+import generateData from '@/app/content/tableData';
 import Title from '@/components/titles'
-import React from 'react'
+import { generateTable } from '@/utilis/content';
+import React, { useState } from 'react'
 
 const Users = () => {
+
+  const [page, setPage] = useState<any>(1);
+  const [data, setData] = useState<any>();
+  const handleView = () => {
+
+  }
+  const handlePageChange = (page: number) => {
+    setPage(page + 1);
+  }
   return (
-    <Title title='Users' />
+    <div className='w-full flex flex-col'>
+      <Title title='Users' />
+      {
+        generateTable({
+          columns: generateTabColumns({ onView: () => handleView(), setData: setData, type: "Status 1", tableName: "Doctors" }),
+          isSuccess: true,
+          currentPage: page,
+          onPageChange: (currentPage: any) => handlePageChange(currentPage),
+          tableData: generateData({ tableName: "Doctors" }),
+          isLoading: false,
+          totalItems: generateData({ tableName: "Doctors" }).length,
+          isError: false
+        })
+      }
+    </div>
   )
 }
+
+
 
 export default Users

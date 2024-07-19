@@ -40,7 +40,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </div>
       <div className="flex bg-[#F5F6FA] h-full flex-row gap-4">
-        <SideBar view={view} />
+        <SideBar view={view} setView={setView} />
         {children}
       </div>
     </>

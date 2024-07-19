@@ -21,7 +21,7 @@ export default function ViewModal({ isOpen, onOpenChange, title, data, keys }: M
           <Input
             key={k.value}
             type="text"
-            className="w-[70vh]"
+            className="w-[20vh] md:w-[70vh] "
             placeholder={data[k.value]}
             label={k.value}
             value={data[k.key]}
@@ -45,7 +45,7 @@ export default function ViewModal({ isOpen, onOpenChange, title, data, keys }: M
   }, [data, keys]);
 
   return (
-    <Modal isOpen={isOpen} size="full" onOpenChange={onOpenChange}>
+    <Modal isOpen={isOpen} size="full" className="w-screen" onOpenChange={onOpenChange}>
       <ModalContent>
         {(onClose) => (
           <>

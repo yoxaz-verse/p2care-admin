@@ -104,7 +104,7 @@ const Hospitals = () => {
         <Title title={"Hopitals"} />
         <div className="bg-white rounded-xl">
           <div className="flex flex-row w-full justify-between p-[1rem]">
-            <h3 className="text-[24px] font-semibold">Hospitals Details</h3>
+            <h3 className="text-[15px] md:text-[24px] font-semibold">Hospitals Details</h3>
             <div className='flex w-1/2 self-end  flex-row gap-2'>
               <AddModal title='Hospital' />
               <Select

@@ -19,7 +19,7 @@ const Doctors = () => {
   const [data, setData] = useState<any>();
   return (
     <>
-      <div className='flex flex-col w-full gap-4'>
+      <div className='flex flex-col w-full p-[1rem] gap-4'>
         <Title title={"Doctors"} />
         <h1 className='text-[15px] font-bold md:text-[30px]'>Consulations</h1>
         {generateTable({
@@ -43,6 +43,18 @@ const Doctors = () => {
           totalItems: generateData({ tableName: "Doctors" }).length,
           isError: false
         })}
+        <h1 className='text-[15px] font-bold md:text-[30px]'>Doctor List</h1>
+        {generateTable({
+          columns: generateTabColumns({ onView: () => handleView(), setData: setData, type: "Status 1", tableName: "Doctors" }),
+          isSuccess: true,
+          currentPage: page,
+          onPageChange: (currentPage: any) => handlePageChange(currentPage),
+          tableData: generateData({ tableName: "Doctors" }),
+          isLoading: false,
+          totalItems: generateData({ tableName: "Doctors" }).length,
+          isError: false
+        })}
+
 
       </div>
     </>
