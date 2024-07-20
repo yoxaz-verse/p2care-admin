@@ -79,7 +79,16 @@ export const HospitalType: Types[] = [
 
 export const generateLeadsType = (tableType: string) => {
   switch (tableType) {
+    case "Gender":
+      return [
+        {
+          type: "text",
+          key: "name",
+          value: "Gender Name"
+        }
+      ];
     case "Doctors":
+
       return [
         {
           type: "text",

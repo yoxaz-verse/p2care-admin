@@ -1,6 +1,6 @@
 import { Statuses } from "@/utilis/content";
 import { Avatar, Chip, Button, Select, SelectItem } from "@nextui-org/react";
-import { FaEye } from "react-icons/fa";
+import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 
 
 interface Columns {
@@ -13,8 +13,150 @@ interface Columns {
 interface TotalColums {
   [key: string]: Columns[];
 }
+interface generateTabColumnsProps {
+  onView: (type: any) => any;
+  tableName: string,
+  type?: string,
+  setData: (item: any) => any;
+}
+export const generateTabColumns = ({ onView, type, tableName, setData }: generateTabColumnsProps): any[] => {
+  if (tableName === "Designation") {
+    return [
+      {
+        key: "Name",
+        label: "Name",
+        logic: (item: any) => (
+          <h3 className="text-tableContent">
+            {item.name}
+          </h3>
+        ),
+      },
+      {
+        key: "Created At",
+        label: "Created At",
+        logic: (item: any) => (
+          <h3 className="text-tableContent">
+            {new Date(item.createdAt).toLocaleString()}
+          </h3>
+        ),
+      },
+      {
+        key: "Actions",
+        label: "Actions",
+        logic: (item: any) => {
+          return (
+            <div className="flex flex-row gap-4">
+              <Button
+                isIconOnly
+                onPress={() => {
+                  onView("View");
+                  console.log(item);
+                  setData(item);
+                }}
+                className="bg-inherit"
+                radius="full"
+              >
+                <FaEye />
+              </Button>
+              <Button
+                isIconOnly
+                onPress={() => {
+                  onView("Update");
+                  console.log(item);
+                  setData(item);
+                }}
+                className="bg-inherit"
+                radius="full"
+              >
+                <FaEdit />
+              </Button>
+              <Button
+                isIconOnly
+                onPress={() => {
+                  setData(item._id);
+                  onView("Delete");
+                  console.log(item);
+                }}
+                className="bg-inherit bg-red-500"
+                radius="full"
+              >
+                <FaTrash className="fill-white" />
+              </Button>
+            </div>
+          );
+        },
+      }
+    ]
+  }
 
-export const generateTabColumns = ({ onView, type, tableName, setData }: { onView: () => any; tableName: string; type: string; setData: (item: any) => any }): any[] => {
+  if (tableName === "Gender") {
+    return [
+      {
+        key: "Name",
+        label: "Name",
+        logic: (item: any) => (
+          <h3 className="text-tableContent">
+            {item.name}
+          </h3>
+        ),
+      },
+      {
+        key: "Created At",
+        label: "Created At",
+        logic: (item: any) => (
+          <h3 className="text-tableContent">
+            {new Date(item.createdAt).toLocaleString()}
+          </h3>
+        ),
+      },
+      {
+        key: "Actions",
+        label: "Actions",
+        logic: (item: any) => {
+          return (
+            <div className="flex flex-row gap-4">
+              <Button
+                isIconOnly
+                onPress={() => {
+                  onView("View");
+                  console.log(item);
+                  setData(item);
+                }}
+                className="bg-inherit"
+                radius="full"
+              >
+                <FaEye />
+              </Button>
+              <Button
+                isIconOnly
+                onPress={() => {
+                  onView("Update");
+                  console.log(item);
+                  setData(item);
+                }}
+                className="bg-inherit"
+                radius="full"
+              >
+                <FaEdit />
+              </Button>
+              <Button
+                isIconOnly
+                onPress={() => {
+                  setData(item._id);
+                  onView("Delete");
+                  console.log(item);
+                }}
+                className="bg-inherit bg-red-500"
+                radius="full"
+              >
+                <FaTrash className="fill-white" />
+              </Button>
+            </div>
+          );
+        },
+      }
+    ]
+  }
   if (tableName === "Consulation") {
     return [
       {
@@ -80,11 +222,11 @@ export const generateTabColumns = ({ onView, type, tableName, setData }: { onVie
             <Button
               isIconOnly
               onPress={() => {
-                onView();
+                onView("View");
                 console.log(item);
                 setData(item);
               }}
-              className="bg-inherit shadow-xl"
+              className="bg-inherit"
               radius="full"
             >
               <FaEye />
@@ -161,7 +303,7 @@ export const generateTabColumns = ({ onView, type, tableName, setData }: { onVie
             <Button
               isIconOnly
               onPress={() => {
-                onView();
+                onView("View");
                 setData(item);
               }}
               className="bg-inherit shadow-xl"
@@ -242,7 +384,7 @@ export const generateTabColumns = ({ onView, type, tableName, setData }: { onVie
                 <Button
                   isIconOnly
                   onPress={() => {
-                    onView();
+                    onView("View");
                     setData(item);
                   }}
                   className="bg-inherit shadow-xl"
@@ -328,7 +470,7 @@ export const generateTabColumns = ({ onView, type, tableName, setData }: { onVie
                 <Button
                   isIconOnly
                   onPress={() => {
-                    onView();
+                    onView("View");
                     setData(item);
                   }}
                   className="bg-inherit shadow-xl"
@@ -415,7 +557,7 @@ export const generateTabColumns = ({ onView, type, tableName, setData }: { onVie
                 <Button
                   isIconOnly
                   onPress={() => {
-                    onView();
+                    onView("View");
                     setData(item);
                   }}
                   className="bg-inherit shadow-xl"
@@ -503,7 +645,7 @@ export const generateTabColumns = ({ onView, type, tableName, setData }: { onVie
                 <Button
                   isIconOnly
                   onPress={() => {
-                    onView();
+                    onView("View");
                     setData(item);
                   }}
                   className="bg-inherit shadow-xl"

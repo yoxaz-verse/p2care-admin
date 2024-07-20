@@ -1,15 +1,21 @@
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Input, useDisclosure } from "@nextui-org/react";
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import { ReactNode } from "react";
 
-export default function AddModal({ title, children, onOpen, isOpen, onOpenChange }: { title: string, children: ReactNode, isOpen: any, onOpenChange: () => any, onOpen: () => any }) {
+interface DeleteModalProps {
+  isOpen: boolean;
+  onOpenChange: () => any;
+  title: string;
+  children: ReactNode
+}
+
+export default function UpdateModal({ isOpen, onOpenChange, title, children }: DeleteModalProps) {
   return (
     <>
-      <Button onPress={onOpen} className="bg-blue-600 text-white">Add {title}</Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Add {title}</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Update {title}</ModalHeader>
               <ModalBody>
                 {children}
               </ModalBody>
@@ -22,6 +28,7 @@ export default function AddModal({ title, children, onOpen, isOpen, onOpenChange
           )}
         </ModalContent>
       </Modal>
+
     </>
   )
 }

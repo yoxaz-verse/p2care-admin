@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Quicksand } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "sonner";
 
 const quicksand = Quicksand({ subsets: ["latin"] });
 export const metadata: Metadata = {
@@ -22,6 +21,7 @@ export default function RootLayout({
       <body className={quicksand.className}>
         <Providers>
           {children}
+          <Toaster />
         </Providers>
       </body>
     </html>

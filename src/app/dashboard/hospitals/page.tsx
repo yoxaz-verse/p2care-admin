@@ -1,7 +1,7 @@
 "use client";
 import CommonTable from '@/components/CommonTable'
 import Title from '@/components/titles'
-import { Avatar, Button, Select, SelectItem, useDisclosure } from '@nextui-org/react'
+import { Avatar, Button, Input, Select, SelectItem, useDisclosure } from '@nextui-org/react'
 import React from 'react'
 import { months } from '@/utilis/content'
 import { useState, useEffect } from "react";
@@ -106,7 +106,6 @@ const Hospitals = () => {
           <div className="flex flex-row w-full justify-between p-[1rem]">
             <h3 className="text-[15px] md:text-[24px] font-semibold">Hospitals Details</h3>
             <div className='flex w-1/2 self-end  flex-row gap-2'>
-              <AddModal title='Hospital' />
               <Select
                 variant="bordered"
                 defaultSelectedKeys={["january"]}
@@ -132,8 +131,8 @@ const Hospitals = () => {
           />
         </div>
       </div>
-      <ViewModal onOpenChange={onOpenChange} isOpen={isOpen} title='Hospital' keys={HospitalType} data={data} />
-      <DeleteModal onOpenChange={onOpenChangeView} isOpen={isOpenView} title='Hospital' />
+      <ViewModal onOpenChange={onOpenChange} isOpen={isOpen} size='full' title='Hospital' keys={HospitalType} data={data} />
+
     </>
   )
 }

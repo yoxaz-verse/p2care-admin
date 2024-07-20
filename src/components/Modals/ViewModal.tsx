@@ -4,15 +4,19 @@ import { Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Button, Input
 import React, { useEffect, useCallback } from "react";
 import Image from "next/image";
 
+
+type ViewModalProp = "sm" | "md" | "lg" | "full";
+
 interface ModalProps {
   isOpen: boolean;
   onOpenChange: () => void;
   title: string;
   keys: Types[];
   data: any;
+  size: ViewModalProp
 }
 
-export default function ViewModal({ isOpen, onOpenChange, title, data, keys }: ModalProps) {
+export default function ViewModal({ isOpen, onOpenChange, title, data, keys, size }: ModalProps) {
 
   const renderData = useCallback(() => {
     return keys.map((k: Types) => {
@@ -21,7 +25,7 @@ export default function ViewModal({ isOpen, onOpenChange, title, data, keys }: M
           <Input
             key={k.value}
             type="text"
-            className="w-[20vh] md:w-[70vh] "
+            className={`${size === "full" ? "w-[60vh]" : "w-full"}`}
             placeholder={data[k.value]}
             label={k.value}
             value={data[k.key]}
@@ -39,13 +43,10 @@ export default function ViewModal({ isOpen, onOpenChange, title, data, keys }: M
     });
   }, [keys, data]);
 
-  useEffect(() => {
-    console.log(data.name);
-    console.log(keys[0].key);
-  }, [data, keys]);
+
 
   return (
-    <Modal isOpen={isOpen} size="full" className="w-screen" onOpenChange={onOpenChange}>
+    <Modal isOpen={isOpen} size={size} className="w-screen" onOpenChange={onOpenChange}>
       <ModalContent>
         {(onClose) => (
           <>

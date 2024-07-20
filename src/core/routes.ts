@@ -1,0 +1,21 @@
+export const ROUTES = {
+  DASHBOARD: "/",
+  LOGIN: "/login",
+  PRODUCTS: "/products",
+  PRODUCT_VERIFICATION: "/product-verification/",
+  BUISNESS_ACCOUNTS: "/buisness",
+  BUISNESS_ACCOUNT_VERIFICATION: "/buisness-account-verification/",
+  USERS: "/users",
+  USER_DETAILS: "/user-details/",
+  CATEGORY: "/category",
+  CATEGORY_DETAILS: "/category/",
+  SUB_CATEGORY: "/sub-category",
+  SUB_CATEGORY_DETAILS: "/sub-category/",
+  TRANSACTION: "/transaction",
+  TRANSACTION_DETAILS: "/transaction-details/",
+  SUBSCRIPTION: "/subscription",
+  STATS: "/adminstats",
+  ADS: "/ad-details",
+  MEMBERLEVEL: "/memberlevel",
+  BANNER: "/banner-details"
+};
