@@ -5,14 +5,14 @@ import CommonTable from "@/components/CommonTable";
 import { CountCardsList, months } from "@/utilis/content";
 import { Select, SelectItem } from "@nextui-org/react";
 import { useState } from "react";
-import { tablecolums } from "../content/table-columns";
-import { DetailsData } from "../content/tableData";
+import { tablecolums } from "../../content/table-columns";
+import { DetailsData } from "../../content/tableData";
 
 export default function Dashboard() {
   const [page, setPage] = useState<number>(1);
   const handlePagination = (page: number) => {
     setPage(page + 1);
-  }
+  };
 
   return (
     <>
@@ -20,7 +20,12 @@ export default function Dashboard() {
         <h3 className="font-extrabold text-[20px] md:text-[44px]">Dashboard</h3>
         <div className="grid  grid-cols-2 md:grid-cols-4 gap-2 xl:grid-cols-5">
           {CountCardsList.map((c: CountCardProps, index: number) => (
-            <CountCard key={index} count={c.count} title={c.title} icon={c.icon} />
+            <CountCard
+              key={index}
+              count={c.count}
+              title={c.title}
+              icon={c.icon}
+            />
           ))}
         </div>
         <GraphCard />
@@ -53,5 +58,5 @@ export default function Dashboard() {
         </div>
       </div>
     </>
-  )
+  );
 }

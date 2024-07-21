@@ -1,83 +1,64 @@
 "use client";
 import { SideBarLink, SideBarLinkProps } from "@/utilis/content";
 import Link from "next/link";
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IoIosSettings } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
 import { Button, Divider, useDisclosure } from "@nextui-org/react";
 import LogoutModal from "./Modals/Logout";
+import { motion } from "framer-motion";
 
 interface ViewProps {
-  view: boolean,
-  setView: Dispatch<SetStateAction<boolean>>
+  view: boolean;
+  setView: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function SideBar({ view, setView }: ViewProps) {
-  const router = useRouter();
-  const [name, setName] = useState("Dashboard");
-  const handleChange = (s: SideBarLinkProps) => {
-    setName(s.name);
-    router.push(s.link);
-    setView(!view);
-  }
-  useEffect(() => {
-    if (window.location.href.split('/').length !== 4) {
-      const side = window.location.href.split('/')[4];
-      setName(side.charAt(0).toUpperCase() + side.slice(1));
-    } else {
-      setName('Dashboard');
-    }
-  }, [name]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <>
-      <div className={`w-1/8 hidden md:block bg-white z-50 flex flex-col h-[80vh] justify-around rounded-lg shadow-md px-4 gap-4`}>
-        <div className="flex flex-col gap-4 w-full items-center justify-center">
+      <motion.div
+        animate={{ width: view ? 0 : 300 }}
+        transition={{ duration: 1, ease: "easeInOut" }}
+        exit={{
+          width: 0,
+          transition: { delay: 4, duration: 5 },
+        }}
+        className={` relative  bg-white z-50 flex flex-col h-[80vh] justify-around rounded-lg shadow-md `}
+      >
+        <div className="flex flex-col gap-4 w-full ">
           {SideBarLink.map((s: SideBarLinkProps) => {
             return (
               <>
-                <h3 onClick={() => handleChange(s)} className={`${name === s.name ? "bg-[#4880FF] text-white p-4  rounded-lg  font-bold h-[50px]" : "h-[25px]"} w-[240px] text-lg text-center hover:cursor-pointer`}>{s.name}</h3>
+                <Link href={s.link} key={s.name}>
+                  <motion.div
+                    animate={
+                      !view
+                        ? { opacity: 1, display: "block" }
+                        : {
+                            opacity: 0,
+                            transitionEnd: {
+                              display: "none",
+                            },
+                          }
+                    }
+                    transition={{ duration: 0.2 }}
+                    className={`${
+                      s.link !== s.link
+                        ? "bg-[#4880FF] text-white p-4  rounded-lg  font-bold h-[50px]"
+                        : "h-[30px]"
+                    } mx-2  text-lg text-center hover:cursor-pointer`}
+                  >
+                    {s.name}
+                  </motion.div>
+                </Link>
               </>
-            )
+            );
           })}
         </div>
-        <div className="flex flex-col h-1/2 items-center justify-center gap-4 w-full">
-          <Divider orientation="horizontal" />
-          <Button className="flex bg-inherit flex-row cursor-pointer gap-2 text-xl items-center">
-            <IoIosSettings size={20} />
-            <p>Settings</p>
-          </Button>
-          <Button onPress={onOpen} className="flex flex-row bg-inherit cursor-pointer gap-2 text-xl items-center">
-            <FaPowerOff size={20} />
-            <p>Logout</p>
-          </Button>
-        </div>
-      </div >
-      <div className={`w-1/8 ${view ? "absolute" : "hidden"} block md:hidden bg-white z-50 flex flex-col h-[80vh] justify-around rounded-lg shadow-md px-4 gap-4`}>
-        <div className="flex flex-col gap-4 w-full items-center justify-center">
-          {SideBarLink.map((s: SideBarLinkProps) => {
-            return (
-              <>
-                <h3 onClick={() => handleChange(s)} className={`${name === s.name ? "bg-[#4880FF] text-white p-4  rounded-lg  font-bold h-[50px]" : "h-[25px]"} w-[240px] text-lg text-center hover:cursor-pointer`}>{s.name}</h3>
-              </>
-            )
-          })}
-        </div>
-
-        <div className="flex flex-col h-1/2 items-center justify-center gap-4 w-full">
-          <Divider orientation="horizontal" />
-          <Button className="flex bg-inherit flex-row cursor-pointer gap-2 text-xl items-center">
-            <IoIosSettings size={20} />
-            <p>Settings</p>
-          </Button>
-          <Button onPress={onOpen} className="flex flex-row bg-inherit cursor-pointer gap-2 text-xl items-center">
-            <FaPowerOff size={20} />
-            <p>Logout</p>
-          </Button>
-        </div>
-      </div >
+      </motion.div>
       <LogoutModal onOpenChange={onOpenChange} isOpen={isOpen} />
     </>
-  )
+  );
 }

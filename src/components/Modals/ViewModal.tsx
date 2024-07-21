@@ -1,9 +1,16 @@
 "use client";
-import { Types } from "@/app/content/tableData";
-import { Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Button, Input } from "@nextui-org/react";
+import { Types } from "@/content/tableData";
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  Button,
+  Input,
+} from "@nextui-org/react";
 import React, { useEffect, useCallback } from "react";
 import Image from "next/image";
-
 
 type ViewModalProp = "sm" | "md" | "lg" | "full";
 
@@ -13,11 +20,17 @@ interface ModalProps {
   title: string;
   keys: Types[];
   data: any;
-  size: ViewModalProp
+  size: ViewModalProp;
 }
 
-export default function ViewModal({ isOpen, onOpenChange, title, data, keys, size }: ModalProps) {
-
+export default function ViewModal({
+  isOpen,
+  onOpenChange,
+  title,
+  data,
+  keys,
+  size,
+}: ModalProps) {
   const renderData = useCallback(() => {
     return keys.map((k: Types) => {
       if (k.type === "text") {
@@ -33,27 +46,27 @@ export default function ViewModal({ isOpen, onOpenChange, title, data, keys, siz
           />
         );
       } else if (k.type === "image") {
-        return (
-          <></>
-        )
-      }
-      else {
+        return <></>;
+      } else {
         return null;
       }
     });
   }, [keys, data]);
 
-
-
   return (
-    <Modal isOpen={isOpen} size={size} className="w-screen" onOpenChange={onOpenChange}>
+    <Modal
+      isOpen={isOpen}
+      size={size}
+      className="w-screen"
+      onOpenChange={onOpenChange}
+    >
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader className="flex flex-col gap-1">View {title}</ModalHeader>
-            <ModalBody className="self-center">
-              {renderData()}
-            </ModalBody>
+            <ModalHeader className="flex flex-col gap-1">
+              View {title}
+            </ModalHeader>
+            <ModalBody className="self-center">{renderData()}</ModalBody>
             <ModalFooter>
               <Button color="primary" variant="solid" onClick={onClose}>
                 Close

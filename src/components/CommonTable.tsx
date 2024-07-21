@@ -1,5 +1,14 @@
 import React, { Suspense } from "react";
-import { Table, TableHeader, TableColumn, TableBody, Pagination, Spinner, TableCell, TableRow } from "@nextui-org/react";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  Pagination,
+  Spinner,
+  TableCell,
+  TableRow,
+} from "@nextui-org/react";
 export default function CommonTable(props: {
   columns: {
     key: string;
@@ -17,17 +26,22 @@ export default function CommonTable(props: {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Table
+        isHeaderSticky
         shadow="md"
-        className="overflow-x-scroll"
         style={{
           outline: "none",
           border: "none",
-          width: "100%",
+        }}
+        classNames={{
+          wrapper: "w-full",
+          table: "min-h-[420px]  w-max overflow-scroll",
         }}
       >
         <TableHeader>
           {props.columns.map((column) => (
-            <TableColumn className="font-bold" key={column.key}>{column.label}</TableColumn>
+            <TableColumn className="font-bold " key={column.key}>
+              {column.label}
+            </TableColumn>
           ))}
         </TableHeader>
         <TableBody
@@ -39,7 +53,9 @@ export default function CommonTable(props: {
           {props.tableData?.map((item: any, index: number) => (
             <TableRow key={index}>
               {props.columns.map((column) => (
-                <TableCell key={column.key}>{column.logic(item)}</TableCell>
+                <TableCell key={column.key} className="max-w-[200px] ">
+                  {column.logic(item)}
+                </TableCell>
               ))}
             </TableRow>
           ))}
