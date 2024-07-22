@@ -27,7 +27,9 @@ import Image from "next/image";
 // import { DeleteIcon } from "../Icons/DeleteIcon";
 import { useRouter } from "next/navigation";
 import { users } from "./data";
-
+import { TbEyeDiscount } from "react-icons/tb";
+import { ImBin } from "react-icons/im";
+import { FaPencilAlt } from "react-icons/fa";
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
   paused: "danger",
@@ -142,21 +144,22 @@ export default function CustomTable({
                 isIconOnly
                 className="bg-transparent"
                 onClick={() => {
+                  console.log(data);
                   onOpenView(data);
                 }}
               >
                 {" "}
-                {/* <EyeIcon /> */}
+                <TbEyeDiscount />
               </Button>
               <Button
                 isIconOnly
-                className="bg-transparent"
+                className="bg-red-500"
                 onClick={() => {
                   onOpenDelete(data);
                 }}
               >
                 {" "}
-                {/* <DeleteIcon className="fill-red-400" /> */}
+                <ImBin className="fill-white" />
               </Button>
             </div>
           </>
@@ -174,6 +177,8 @@ export default function CustomTable({
               >
                 {" "}
                 {/* <DeleteIcon className="fill-red-400" /> */}
+                <ImBin className="fill-white" />
+
               </Button>
             </div>
           </>
@@ -191,6 +196,7 @@ export default function CustomTable({
               >
                 {" "}
                 {/* <EyeIcon /> */}
+                <TbEyeDiscount />
               </Button>
             </div>
           </>
@@ -208,7 +214,7 @@ export default function CustomTable({
                 }}
               >
                 {" "}
-                {/* <EyeIcon /> */}
+                <TbEyeDiscount />
               </Button>
               <Button
                 isIconOnly
@@ -218,23 +224,22 @@ export default function CustomTable({
                 }}
               >
                 {" "}
-                {/* <EditIcon /> */}
+                <FaPencilAlt />
               </Button>
               <Button
                 isIconOnly
-                className="bg-transparent"
+                className="bg-transparent bg-red-500"
                 onClick={() => {
                   onOpenDelete(data);
                 }}
               >
                 {" "}
+                <ImBin className="fill-white" />
                 {/* <DeleteIcon className="fill-red-400" /> */}
               </Button>
             </div>
           </>
         );
-      case "service_dropdown":
-        return data.services_provided;
       default:
         return cellValue;
     }
@@ -248,7 +253,7 @@ export default function CustomTable({
     }
   }, [data]);
 
-  const rowsPerPage = 4;
+  const rowsPerPage = 10;
 
   const pages = data.totalPages;
 
@@ -270,7 +275,7 @@ export default function CustomTable({
             color="secondary"
             page={currentPage}
             total={pages}
-            onChange={(page) => {}}
+            onChange={(page) => { }}
           />
         </div>
       }

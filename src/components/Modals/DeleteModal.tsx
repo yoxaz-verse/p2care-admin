@@ -10,13 +10,14 @@ interface ModalProps {
   onOpenChange: () => any;
   title: string;
   api: string;
-  queryKey: any
+  data: any;
+  queryKey: string[]
 }
-export default function DeleteModal({ isOpen, onOpenChange, title, api, queryKey }: ModalProps) {
+export default function DeleteModal({ isOpen, onOpenChange, title, api, queryKey, data }: ModalProps) {
   const removeData = useMutation({
-    mutationKey: [`delete-${title}`],
-    mutationFn: () => {
-      return deleteData(api, {});
+    mutationKey: [queryKey],
+    mutationFn: (data: any) => {
+      return deleteData(api, { id: data });
     },
     onSuccess: (data: any) => {
       if (data.data) {
@@ -36,7 +37,7 @@ export default function DeleteModal({ isOpen, onOpenChange, title, api, queryKey
   const [isLoading, setisLoading] = useState(false);
   const handleClose = (onClose: () => any) => {
     setisLoading(true);
-    removeData.mutate();
+    removeData.mutate(data?._id);
     onClose();
   }
   return (
@@ -48,7 +49,7 @@ export default function DeleteModal({ isOpen, onOpenChange, title, api, queryKey
               <ModalHeader className="flex flex-col gap-1">Delete {title}</ModalHeader>
               <ModalBody className="self-start">
                 <p className="text-tableContent font-semibold">
-                  Are you sure you want to delete ?
+                  Are you sure you want to  delete ?
                 </p>
               </ModalBody>
               <ModalFooter>
