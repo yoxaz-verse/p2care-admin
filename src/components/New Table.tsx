@@ -208,7 +208,7 @@ export default function CustomTable({
                 }}
               >
                 {" "}
-                <TbEyeDiscount />
+                {/* <EyeIcon /> */}
               </Button>
               <Button
                 isIconOnly
@@ -234,6 +234,8 @@ export default function CustomTable({
             </div>
           </>
         );
+      case "service_dropdown":
+        return data.services_provided;
       default:
         return cellValue;
     }
@@ -271,7 +273,7 @@ export default function CustomTable({
       </TableHeader>
       <TableBody emptyContent={"No data to display.."} items={data.data}>
         {(item: any) => (
-          <TableRow key={item._id}>
+          <TableRow key={item.id}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}

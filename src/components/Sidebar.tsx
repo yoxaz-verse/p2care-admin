@@ -8,24 +8,22 @@ import { FaPowerOff } from "react-icons/fa";
 import { Button, Divider, useDisclosure } from "@nextui-org/react";
 import LogoutModal from "./Modals/Logout";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 interface ViewProps {
   view: boolean;
   setView: Dispatch<SetStateAction<boolean>>;
 }
-
 export default function SideBar({ view, setView }: ViewProps) {
+  const pathname = usePathname();
+
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <>
       <motion.div
         animate={{ width: view ? 0 : 300 }}
         transition={{ duration: 1, ease: "easeInOut" }}
-        exit={{
-          width: 0,
-          transition: { delay: 4, duration: 5 },
-        }}
-        className={` relative  bg-white z-50 flex flex-col h-[80vh] justify-around rounded-lg shadow-md `}
+        className={` w-[300px] relative  bg-white z-50 flex flex-col h-[90vh] justify-around rounded-lg shadow-md `}
       >
         <div className="flex flex-col gap-4 w-full ">
           {SideBarLink.map((s: SideBarLinkProps) => {
@@ -35,20 +33,22 @@ export default function SideBar({ view, setView }: ViewProps) {
                   <motion.div
                     animate={
                       !view
-                        ? { opacity: 1, display: "block" }
+                        ? { x: 0, width: 300, display: "block" }
                         : {
-                            opacity: 0,
+                            x: -150,
+                            width: 0,
                             transitionEnd: {
                               display: "none",
                             },
                           }
                     }
-                    transition={{ duration: 0.2 }}
+                    // onClick={() =>  setView(true)}
+                    transition={{ duration: 1, ease: "easeInOut" }}
                     className={`${
-                      s.link !== s.link
+                      s.link === pathname
                         ? "bg-[#4880FF] text-white p-4  rounded-lg  font-bold h-[50px]"
                         : "h-[30px]"
-                    } mx-2  text-lg text-center hover:cursor-pointer`}
+                    } ms-2 me-4 max-w-[280px] select-none   text-lg  cursor-pointer`}
                   >
                     {s.name}
                   </motion.div>
@@ -57,6 +57,34 @@ export default function SideBar({ view, setView }: ViewProps) {
             );
           })}
         </div>
+        <motion.div
+          animate={
+            !view
+              ? { x: 0, width: 300, display: "block" }
+              : {
+                  x: -150,
+                  width: 0,
+                  transitionEnd: {
+                    display: "none",
+                  },
+                }
+          }
+          transition={{ duration: 1, ease: "easeInOut" }}
+          className="flex flex-col items-center justify-center gap-4 w-full"
+        >
+          <Divider orientation="horizontal" />
+          {/* <Button className="flex bg-inherit flex-row cursor-pointer gap-2 text-xl items-center">
+            <IoIosSettings size={20} />
+            <p>Settings</p>
+          </Button> */}
+          <Button
+            onPress={onOpen}
+            className=" flex flex-row bg-inherit cursor-pointer gap-2 text-xl items-center"
+          >
+            <FaPowerOff size={20} />
+            <p>Logout</p>
+          </Button>
+        </motion.div>
       </motion.div>
       <LogoutModal onOpenChange={onOpenChange} isOpen={isOpen} />
     </>
