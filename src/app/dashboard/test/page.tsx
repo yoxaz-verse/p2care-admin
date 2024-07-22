@@ -9,43 +9,82 @@ import { useState } from "react";
 
 export default function Page() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { isOpen: isOpenView, onOpen: onOpenView, onOpenChange: onOpenViewChange, onClose: onCloseView } = useDisclosure();
-  const { isOpen: isOpenEdit, onOpen: onOpenEdit, onOpenChange: onOpenEditChange, onClose: onCloseEdit } = useDisclosure();
+  const {
+    isOpen: isOpenView,
+    onOpen: onOpenView,
+    onOpenChange: onOpenViewChange,
+    onClose: onCloseView,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenEdit,
+    onOpen: onOpenEdit,
+    onOpenChange: onOpenEditChange,
+    onClose: onCloseEdit,
+  } = useDisclosure();
 
   const [currData, setCurrData] = useState<any>();
   const handleDeleteData = (data: any) => {
     onOpen();
     setCurrData(data);
-  }
+  };
   const handleEditData = (data: any) => {
     onOpenEdit();
-    setCurrData(data)
-  }
+    setCurrData(data);
+  };
   const columns = [
     { name: "NAME", uid: "name", type: "text" },
     { name: "ACTIONS", uid: "actions", type: "action" },
-  ]
+  ];
 
   const handleViewData = (data: any) => {
     onOpenView();
     setCurrData(data);
-  }
-  const [page, setPage] = useState<number>();
+  };
+  const [page, setPage] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(5);
+  const genderKey = "genders";
+  const genderTitle = "Gender";
   return (
     <main className="w-full p-5">
       <CurdTable
         api={GenderRoutes.gender}
-        queryKey={["genders"]}
-        title="Gender"
+        queryKey={[genderKey, page.toString()]}
+        title={genderTitle}
         columns={columns}
-        onOpenCreate={() => { }}
+        onOpenCreate={() => {}}
         onOpenDelete={(data: any) => handleDeleteData(data)}
         onOpenEdit={(data: any) => handleEditData(data)}
         onOpenView={(data: any) => handleViewData(data)}
+        page={page}
+        setPage={setPage}
+        limit={limit}
       />
-      <ViewModal isOpen={isOpenView} onOpenChange={onOpenViewChange} title="Gender" columns={columns} data={currData} large={false} onClose={onCloseView} />
-      <DeleteModal isOpen={isOpen} onOpenChange={onOpenChange} data={currData} api={GenderRoutes.gender} queryKey={["genders"]} title={"Gender"} />
-      <EditModal isOpen={isOpenEdit} onOpenChange={onOpenEditChange} data={currData} api={GenderRoutes.gender} apiKey={["edit-genders"]} newCols={columns} title="Gender" />
+      <ViewModal
+        isOpen={isOpenView}
+        onOpenChange={onOpenViewChange}
+        title={genderTitle}
+        columns={columns}
+        data={currData}
+        large={false}
+        onClose={onCloseView}
+      />
+      <DeleteModal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        data={currData}
+        api={GenderRoutes.gender}
+        queryKey={[genderKey]}
+        title={genderTitle}
+      />
+      <EditModal
+        isOpen={isOpenEdit}
+        onOpenChange={onOpenEditChange}
+        data={currData}
+        api={GenderRoutes.gender}
+        apiKey={[genderKey]}
+        newCols={columns}
+        title={genderTitle}
+      />
     </main>
   );
 }

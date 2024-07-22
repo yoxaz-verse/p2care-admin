@@ -22,11 +22,10 @@ import {
 } from "@nextui-org/react";
 // import { getData } from "@/backend/Services/firestore";
 import Image from "next/image";
-// import { EyeIcon } from "../Icons/EyeIcon";
-// import { EditIcon } from "../Icons/EditIcon";
-// import { DeleteIcon } from "../Icons/DeleteIcon";
+import { EyeIcon } from "../icons/eyeIcon";
+import { EditIcon } from "../icons/editIcon";
+import { DeleteIcon } from "../icons/deleteIcon";
 import { useRouter } from "next/navigation";
-import { users } from "./data";
 import { TbEyeDiscount } from "react-icons/tb";
 import { ImBin } from "react-icons/im";
 import { FaPencilAlt } from "react-icons/fa";
@@ -44,25 +43,24 @@ interface CustomTableProps {
   onOpenEdit: (data: any) => any;
   onOpenDelete: (data: any) => any;
   onOpenView: (data: any) => any;
+  setPage: (page: number) => void;
+  limit: number;
 }
 export default function CustomTable({
-  title,
   data,
   columns,
   onOpenEdit,
   onOpenView,
   onOpenDelete,
+  setPage,
+  limit,
 }: CustomTableProps) {
-  const [table_data, setTableData] = React.useState(users);
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const [totalPages, setTotalPages] = React.useState(1);
   console.log(data);
 
   const navigate = useRouter();
   const renderCell = React.useCallback((data: any, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof any];
     const post_code = data["postal code"];
-    console.log(columnKey);
 
     switch (columnKey) {
       case "name":
@@ -144,22 +142,20 @@ export default function CustomTable({
                 isIconOnly
                 className="bg-transparent"
                 onClick={() => {
-                  console.log(data);
                   onOpenView(data);
                 }}
               >
                 {" "}
-                <TbEyeDiscount />
+                <EyeIcon />
               </Button>
               <Button
                 isIconOnly
-                className="bg-red-500"
                 onClick={() => {
                   onOpenDelete(data);
                 }}
               >
                 {" "}
-                <ImBin className="fill-white" />
+                <DeleteIcon />
               </Button>
             </div>
           </>
@@ -176,9 +172,7 @@ export default function CustomTable({
                 }}
               >
                 {" "}
-                {/* <DeleteIcon className="fill-red-400" /> */}
-                <ImBin className="fill-white" />
-
+                <DeleteIcon className="fill-red-400" />
               </Button>
             </div>
           </>
@@ -195,7 +189,7 @@ export default function CustomTable({
                 }}
               >
                 {" "}
-                {/* <EyeIcon /> */}
+                <EyeIcon />
                 <TbEyeDiscount />
               </Button>
             </div>
@@ -224,18 +218,18 @@ export default function CustomTable({
                 }}
               >
                 {" "}
-                <FaPencilAlt />
+                <EditIcon />
+                {/* <FaPencilAlt /> */}
               </Button>
               <Button
                 isIconOnly
-                className="bg-transparent bg-red-500"
                 onClick={() => {
                   onOpenDelete(data);
                 }}
               >
                 {" "}
-                <ImBin className="fill-white" />
-                {/* <DeleteIcon className="fill-red-400" /> */}
+                {/* <ImBin className="fill-white" /> */}
+                <DeleteIcon className="fill-red-400" />
               </Button>
             </div>
           </>
@@ -245,24 +239,7 @@ export default function CustomTable({
     }
   }, []);
 
-  useEffect(() => {
-    if (data) {
-      setTableData(data.data);
-      setCurrentPage(data.currentPage);
-      setTotalPages(data.totalPages === 0 ? 1 : data.totalPages);
-    }
-  }, [data]);
-
-  const rowsPerPage = 10;
-
   const pages = data.totalPages;
-
-  const items = React.useMemo(() => {
-    const start = (currentPage - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-
-    return table_data.slice(start, end);
-  }, [currentPage, table_data]);
   return (
     <Table
       aria-label="Example table with custom cells"
@@ -273,9 +250,11 @@ export default function CustomTable({
             showControls
             showShadow
             color="secondary"
-            page={currentPage}
+            page={data.currentPage}
             total={pages}
-            onChange={(page) => { }}
+            onChange={(page) => {
+              setPage(page);
+            }}
           />
         </div>
       }
@@ -290,7 +269,7 @@ export default function CustomTable({
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No data to display.."} items={items}>
+      <TableBody emptyContent={"No data to display.."} items={data.data}>
         {(item: any) => (
           <TableRow key={item._id}>
             {(columnKey) => (

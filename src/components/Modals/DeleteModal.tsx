@@ -1,30 +1,44 @@
 import { queryAdmin } from "@/app/providers";
 import { deleteData } from "@/core/apiHandler";
-import { Modal, ModalBody, ModalContent, ModalHeader, ModalFooter, Button } from "@nextui-org/react"
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  Button,
+} from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 
 interface ModalProps {
-  isOpen: boolean,
+  isOpen: boolean;
   onOpenChange: () => any;
   title: string;
   api: string;
   data: any;
-  queryKey: string[]
+  queryKey: string[];
 }
-export default function DeleteModal({ isOpen, onOpenChange, title, api, queryKey, data }: ModalProps) {
+export default function DeleteModal({
+  isOpen,
+  onOpenChange,
+  title,
+  api,
+  queryKey,
+  data,
+}: ModalProps) {
   const removeData = useMutation({
-    mutationKey: [queryKey],
+    mutationKey: [`delete-${queryKey}`],
     mutationFn: (data: any) => {
-      return deleteData(api, { id: data });
+      return deleteData(api + "/" + data, {});
     },
     onSuccess: (data: any) => {
       if (data.data) {
         queryAdmin.invalidateQueries({ queryKey: queryKey });
         console.log(data.data);
         toast.success("Data Deleted sucessfully", {
-          position: "top-right"
+          position: "top-right",
         });
         setisLoading(false);
       }
@@ -32,31 +46,37 @@ export default function DeleteModal({ isOpen, onOpenChange, title, api, queryKey
     onError: (error: any) => {
       console.log(error.response.data);
       setisLoading(false);
-    }
-  })
+    },
+  });
   const [isLoading, setisLoading] = useState(false);
   const handleClose = (onClose: () => any) => {
     setisLoading(true);
     removeData.mutate(data?._id);
     onClose();
-  }
+  };
   return (
     <>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Delete {title}</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                Delete {title}
+              </ModalHeader>
               <ModalBody className="self-start">
                 <p className="text-tableContent font-semibold">
-                  Are you sure you want to  delete ?
+                  Are you sure you want to delete ?
                 </p>
               </ModalBody>
               <ModalFooter>
                 <Button color="primary" variant="light" onPress={onClose}>
                   Close
                 </Button>
-                <Button isLoading={isLoading} color="danger" onPress={() => handleClose(onClose)}>
+                <Button
+                  isLoading={isLoading}
+                  color="danger"
+                  onPress={() => handleClose(onClose)}
+                >
                   Delete
                 </Button>
               </ModalFooter>
@@ -65,5 +85,5 @@ export default function DeleteModal({ isOpen, onOpenChange, title, api, queryKey
         </ModalContent>
       </Modal>
     </>
-  )
+  );
 }
