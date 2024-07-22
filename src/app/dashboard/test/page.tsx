@@ -14,7 +14,7 @@ export default function Page() {
   // const data = await getData();
 
   return (
-    <main>
+    <main className="w-full">
       <CustomTable
         title="Test"
         id={1}
