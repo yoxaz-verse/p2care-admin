@@ -8,12 +8,13 @@ import UpdateModal from "@/components/Modals/UpdateModal";
 import ViewModal from "@/components/Modals/ViewModal";
 import Title from "@/components/titles";
 import { postData, getData, patchData } from "@/core/apiHandler";
-import { DesignationRoutes, GenderRoutes } from "@/core/apiRoutes";
+import { DesignationRoutes, GenderRoutes, LocationRoutes } from "@/core/apiRoutes";
 import { generateTable } from "@/utilis/content";
 import { Button, Input, useDisclosure } from "@nextui-org/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { toast } from "sonner";
+import Page from "@/components/Page/PageAll";
 
 const Content = () => {
   const [page, setPage] = useState<any>(1);
@@ -168,185 +169,35 @@ const Content = () => {
     onClose: onCloseView,
   } = useDisclosure();
 
+  const gendercolumns = [
+    { name: "NAME", uid: "name", type: "text" },
+    { name: "ACTIONS", uid: "actions", type: "action" },
+  ];
+  const countrycolumns = [
+    { name: "NAME", uid: "name", type: "text" },
+    { name: "PINCODE", uid: "pincode", type: "number" },
+    { name: "DISTRICT", uid: "district", type: "districtDropdown" },
+    { name: "ACTIONS", uid: "actions", type: "action" },
+  ];
   return (
     <div className="flex flex-col w-full">
       <Title title="Content" />
-      <div className="flex flex-row justify-between items-center w-full self-end p-[1rem]">
-        <h3 className="text-[20px] p-[1rem] font-bold">Gender</h3>
-        <AddModal
-          isOpen={isOpen}
-          onOpen={onOpen}
-          onOpenChange={onOpenChange}
-          title={"Gender"}
-        >
-          <form
-            className="flex flex-col items-center gap-4 justify-center"
-            onSubmit={(e) => handleSubmit(e)}
-          >
-            <Input
-              value={gender}
-              onValueChange={(e) => setGender(e)}
-              type="text"
-              placeholder="Write the gender you want to add"
-            />
-            <Button
-              isLoading={loading}
-              type="submit"
-              className="w-full"
-              color="primary"
-            >
-              Create
-            </Button>
-          </form>
-        </AddModal>
-      </div>
-      {generateTable({
-        columns: generateTabColumns({
-          onView: (type: any) => handleView(type),
-          setData: setData,
-          tableName: "Gender",
-        }),
-        isSuccess: isSuccessGender,
-        currentPage: page,
-        onPageChange: (currentPage: any) => handlePageChange(currentPage),
-        tableData: getGender?.data.data.gender,
-        isLoading: isLoadingGender,
-        totalItems: getGender?.data.data.totalCount,
-        isError: isErrorGender,
-      })}
-      <UpdateModal
-        isOpen={isOpenUpdate}
-        onOpenChange={onOpenChangeUpdate}
-        title="Gender"
-      >
-        <form
-          onSubmit={(e) => handleUpdateSubmit(e)}
-          className="flex flex-col items-center w-full gap-4 justify-around"
-        >
-          <Input
-            value={data?.name}
-            placeholder="Update the name"
-            onValueChange={(e) =>
-              setData((data: any) => ({
-                ...data,
-                name: e,
-              }))
-            }
-          />
-          <Button
-            isLoading={loading}
-            type="submit"
-            color="primary"
-            radius="full"
-            className="w-full"
-          >
-            Submit
-          </Button>
-        </form>
-      </UpdateModal>
-      <DeleteModal
-        isOpen={isOpenDelete}
-        onOpenChange={onOpenChangeDelete}
-        title="Gender"
-        api={`${GenderRoutes.gender}/${data}`}
-        queryKey={"get-gender"}
-      />
-      <ViewModal
-        data={data}
-        size="sm"
-        isOpen={isOpenView}
-        onOpenChange={onOpenChangeView}
-        title="Gender"
-        keys={generateLeadsType("Gender")}
-      />
-      <div className="flex flex-row justify-between items-center w-full self-end p-[1rem]">
-        <h3 className="text-[20px] p-[1rem] font-bold">Designation</h3>
-        <AddModal
-          isOpen={isOpen}
-          onOpen={onOpen}
-          onOpenChange={onOpenChange}
-          title={"Designation"}
-        >
-          <form
-            className="flex flex-col items-center gap-4 justify-center"
-            onSubmit={(e) => handleSubmit(e)}
-          >
-            <Input
-              value={gender}
-              onValueChange={(e) => setGender(e)}
-              type="text"
-              placeholder="Write the designation you want to add"
-            />
-            <Button
-              isLoading={loading}
-              type="submit"
-              className="w-full"
-              color="primary"
-            >
-              Create
-            </Button>
-          </form>
-        </AddModal>
-      </div>
-      {generateTable({
-        columns: generateTabColumns({
-          onView: (type: any) => handleView(type),
-          setData: setData,
-          tableName: "Designation",
-        }),
-        isSuccess: isSuccessDesignation,
-        currentPage: page,
-        onPageChange: (currentPage: any) => handlePageChange(currentPage),
-        tableData: getGender?.data.data.gender,
-        isLoading: isLoadingDesignation,
-        totalItems: getGender?.data.data.totalCount,
-        isError: isErrorDesignation,
-      })}
-      <UpdateModal
-        isOpen={isOpenUpdate}
-        onOpenChange={onOpenChangeUpdate}
-        title="Gender"
-      >
-        <form
-          onSubmit={(e) => handleUpdateSubmit(e)}
-          className="flex flex-col items-center w-full gap-4 justify-around"
-        >
-          <Input
-            value={data?.name}
-            placeholder="Update the name"
-            onValueChange={(e) =>
-              setData((data: any) => ({
-                ...data,
-                name: e,
-              }))
-            }
-          />
-          <Button
-            isLoading={loading}
-            type="submit"
-            color="primary"
-            radius="full"
-            className="w-full"
-          >
-            Submit
-          </Button>
-        </form>
-      </UpdateModal>
-      <DeleteModal
-        isOpen={isOpenDelete}
-        onOpenChange={onOpenChangeDelete}
-        title="Gender"
-        api={`${GenderRoutes.gender}/${data}`}
-        queryKey={"get-gender"}
-      />
-      <ViewModal
-        data={data}
-        size="sm"
-        isOpen={isOpenView}
-        onOpenChange={onOpenChangeView}
-        title="Gender"
-        keys={generateLeadsType("Gender")}
-      />
+      <Page apiKey="gender" title="Gender" api={GenderRoutes.gender} columns={gendercolumns} />
+      <Page
+        apiKey="designation"
+        title="Designation"
+        api={DesignationRoutes.desgination}
+        columns={gendercolumns} />
+      <Page
+        apiKey="districts"
+        title="District"
+        api={LocationRoutes.district}
+        columns={gendercolumns} />
+      <Page
+        apiKey="cities"
+        title="City"
+        api={LocationRoutes.city}
+        columns={countrycolumns} />
     </div>
   );
 };

@@ -7,7 +7,16 @@ import { GenderRoutes } from "@/core/apiRoutes";
 import { useDisclosure } from "@nextui-org/react";
 import { useState } from "react";
 
-export default function Page() {
+
+interface Page {
+  api: string,
+  title: string,
+  columns: any[],
+  apiKey: string
+}
+
+export default function Page({ api, title, columns, apiKey }: Page) {
+  console.log(api, title)
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
     isOpen: isOpenView,
@@ -31,10 +40,12 @@ export default function Page() {
     onOpenEdit();
     setCurrData(data);
   };
+  /*
   const columns = [
     { name: "NAME", uid: "name", type: "text" },
     { name: "ACTIONS", uid: "actions", type: "action" },
   ];
+  */
 
   const handleViewData = (data: any) => {
     onOpenView();
@@ -42,14 +53,13 @@ export default function Page() {
   };
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
-  const genderKey = "genders";
-  const genderTitle = "Gender";
+
   return (
     <main className="w-full p-5">
       <CurdTable
-        api={GenderRoutes.gender}
-        queryKey={[genderKey]}
-        title={genderTitle}
+        api={api}
+        queryKey={[apiKey, page.toString()]}
+        title={title}
         columns={columns}
         onOpenCreate={() => { }}
         onOpenDelete={(data: any) => handleDeleteData(data)}
@@ -62,7 +72,7 @@ export default function Page() {
       <ViewModal
         isOpen={isOpenView}
         onOpenChange={onOpenViewChange}
-        title={genderTitle}
+        title={title}
         columns={columns}
         data={currData}
         large={false}
@@ -72,18 +82,18 @@ export default function Page() {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         data={currData}
-        api={GenderRoutes.gender}
-        queryKey={[genderKey]}
-        title={genderTitle}
+        api={api}
+        queryKey={[apiKey]}
+        title={title}
       />
       <EditModal
         isOpen={isOpenEdit}
         onOpenChange={onOpenEditChange}
         data={currData}
-        api={GenderRoutes.gender}
-        apiKey={[genderKey]}
+        api={api}
+        apiKey={[apiKey]}
         newCols={columns}
-        title={genderTitle}
+        title={title}
       />
     </main>
   );

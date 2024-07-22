@@ -12,7 +12,12 @@ import {
   Textarea,
   Spinner,
   Chip,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
+import { getData } from "@/core/apiHandler";
+import { DesignationRoutes, Doctor, LocationRoutes } from "@/core/apiRoutes";
+import { useQuery } from "@tanstack/react-query";
 
 interface ViewModalProps {
   title: string;
@@ -35,6 +40,18 @@ const ViewModal: React.FC<ViewModalProps> = ({
 }) => {
   const [loading, setLoading] = useState(true);
 
+  const { data: getDesignation } = useQuery({
+    queryKey: ["get-district"],
+    queryFn: () => {
+      return getData(DesignationRoutes.desgination, {});
+    }
+  })
+  const { data: getDepartment } = useQuery({
+    queryKey: ["get-district"],
+    queryFn: () => {
+      return getData(Doctor.department, {});
+    }
+  })
   useEffect(() => {
     if (data) {
       /* const altImage = Array(5).fill({
@@ -46,11 +63,61 @@ const ViewModal: React.FC<ViewModalProps> = ({
       setLoading(false);
     }
   }, [data]);
-
+  const { data: getDistrict } = useQuery({
+    queryKey: ["get-district"],
+    queryFn: () => {
+      return getData(LocationRoutes.district, {});
+    }
+  })
   const renderField = (column: any, value: any, index: number) => {
+    console.log(column);
     switch (column.type) {
       case "text":
         return <Input key={index} label={column.name} value={value || ""} disabled />;
+      case "number":
+        return <Input key={index} label={column.name} value={value || ""} disabled />;
+      case "districtDropdown":
+        return (
+          <Autocomplete
+            label="Select an District"
+            selectedKey={value}
+            className="max-w-full"
+          >
+            {getDistrict?.data.data.data.map((d: any) => (
+              <AutocompleteItem key={d._id} value={d._id}>
+                {d.name}
+              </AutocompleteItem>
+            ))}
+          </Autocomplete>
+        );
+      case "departmentDropdown":
+        return (
+          <Autocomplete
+            label="Select an Department"
+            className="max-w-full"
+          >
+            {getDepartment?.data.data.data.map((d: any) => (
+              <AutocompleteItem key={d._id} value={d._id}>
+                {d.name}
+              </AutocompleteItem>
+            ))}
+          </Autocomplete>
+        );
+
+      case "designationDropdown":
+        return (
+          <Autocomplete
+            label="Select an Desigantion"
+            className="max-w-full"
+          >
+            {getDepartment?.data.data.data.map((d: any) => (
+              <AutocompleteItem key={d._id} value={d._id}>
+                {d.name}
+              </AutocompleteItem>
+            ))}
+          </Autocomplete>
+        );
+
       case "image":
         return (
           <div key={index}>

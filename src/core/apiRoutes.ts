@@ -2,9 +2,16 @@ export const GenderRoutes = {
   gender: "/gender",
 };
 export const DesignationRoutes = {
-  desgination: "/desgination",
+  desgination: "/designation",
 };
-
+export const LocationRoutes = {
+  city: "/city",
+  district: "/district"
+}
+export const Doctor = {
+  docotor: "/doctor",
+  department: "/department"
+}
 const admin = "/admin";
 export const AdminRoutes = {
   adminLogin: `${admin}/login`,

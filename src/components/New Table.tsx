@@ -199,20 +199,20 @@ export default function CustomTable({
       case "actions":
         return (
           <>
-            <div className="relative flex items-center gap-2">
+            <div className="flex items-center self-end w-fit">
               <Button
                 isIconOnly
-                className="bg-transparent"
+                className="bg-inherit"
                 onClick={() => {
                   onOpenView(data);
                 }}
               >
                 {" "}
-                {/* <EyeIcon /> */}
+                <EyeIcon />
               </Button>
               <Button
                 isIconOnly
-                className="bg-transparent"
+                className="bg-inherit"
                 onClick={() => {
                   onOpenEdit(data);
                 }}
@@ -223,6 +223,7 @@ export default function CustomTable({
               </Button>
               <Button
                 isIconOnly
+                className="bg-white"
                 onClick={() => {
                   onOpenDelete(data);
                 }}
@@ -271,11 +272,11 @@ export default function CustomTable({
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No data to display.."} items={data.data}>
+      <TableBody emptyContent={"No data to display"} items={data.data}>
         {(item: any) => (
-          <TableRow key={item.id}>
+          <TableRow key={item._id}>
             {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
+              <TableCell className="self-center">{renderCell(item, columnKey)}</TableCell>
             )}
           </TableRow>
         )}

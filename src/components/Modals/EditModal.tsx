@@ -130,7 +130,23 @@ export default function EditModal({
                           required
                         />
                       );
-
+                    case "number":
+                      return (
+                        <Input
+                          key={index}
+                          label={column.name}
+                          placeholder={column.name}
+                          value={currdata[column.name.toLowerCase()] || ""}
+                          onChange={(e) =>
+                            handleChangeCurrentData(
+                              column.name.toLowerCase(),
+                              e.target.value
+                            )
+                          }
+                          name={column.name.toLowerCase()}
+                          required
+                        />
+                      );
                     case "textbox":
                       return (
                         <Textarea

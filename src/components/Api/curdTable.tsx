@@ -44,7 +44,7 @@ function CurdTable(props: ICurdTableProps) {
         {(data) => {
           return (
             <CustomTable
-              title="Genders"
+              title={props.title}
               data={data}
               columns={props.columns}
               onOpenEdit={(data: any) => props.onOpenEdit(data)}

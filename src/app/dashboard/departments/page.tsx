@@ -1,35 +1,20 @@
 "use client";
-import { generateTabColumns } from "@/content/table-columns";
-import generateData from "@/content/tableData";
-import Title from "@/components/titles";
-import { generateTable } from "@/utilis/content";
-import { useState } from "react";
+import Page from "@/components/Page/PageAll";
+import { Doctor } from "@/core/apiRoutes";
 
 export default function Department() {
-  const [page, setPage] = useState<any>(1);
-  const [data, setData] = useState<any>();
-  const handleView = () => {};
-  const handlePageChange = (page: number) => {
-    setPage(page + 1);
-  };
+
+
+  const departmentColumns = [
+    { name: "Name", uid: "name", type: "text" },
+    { name: "Code", uid: "code", type: "text" },
+    { name: "Description", uid: "description", type: "textbox" },
+    { name: "MetaTitle", uid: "metaTitle", type: "text" },
+    { name: "MetaDescription", uid: "metaDescription", type: "textbox" }
+  ]
   return (
-    <div className="w-full flex flex-col">
-      <Title title="Department" />
-      {generateTable({
-        columns: generateTabColumns({
-          onView: () => handleView(),
-          setData: setData,
-          type: "Status 1",
-          tableName: "Doctors",
-        }),
-        isSuccess: true,
-        currentPage: page,
-        onPageChange: (currentPage: any) => handlePageChange(currentPage),
-        tableData: generateData({ tableName: "Doctors" }),
-        isLoading: false,
-        totalItems: generateData({ tableName: "Doctors" }).length,
-        isError: false,
-      })}
-    </div>
+    <>
+      <Page apiKey="department" api={Doctor.department} columns={departmentColumns} title="Department" />
+    </>
   );
 }

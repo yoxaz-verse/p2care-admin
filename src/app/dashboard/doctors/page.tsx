@@ -6,6 +6,8 @@ import { generateTable } from "@/utilis/content";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
+import Page from "@/components/Page/PageAll";
+import { Doctor } from "@/core/apiRoutes";
 
 const Doctors = () => {
   const [page, setPage] = useState<number>(1);
@@ -17,6 +19,16 @@ const Doctors = () => {
     router.push("/dashboard/doctors/1");
   };
   const [data, setData] = useState<any>();
+
+  const docColumns = [
+    { name: "Name", uid: "name", type: "text" },
+    { name: "Phone", uid: "code", type: "text" },
+    { name: "Email", uid: "email", type: "text" },
+    {
+      name: "Department", uid: "department", type: "departmentDropdown"
+    },
+    { name: "Designation", uid: "Designation", type: "desginationDropDown" }
+  ]
   return (
     <>
       <div className="flex flex-col w-full p-[1rem] gap-4">
@@ -69,6 +81,7 @@ const Doctors = () => {
           totalItems: generateData({ tableName: "Doctors" }).length,
           isError: false,
         })}
+        <Page api={Doctor.docotor} apiKey="doctor" columns={docColumns} title="Doctors" />
       </div>
     </>
   );

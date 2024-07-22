@@ -11,6 +11,10 @@ import {
   Input,
   Image,
   Textarea,
+  Select,
+  SelectItem,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
 
 
@@ -21,24 +25,35 @@ interface AddModalProps {
   api: string,
   apiKey: string[];
 }
-import { postData } from "@/core/apiHandler";
-import { useMutation } from "@tanstack/react-query";
+import { getData, postData } from "@/core/apiHandler";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryAdmin } from "@/app/providers";
 import { toast } from "sonner";
+import { DesignationRoutes, Doctor, LocationRoutes } from "@/core/apiRoutes";
 
 export default function AddModal({ title, columns, api, apiKey }: AddModalProps) {
 
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [submitting, setSubmitting] = useState(false);
-
-
+  const [district, setDistrict] = useState<any>();
+  const [department, setDepartment] = useState<any>();
+  const [designation, setDesignation] = useState<any>();
+  console.log(api, apiKey);
   const AddModalData = useMutation({
-    mutationKey: [`add-${title}`],
+    mutationKey: [`add-${apiKey}`],
     mutationFn: (data: any) => {
+      console.log(data);
       return postData(api, data, {});
     },
     onSuccess: (data: any) => {
+      console.log(data);
       queryAdmin.invalidateQueries({ queryKey: apiKey });
+      setSubmitting(false);
+      onClose();
+    },
+    onError: (data: any) => {
+      setSubmitting(false);
+      onClose();
     }
   })
   const handleSubmit = async (e: any, close: () => void) => {
@@ -56,29 +71,45 @@ export default function AddModal({ title, columns, api, apiKey }: AddModalProps)
         data[name] = value;
       }
     });
-
-
-
-
-
-
-    console.log(data);
-    AddModalData.mutate(data);
-    if (AddModalData.error) {
-      toast.error("Data upload failed", {
-        position: "top-right"
-      });
-      setSubmitting(false);
-      close();
-    } else {
-      toast.success("Data uploaded successfully", {
-        position: "top-right"
-      });
-      setSubmitting(false);
-      close();
+    if (api === Doctor.docotor) {
+      const docInput = {
+        ...data,
+        department,
+        designation
+      }
     }
-  };
+    if (api === LocationRoutes.city) {
+      const cityInput = {
+        ...data,
+        district
+      }
+      console.log(data);
+      AddModalData.mutate(cityInput);
+    } else {
 
+      AddModalData.mutate(data);
+    }
+    close();
+  };
+  const { data: getDistrict } = useQuery({
+    queryKey: ["get-district"],
+    queryFn: () => {
+      return getData(LocationRoutes.district, {});
+    }
+  })
+
+  const { data: getDepartment } = useQuery({
+    queryKey: ["get-department"],
+    queryFn: () => {
+      return getData(Doctor.department, {});
+    }
+  })
+  const { data: getDesignation } = useQuery({
+    queryKey: ["get-desgnation"],
+    queryFn: () => {
+      return getData(DesignationRoutes.desgination, {});
+    }
+  })
   return (
     <>
       <Button onPress={onOpen} className="bg-violet-700 text-white">{`Add ${title}`}</Button>
@@ -107,6 +138,55 @@ export default function AddModal({ title, columns, api, apiKey }: AddModalProps)
                       case "text":
                         return (
                           <Input key={columnIndex} label={column.name} name={column.name.toLowerCase()} placeholder={column.name} required />
+                        );
+                      case "number":
+                        return (
+                          <Input key={columnIndex} label={column.name} name={column.name.toLowerCase()} placeholder={column.name} required />
+                        );
+                      case "districtDropdown":
+                        return (
+                          <Autocomplete
+                            label="Select an District"
+                            selectedKey={district}
+                            onSelectionChange={(e) => setDistrict(e)}
+                            className="max-w-full"
+                          >
+                            {getDistrict?.data.data.data.map((d: any) => (
+                              <AutocompleteItem key={d._id} value={d._id}>
+                                {d.name}
+                              </AutocompleteItem>
+                            ))}
+                          </Autocomplete>
+                        );
+                      case "departmentDropdown":
+                        return (
+                          <Autocomplete
+                            label="Select an Department"
+                            selectedKey={department}
+                            onSelectionChange={(e) => setDepartment(e)}
+                            className="max-w-full"
+                          >
+                            {getDepartment?.data.data.data.map((d: any) => (
+                              <AutocompleteItem key={d._id} value={d._id}>
+                                {d.name}
+                              </AutocompleteItem>
+                            ))}
+                          </Autocomplete>
+                        );
+                      case "desginationDropDown":
+                        return (
+                          <Autocomplete
+                            label="Select an Desigantion"
+                            selectedKey={designation}
+                            onSelectionChange={(e) => setDesignation(e)}
+                            className="max-w-full"
+                          >
+                            {getDesignation?.data.data.data.map((d: any) => (
+                              <AutocompleteItem key={d._id} value={d._id}>
+                                {d.name}
+                              </AutocompleteItem>
+                            ))}
+                          </Autocomplete>
                         );
                       case "textbox":
                         return (
