@@ -1,44 +1,22 @@
 "use client";
-import { users } from "@/components/data";
-import CustomTable from "@/components/New Table";
-
-async function getData() {
-  const res = "Yo";
-  // The return value is not serialized
-  // You can return Date, Map, Set, etc.
-
-  return res;
-}
-
+import CurdTable from "@/components/Api/curdTable";
+import { GenderRoutes } from "@/core/apiRoutes";
 export default function Page() {
-  // const data = await getData();
-
   return (
-    <main>
-      <CustomTable
-        title="Test"
-        id={1}
-        isLoading={false}
-        data={users}
+    <main className="w-full p-5">
+      <CurdTable
+        api={GenderRoutes.gender}
+        queryKey={["genders"]}
+        title="Gender"
         columns={[
-          { name: "ID", uid: "id" },
+          // { name: "ID", uid: "_id" },
           { name: "NAME", uid: "name" },
-          { name: "ROLE", uid: "role" },
-          { name: "STATUS", uid: "status" },
           { name: "ACTIONS", uid: "actions" },
         ]}
+        onOpenCreate={() => {}}
+        onOpenDelete={() => {}}
         onOpenEdit={() => {}}
         onOpenView={() => {}}
-        onOpenDelete={() => {}}
-
-        //       title,
-        // isLoading,
-        // data,
-        // columns,
-        // onOpenEdit,
-        // onOpenView,
-        // onOpenDelete,
-        // id,
       />
     </main>
   );

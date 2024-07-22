@@ -8,15 +8,15 @@ export const getData = async (url: string, params: any) => {
 // getDataById
 
 // create a post request to the API
-export const postData = async (url: string, params: any, data: any) => {
+export const postData = async (url: string, data: any, params: any) => {
   return await instance.post(url, data, { params });
 };
 
-export const putData = async (url: string, params: any, data: any) => {
+export const putData = async (url: string, data: any, params: any) => {
   return await instance.put(url, data, { params });
-}
+};
 // create a patch request to the API
-export const patchData = async (url: string, params: any, data: any) => {
+export const patchData = async (url: string, data: any, params: any) => {
   console.log(url, params, data);
 
   return await instance.patch(url, data, { params });
@@ -26,7 +26,6 @@ export const patchData = async (url: string, params: any, data: any) => {
 export const deleteData = async (url: string, params: any) => {
   return await instance.delete(url, { params });
 };
-
 
 export const putMultipart = async (
   url: string,
@@ -46,7 +45,7 @@ export const putMultipart = async (
     console.error("Error sending multipart request:", error);
     throw error;
   }
-}
+};
 // create a post with multipart data
 export const postMultipart = async (
   url: string,
@@ -68,4 +67,3 @@ export const postMultipart = async (
     throw error;
   }
 };
-

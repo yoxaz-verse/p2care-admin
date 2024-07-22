@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { postData } from "@/core/apiHandler";
 import { useState } from "react";
-import { cookies } from "next/headers";
 import { toast } from "sonner";
 import Cookies from "js-cookie";
+import { AdminRoutes } from "@/core/apiRoutes";
 
 export default function Home() {
   const router = useRouter();
@@ -28,7 +28,7 @@ export default function Home() {
   const adminLogin = useMutation({
     mutationKey: ["adminLogin"],
     mutationFn: (data: any) => {
-      return postData("/admin/login", {}, data);
+      return postData(AdminRoutes.adminLogin, data, {});
     },
     onSuccess: (data: any) => {
       console.log(data);
@@ -36,15 +36,13 @@ export default function Home() {
       toast.success(data.data.message, {
         position: "top-right",
       });
-      Cookies.set(
-        "3a9a3453-86e1-7b74-18dc-6c9caf45749b",
-        data.data.data.accessToken
-      );
       handleNaviagtion();
     },
     onError: (error: any) => {
       setLoading(false);
-      toast.error(error.response.data.error, {
+      console.log(error);
+
+      toast.error(error.response.data.message || error.response.data.error, {
         position: "top-right",
       });
     },

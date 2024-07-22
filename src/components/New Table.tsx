@@ -38,8 +38,6 @@ interface CustomTableProps {
   title: string;
   data: any;
   columns: any;
-  id: any;
-  isLoading: any;
   // generateRandomId: () => void;
   onOpenEdit: (data: any) => any;
   onOpenDelete: (data: any) => any;
@@ -47,15 +45,16 @@ interface CustomTableProps {
 }
 export default function CustomTable({
   title,
-  isLoading,
   data,
   columns,
   onOpenEdit,
   onOpenView,
   onOpenDelete,
-  id,
 }: CustomTableProps) {
   const [table_data, setTableData] = React.useState(users);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
+  console.log(data);
 
   const navigate = useRouter();
   const renderCell = React.useCallback((data: any, columnKey: React.Key) => {
@@ -241,27 +240,24 @@ export default function CustomTable({
     }
   }, []);
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const resp = await getData(title);
-  //     if (resp.status) {
-  //       setTableData(resp.data);
-  //     }
-  //   }
-  //   fetchData();
-  // }, [title, id]);
+  useEffect(() => {
+    if (data) {
+      setTableData(data.data);
+      setCurrentPage(data.currentPage);
+      setTotalPages(data.totalPages === 0 ? 1 : data.totalPages);
+    }
+  }, [data]);
 
-  const [page, setPage] = React.useState(1);
   const rowsPerPage = 4;
 
-  const pages = Math.ceil(table_data.length / rowsPerPage);
+  const pages = data.totalPages;
 
   const items = React.useMemo(() => {
-    const start = (page - 1) * rowsPerPage;
+    const start = (currentPage - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
     return table_data.slice(start, end);
-  }, [page, table_data]);
+  }, [currentPage, table_data]);
   return (
     <Table
       aria-label="Example table with custom cells"
@@ -272,9 +268,9 @@ export default function CustomTable({
             showControls
             showShadow
             color="secondary"
-            page={page}
+            page={currentPage}
             total={pages}
-            onChange={(page) => setPage(page)}
+            onChange={(page) => {}}
           />
         </div>
       }
@@ -289,16 +285,9 @@ export default function CustomTable({
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody
-        loadingContent={
-          isLoading ? <Spinner color="secondary" label="Loading..." /> : <></>
-        }
-        isLoading={isLoading}
-        emptyContent={"No data to display.."}
-        items={items}
-      >
+      <TableBody emptyContent={"No data to display.."} items={items}>
         {(item: any) => (
-          <TableRow key={item.id}>
+          <TableRow key={item._id}>
             {(columnKey) => (
               <TableCell>{renderCell(item, columnKey)}</TableCell>
             )}

@@ -1,9 +1,7 @@
 // axiosInstance.js
 import axios from "axios";
 import { authToken } from "./localStorageKeys";
-
-export const baseUrlExport =
-  "https://6664-59-182-188-227.ngrok-free.app/api/v1/web/";
+const baseUrlExport = "http://localhost:5000/api/v1/web";
 
 const instance = axios.create({
   baseURL: baseUrlExport,
@@ -14,6 +12,7 @@ const instance = axios.create({
     "ngrok-skip-browser-warning": "123",
     // You can add more default headers here if needed
   },
+  withCredentials: true,
 });
 
 // Add an interceptor to set the Authorization header before each request
