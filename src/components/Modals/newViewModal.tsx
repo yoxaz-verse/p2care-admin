@@ -71,6 +71,9 @@ const ViewModal: React.FC<ViewModalProps> = ({
   })
   const renderField = (column: any, value: any, index: number) => {
     console.log(column);
+    if (column.name === "Admin Name") {
+      return <Input key={index} label={"Admin Name"} value={data.name || ""} disabled />;
+    }
     switch (column.type) {
       case "text":
         return <Input key={index} label={column.name} value={value || ""} disabled />;

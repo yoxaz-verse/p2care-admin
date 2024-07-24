@@ -33,6 +33,7 @@ export default function ViewModal({
 }: ModalProps) {
   const renderData = useCallback(() => {
     return keys.map((k: Types) => {
+      console.log(k.key);
       if (k.type === "text") {
         return (
           <Input
@@ -45,7 +46,21 @@ export default function ViewModal({
             readOnly
           />
         );
-      } else if (k.type === "image") {
+      }
+      if (k.type === "text" && k.key === "Admin Name") {
+        return (
+          <Input
+            key={k.value}
+            type="text"
+            className={`${size === "full" ? "w-[60vh]" : "w-full"}`}
+            placeholder={data[k.value]}
+            label={"Admin Name"}
+            value={data[k.key]}
+            readOnly
+          />
+        );
+      }
+      else if (k.type === "image") {
         return <></>;
       } else {
         return null;

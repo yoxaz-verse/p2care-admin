@@ -3,10 +3,10 @@ import CurdTable from "@/components/Api/curdTable";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import EditModal from "@/components/Modals/EditModal";
 import ViewModal from "@/components/Modals/newViewModal";
-import { GenderRoutes } from "@/core/apiRoutes";
+import { Doctor, GenderRoutes } from "@/core/apiRoutes";
 import { useDisclosure } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 
 interface Page {
   api: string,
@@ -16,7 +16,6 @@ interface Page {
 }
 
 export default function Page({ api, title, columns, apiKey }: Page) {
-  console.log(api, title)
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
     isOpen: isOpenView,
@@ -40,16 +39,17 @@ export default function Page({ api, title, columns, apiKey }: Page) {
     onOpenEdit();
     setCurrData(data);
   };
-  /*
-  const columns = [
-    { name: "NAME", uid: "name", type: "text" },
-    { name: "ACTIONS", uid: "actions", type: "action" },
-  ];
-  */
 
+
+  const router = useRouter();
   const handleViewData = (data: any) => {
-    onOpenView();
-    setCurrData(data);
+    if (api === Doctor.docotor) {
+      setCurrData(data);
+      router.push(`/doctor/${currData._id}`);
+    } else {
+      onOpenView();
+      setCurrData(data);
+    }
   };
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);

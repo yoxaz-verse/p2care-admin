@@ -23,7 +23,6 @@ interface ICurdTableProps {
 function CurdTable(props: ICurdTableProps) {
   return (
     <div className="w-full">
-      <Title title={props.title} />
       <Spacer y={5} />
       <div className="flex justify-between">
         <SubTitle title={props.title} />

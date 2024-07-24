@@ -139,6 +139,10 @@ export default function AddModal({ title, columns, api, apiKey }: AddModalProps)
                         return (
                           <Input key={columnIndex} label={column.name} name={column.name.toLowerCase()} placeholder={column.name} required />
                         );
+                      case "password":
+                        return (
+                          <Input type="password" key={columnIndex} label={column.name} name={column.name.toLowerCase()} placeholder={column.name} required />
+                        );
                       case "number":
                         return (
                           <Input key={columnIndex} label={column.name} name={column.name.toLowerCase()} placeholder={column.name} required />

@@ -19,6 +19,10 @@ import {
   Textarea,
   Link,
   Button,
+  Select,
+  SelectItem,
+  TimeInput,
+  DatePicker,
 } from "@nextui-org/react";
 // import { getData } from "@/backend/Services/firestore";
 import Image from "next/image";
@@ -29,6 +33,7 @@ import { useRouter } from "next/navigation";
 import { TbEyeDiscount } from "react-icons/tb";
 import { ImBin } from "react-icons/im";
 import { FaPencilAlt } from "react-icons/fa";
+import { Time } from "@internationalized/date";
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
   paused: "danger",
@@ -55,8 +60,7 @@ export default function CustomTable({
   setPage,
   limit,
 }: CustomTableProps) {
-  console.log(data);
-
+  const status = ["Pending", "Completed", "In way"];
   const navigate = useRouter();
   const renderCell = React.useCallback((data: any, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof any];
@@ -73,6 +77,8 @@ export default function CustomTable({
             {data.project_link}
           </Link>
         );
+      case "password":
+        return null;
       case "heading":
         return <h3>{data.heading}</h3>;
       case "youtubeLink":
@@ -80,6 +86,18 @@ export default function CustomTable({
           <Link href={data.youtubeLink} target="_blank" underline={"hover"}>
             {data.youtubeLink}
           </Link>
+        );
+      case "appointmentTime":
+        return (
+          <div className="flex flex-row justify-around bg-white gap-4 items-center flex-row">
+            <TimeInput
+              label="Meeting time"
+              className="bg-white"
+              defaultValue={new Time(9)}
+            />
+            <DatePicker className="bg-white" />
+            <Button color="secondary" className="p-4">Reschedule</Button>
+          </div>
         );
       case "image":
         return <Image src={data.image} alt={"images"} width={50} height={50} />;
@@ -94,6 +112,22 @@ export default function CustomTable({
             defaultValue={data.description}
             className="max-w-xs"
           />
+        );
+      case "enquiryStatus":
+        return (
+          <Select
+            isRequired
+            label="Status"
+            placeholder="Update Status"
+            defaultSelectedKeys={["Pending"]}
+            className="max-w-full"
+          >
+            {status.map((s: any) => (
+              <SelectItem key={s}>
+                {s}
+              </SelectItem>
+            ))}
+          </Select>
         );
       case "resume":
         return (
@@ -242,7 +276,7 @@ export default function CustomTable({
     }
   }, []);
 
-  const pages = data.totalPages;
+  const pages = data?.totalPages || 1;
   return (
     <Table
       aria-label="Example table with custom cells"
@@ -272,7 +306,7 @@ export default function CustomTable({
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No data to display"} items={data.data}>
+      <TableBody emptyContent={"No data to display"} items={data?.data || data}>
         {(item: any) => (
           <TableRow key={item._id}>
             {(columnKey) => (
@@ -281,6 +315,6 @@ export default function CustomTable({
           </TableRow>
         )}
       </TableBody>
-    </Table>
+    </Table >
   );
 }

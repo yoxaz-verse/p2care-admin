@@ -4,32 +4,25 @@ import generateData from "@/content/tableData";
 import Title from "@/components/titles";
 import { generateTable } from "@/utilis/content";
 import React, { useState } from "react";
+import Page from "@/components/Page/PageAll";
+import { AdminRoutes } from "@/core/apiRoutes";
 
 const Users = () => {
   const [page, setPage] = useState<any>(1);
-  const [data, setData] = useState<any>();
-  const handleView = () => {};
-  const handlePageChange = (page: number) => {
-    setPage(page + 1);
-  };
+
+  const userColumns = [
+
+  ]
+  const adminColumns = [
+    { name: "Name", uid: "name", type: "text" },
+    { name: "Email", uid: "email", type: "text" },
+    { name: "Password", uid: "password", type: "password" },
+    { name: "Actions", uid: "actions", type: "actions" }
+  ]
   return (
     <div className="w-full flex flex-col">
       <Title title="Users" />
-      {generateTable({
-        columns: generateTabColumns({
-          onView: () => handleView(),
-          setData: setData,
-          type: "Status 1",
-          tableName: "Doctors",
-        }),
-        isSuccess: true,
-        currentPage: page,
-        onPageChange: (currentPage: any) => handlePageChange(currentPage),
-        tableData: generateData({ tableName: "Doctors" }),
-        isLoading: false,
-        totalItems: generateData({ tableName: "Doctors" }).length,
-        isError: false,
-      })}
+      <Page api={AdminRoutes.admin} apiKey={"admin"} columns={adminColumns} title="Admin" />
     </div>
   );
 };

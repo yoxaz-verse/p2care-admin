@@ -10,10 +10,13 @@ export const LocationRoutes = {
 }
 export const Doctor = {
   docotor: "/doctor",
+  appointments: "/appointment",
+  enquiry: "/enquiry",
   department: "/department"
 }
 const admin = "/admin";
 export const AdminRoutes = {
+  admin: "/admin",
   adminLogin: `${admin}/login`,
   adminLogout: `${admin}/logout`,
   adminForgotPassword: `${admin}/forgot-password`,
