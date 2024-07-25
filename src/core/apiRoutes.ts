@@ -14,6 +14,15 @@ export const Doctor = {
   enquiry: "/enquiry",
   department: "/department"
 }
+export const HospitalRoutes = {
+  hospital: "/hospital",
+  enquiry: '/enquiry',
+  department: '/hospital-department',
+  appointment: '/appointment'
+}
+export const userRoutes = {
+  user: "/user"
+}
 const admin = "/admin";
 export const AdminRoutes = {
   admin: "/admin",

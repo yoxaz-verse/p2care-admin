@@ -1,6 +1,7 @@
 "use client";
 import Page from "@/components/Page/PageAll";
-import { Doctor } from "@/core/apiRoutes";
+import Title from "@/components/titles";
+import { Doctor, HospitalRoutes } from "@/core/apiRoutes";
 
 export default function Department() {
 
@@ -12,9 +13,26 @@ export default function Department() {
     { name: "MetaTitle", uid: "metaTitle", type: "text" },
     { name: "MetaDescription", uid: "metaDescription", type: "textbox" }
   ]
+  const enquiryColumns = [
+    { name: "Name", uid: "name", type: "text" },
+    { name: "Phone", uid: "phoneno", type: "text" },
+    { name: "Email", uid: "email", type: "text" },
+    {
+      name: "Status", uid: "status", type: "enquirystatus"
+    },
+    {
+      name: "Actions", uid: "actions", type: "actions"
+    }
+  ]
+
+
   return (
     <>
-      <Page apiKey="department" api={Doctor.department} columns={departmentColumns} title="Department" />
+      <div className="flex flex-col gap-2 p-[1rem] w-full">
+        <Title title="Departments" />
+        <Page apiKey="department" api={Doctor.department} columns={departmentColumns} title="Department" />
+        <Page api={HospitalRoutes.enquiry} apiKey="enquiryforDepartments" columns={enquiryColumns} title={`Enquiries for All Departments`} />
+      </div>
     </>
   );
 }

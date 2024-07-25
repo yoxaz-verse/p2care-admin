@@ -32,8 +32,9 @@ import { DeleteIcon } from "../icons/deleteIcon";
 import { useRouter } from "next/navigation";
 import { TbEyeDiscount } from "react-icons/tb";
 import { ImBin } from "react-icons/im";
-import { FaPencilAlt } from "react-icons/fa";
+import { FaPencilAlt, FaUser } from "react-icons/fa";
 import { Time } from "@internationalized/date";
+import { FaUserDoctor } from "react-icons/fa6";
 const statusColorMap: Record<string, ChipProps["color"]> = {
   active: "success",
   paused: "danger",
@@ -225,6 +226,135 @@ export default function CustomTable({
                 {" "}
                 <EyeIcon />
                 <TbEyeDiscount />
+              </Button>
+            </div>
+          </>
+        );
+      case "actions5":
+        return (
+          <>
+            <div className="flex items-center self-end w-fit">
+              <Button
+                isIconOnly
+                className="bg-inherit"
+                onClick={() => {
+                  onOpenView({ data: data, type: "department" });
+                }}
+              >
+                {" "}
+                <FaUserDoctor />
+              </Button>
+              <Button
+                isIconOnly
+                className="bg-inherit"
+                onClick={() => {
+                  onOpenEdit(data);
+                }}
+              >
+                {" "}
+                <EditIcon />
+                {/* <FaPencilAlt /> */}
+              </Button>
+              <Button
+                isIconOnly
+                className="bg-white"
+                onClick={() => {
+                  onOpenDelete(data);
+                }}
+              >
+                {" "}
+                {/* <ImBin className="fill-white" /> */}
+                <DeleteIcon className="fill-red-400" />
+              </Button>
+            </div>
+          </>
+        );
+      case "actions5":
+        return (
+          <>
+            <div className="flex items-center self-end w-fit">
+              <Button
+                isIconOnly
+                className="bg-inherit"
+                onClick={() => {
+                  onOpenView({ data: data, type: "doctor" });
+                }}
+              >
+                {" "}
+                <FaUserDoctor />
+              </Button>
+              <Button
+                isIconOnly
+                className="bg-inherit"
+                onClick={() => {
+                  onOpenEdit(data);
+                }}
+              >
+                {" "}
+                <EditIcon />
+                {/* <FaPencilAlt /> */}
+              </Button>
+              <Button
+                isIconOnly
+                className="bg-white"
+                onClick={() => {
+                  onOpenDelete(data);
+                }}
+              >
+                {" "}
+                {/* <ImBin className="fill-white" /> */}
+                <DeleteIcon className="fill-red-400" />
+              </Button>
+            </div>
+          </>
+        );
+
+
+      case "actions4":
+        return (
+          <>
+            <div className="flex items-center self-end w-fit">
+              <Button
+                isIconOnly
+                className="bg-inherit"
+                onClick={() => {
+                  onOpenView({ data: data, type: "doctor" });
+                }}
+              >
+                {" "}
+                <FaUserDoctor />
+              </Button>
+              <Button
+                isIconOnly
+                className="bg-inherit"
+                onClick={() => {
+                  onOpenView({ data: data, type: "user" });
+                }}
+              >
+                {" "}
+                <FaUser />
+              </Button>
+              <Button
+                isIconOnly
+                className="bg-inherit"
+                onClick={() => {
+                  onOpenEdit(data);
+                }}
+              >
+                {" "}
+                <EditIcon />
+                {/* <FaPencilAlt /> */}
+              </Button>
+              <Button
+                isIconOnly
+                className="bg-white"
+                onClick={() => {
+                  onOpenDelete(data);
+                }}
+              >
+                {" "}
+                {/* <ImBin className="fill-white" /> */}
+                <DeleteIcon className="fill-red-400" />
               </Button>
             </div>
           </>

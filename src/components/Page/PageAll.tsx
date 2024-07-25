@@ -46,7 +46,16 @@ export default function Page({ api, title, columns, apiKey }: Page) {
     if (api === Doctor.docotor) {
       setCurrData(data);
       router.push(`/doctor/${currData._id}`);
-    } else {
+    } else if (api == Doctor.enquiry || api == Doctor.appointments) {
+      setCurrData(data.data);
+      if (data.type === "doctor") {
+        router.push(`/dashboard/doctor/${currData._id}`);
+      }
+      if (data.type === "user") {
+        router.push(`/dashboard/user/${currData._id}`);
+      }
+    }
+    else {
       onOpenView();
       setCurrData(data);
     }
