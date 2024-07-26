@@ -40,7 +40,10 @@ function CurdTable(props: ICurdTableProps) {
                 props.searchBy.map((item) => item).join(", ") || ""
               }`}
               labelPlacement="inside"
-              onChange={(e) => props.setSearch(e.target.value)}
+              onChange={(e) => {
+                props.setSearch(e.target.value);
+                props.setPage(1);
+              }}
               startContent={
                 <SearchIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
               }
