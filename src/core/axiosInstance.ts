@@ -2,7 +2,7 @@
 import axios from "axios";
 import { authToken } from "./localStorageKeys";
 const baseUrlExport = "http://localhost:5000/api/v1/web";
-const ngrokurl = "https://755b-117-243-55-168.ngrok-free.app/api/v1/web";
+const ngrokurl = "https://9289-2409-40f3-1004-4f49-8002-74b3-f38d-785e.ngrok-free.app/api/v1/web";
 
 const instance = axios.create({
   baseURL: baseUrlExport,

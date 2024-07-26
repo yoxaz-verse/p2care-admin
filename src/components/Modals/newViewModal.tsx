@@ -15,9 +15,7 @@ import {
   Autocomplete,
   AutocompleteItem,
 } from "@nextui-org/react";
-import { getData } from "@/core/apiHandler";
-import { DesignationRoutes, Doctor, LocationRoutes } from "@/core/apiRoutes";
-import { useQuery } from "@tanstack/react-query";
+
 
 interface ViewModalProps {
   title: string;
@@ -27,6 +25,7 @@ interface ViewModalProps {
   data: any;
   columns: any;
   large: boolean;
+  DropDownData?: any
 }
 
 const ViewModal: React.FC<ViewModalProps> = ({
@@ -36,22 +35,12 @@ const ViewModal: React.FC<ViewModalProps> = ({
   onOpenChange,
   data,
   columns,
+  DropDownData,
   large,
 }) => {
   const [loading, setLoading] = useState(true);
 
-  const { data: getDesignation } = useQuery({
-    queryKey: ["get-district"],
-    queryFn: () => {
-      return getData(DesignationRoutes.desgination, {});
-    }
-  })
-  const { data: getDepartment } = useQuery({
-    queryKey: ["get-district"],
-    queryFn: () => {
-      return getData(Doctor.department, {});
-    }
-  })
+  console.log(DropDownData?.district?.items);
   useEffect(() => {
     if (data) {
       /* const altImage = Array(5).fill({
@@ -63,12 +52,7 @@ const ViewModal: React.FC<ViewModalProps> = ({
       setLoading(false);
     }
   }, [data]);
-  const { data: getDistrict } = useQuery({
-    queryKey: ["get-district"],
-    queryFn: () => {
-      return getData(LocationRoutes.district, {});
-    }
-  })
+
   const renderField = (column: any, value: any, index: number) => {
     console.log(column);
     if (column.name === "Admin Name") {
@@ -81,17 +65,20 @@ const ViewModal: React.FC<ViewModalProps> = ({
         return <Input key={index} label={column.name} value={value || ""} disabled />;
       case "districtDropdown":
         return (
-          <Autocomplete
-            label="Select an District"
-            selectedKey={value}
-            className="max-w-full"
-          >
-            {getDistrict?.data.data.data.map((d: any) => (
-              <AutocompleteItem key={d._id} value={d._id}>
-                {d.name}
-              </AutocompleteItem>
-            ))}
-          </Autocomplete>
+          <>
+
+            <Autocomplete
+              label="Select an District"
+              selectedKey={value}
+              isLoading={DropDownData.district.isLoading}
+              items={DropDownData.district.items}
+              className="max-w-full"
+            >
+              {DropDownData.district.items.map((d: any) => (
+                <AutocompleteItem key={d.name} value={d.name}>{d.name}</AutocompleteItem>
+              ))}
+            </Autocomplete>
+          </>
         );
       case "departmentDropdown":
         return (
@@ -99,7 +86,7 @@ const ViewModal: React.FC<ViewModalProps> = ({
             label="Select an Department"
             className="max-w-full"
           >
-            {getDepartment?.data.data.data.map((d: any) => (
+            {DropDownData["department"].map((d: any) => (
               <AutocompleteItem key={d._id} value={d._id}>
                 {d.name}
               </AutocompleteItem>
@@ -113,7 +100,7 @@ const ViewModal: React.FC<ViewModalProps> = ({
             label="Select an Desigantion"
             className="max-w-full"
           >
-            {getDepartment?.data.data.data.map((d: any) => (
+            {DropDownData["desgination"].map((d: any) => (
               <AutocompleteItem key={d._id} value={d._id}>
                 {d.name}
               </AutocompleteItem>

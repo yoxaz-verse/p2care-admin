@@ -11,18 +11,21 @@ import {
   Image,
   Textarea,
   Spinner,
+  Autocomplete,
+  AutocompleteItem,
 } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
 import { patchData } from "@/core/apiHandler";
 import { toast } from "sonner";
 import MutationLoading from "../Loading/mutationLoading";
 import { queryAdmin } from "@/app/providers";
+import { LocationRoutes } from "@/core/apiRoutes";
 
 interface EditModalProps {
   title: string;
   data: any;
   isOpen: boolean;
-
+  DropDownData?: any;
   api: string;
   apiKey: string[];
   newCols: any[];
@@ -34,6 +37,7 @@ export default function EditModal({
   data,
   newCols,
   api,
+  DropDownData,
   apiKey,
   isOpen,
   onOpenChange,
@@ -42,7 +46,7 @@ export default function EditModal({
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   const [loading, setLoading] = useState<boolean>(true);
-
+  const [district, setDistrict] = useState<any>("");
   useEffect(() => {
     if (!data) return;
     setCurrData(data);
@@ -78,10 +82,11 @@ export default function EditModal({
     e.preventDefault();
     setSubmitting(true);
     console.log(currdata);
+    if (api === LocationRoutes.city && currdata[district] != district) {
+      currdata[district] = district
+    }
     setSubmitting(true);
     try {
-      // Update data with new image URLs
-
       updateData.mutate({ data: currdata, id: data._id });
     } catch (error) {
       console.error("Error updating data:", error);
@@ -129,6 +134,21 @@ export default function EditModal({
                           name={column.name.toLowerCase()}
                           required
                         />
+                      );
+                    case "districtDropdown":
+                      return (
+                        <Autocomplete
+                          label="Select an District"
+                          defaultSelectedKey={currdata[column.name.toLowerCase()] || ""}
+                          onSelectionChange={(e) => setDistrict(e)}
+                          className="max-w-full"
+                        >
+                          {DropDownData?.district?.items.map((d: any) => (
+                            <AutocompleteItem key={d.name} value={d.name}>
+                              {d.name}
+                            </AutocompleteItem>
+                          ))}
+                        </Autocomplete>
                       );
                     case "number":
                       return (
@@ -180,6 +200,6 @@ export default function EditModal({
           </form>
         )}
       </ModalContent>
-    </Modal>
+    </Modal >
   );
 }
