@@ -14,6 +14,7 @@ interface Page {
   columns: any[];
   apiKey: string;
   dropDownData?: any;
+  searchBy?: string[];
 }
 
 export default function Page({
@@ -22,6 +23,7 @@ export default function Page({
   columns,
   apiKey,
   dropDownData,
+  searchBy,
 }: Page) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
@@ -85,6 +87,8 @@ export default function Page({
         setPage={setPage}
         limit={limit}
         search={search}
+        setSearch={setSearch}
+        searchBy={searchBy}
       />
       <ViewModal
         isOpen={isOpenView}

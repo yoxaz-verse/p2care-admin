@@ -1,9 +1,10 @@
 import React from "react";
 import QueryComponent from "./queryComponent";
 import CustomTable from "../New Table";
-import { Spacer } from "@nextui-org/react";
-import Title, { SubTitle } from "../titles";
+import { Input, Spacer } from "@nextui-org/react";
+import { SubTitle } from "../titles";
 import AddModal from "../Modals/newAddModal";
+import { SearchIcon } from "@/icons/searchIcon";
 
 interface ICurdTableProps {
   title: string;
@@ -18,8 +19,10 @@ interface ICurdTableProps {
   redirect?: string;
   page: number;
   setPage: (page: number) => void;
+  setSearch: (search: string) => void;
   limit: number;
   search?: string;
+  searchBy?: string[];
 }
 
 function CurdTable(props: ICurdTableProps) {
@@ -28,13 +31,29 @@ function CurdTable(props: ICurdTableProps) {
       <Spacer y={5} />
       <div className="flex justify-between">
         <SubTitle title={props.title} />
-        <AddModal
-          title={props.title}
-          columns={props.columns}
-          DropDownData={props.DropDownData}
-          api={props.api}
-          apiKey={props.queryKey}
-        />
+        <div className="flex gap-5">
+          {props.searchBy && props.searchBy.length > 0 && (
+            <Input
+              type="text"
+              label="Search"
+              placeholder={`Search by ${
+                props.searchBy.map((item) => item).join(", ") || ""
+              }`}
+              labelPlacement="inside"
+              onChange={(e) => props.setSearch(e.target.value)}
+              startContent={
+                <SearchIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+              }
+            />
+          )}
+          <AddModal
+            title={props.title}
+            columns={props.columns}
+            DropDownData={props.DropDownData}
+            api={props.api}
+            apiKey={props.queryKey}
+          />
+        </div>
       </div>
       <Spacer y={3} />
       <QueryComponent

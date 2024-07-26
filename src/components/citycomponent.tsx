@@ -5,7 +5,7 @@ import { getData } from "@/core/apiHandler";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 
 interface CityComponentProps {
-  DistrictData: any
+  DistrictData: any;
 }
 
 const countrycolumns = [
@@ -17,11 +17,14 @@ const countrycolumns = [
 
 export default function CityComponent({ DistrictData }: CityComponentProps) {
   const DropDownData = {
-    "district": DistrictData
-  }
+    district: DistrictData,
+  };
   let list = useAsyncList<any>({
     async load({ filterText }) {
-      let res = await getData(`${LocationRoutes.districtAll}/?search=${filterText}`, {});
+      let res = await getData(
+        `${LocationRoutes.districtAll}/?search=${filterText}`,
+        {}
+      );
       let json = await res.data.data;
 
       return {
@@ -29,10 +32,8 @@ export default function CityComponent({ DistrictData }: CityComponentProps) {
       };
     },
   });
-  console.log(list.items);
   return (
     <>
-
       <Autocomplete
         className="max-w-xs"
         inputValue={list.filterText}
@@ -52,9 +53,11 @@ export default function CityComponent({ DistrictData }: CityComponentProps) {
       <Page
         apiKey="cities"
         title="City"
+        searchBy={["name"]}
         dropDownData={DropDownData}
         api={LocationRoutes.city}
-        columns={countrycolumns} />
+        columns={countrycolumns}
+      />
     </>
-  )
+  );
 }
