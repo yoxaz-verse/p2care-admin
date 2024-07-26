@@ -9,14 +9,22 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface Page {
-  api: string,
-  title: string,
-  columns: any[],
-  apiKey: string,
-  dropDownData?: any,
+  api: string;
+  title: string;
+  columns: any[];
+  apiKey: string;
+  dropDownData?: any;
+  searchBy?: string[];
 }
 
-export default function Page({ api, title, columns, apiKey, dropDownData }: Page) {
+export default function Page({
+  api,
+  title,
+  columns,
+  apiKey,
+  dropDownData,
+  searchBy,
+}: Page) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
     isOpen: isOpenView,
@@ -41,7 +49,6 @@ export default function Page({ api, title, columns, apiKey, dropDownData }: Page
     setCurrData(data);
   };
 
-
   const router = useRouter();
   const handleViewData = (data: any) => {
     if (api === Doctor.docotor) {
@@ -55,14 +62,14 @@ export default function Page({ api, title, columns, apiKey, dropDownData }: Page
       if (data.type === "user") {
         router.push(`/dashboard/user/${currData._id}`);
       }
-    }
-    else {
+    } else {
       onOpenView();
       setCurrData(data);
     }
   };
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
+  const [search, setSearch] = useState<string>("");
 
   return (
     <main className="w-full p-5">
@@ -72,13 +79,16 @@ export default function Page({ api, title, columns, apiKey, dropDownData }: Page
         title={title}
         columns={columns}
         DropDownData={dropDownData}
-        onOpenCreate={() => { }}
+        onOpenCreate={() => {}}
         onOpenDelete={(data: any) => handleDeleteData(data)}
         onOpenEdit={(data: any) => handleEditData(data)}
         onOpenView={(data: any) => handleViewData(data)}
         page={page}
         setPage={setPage}
         limit={limit}
+        search={search}
+        setSearch={setSearch}
+        searchBy={searchBy}
       />
       <ViewModal
         isOpen={isOpenView}

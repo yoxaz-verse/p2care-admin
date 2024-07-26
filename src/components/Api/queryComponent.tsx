@@ -8,6 +8,7 @@ interface QueryComponentProps<T> {
   children?: (data: T) => React.ReactNode;
   page: number;
   limit?: number;
+  search?: string;
 }
 
 function QueryComponent<T>(props: QueryComponentProps<T>) {
@@ -15,7 +16,12 @@ function QueryComponent<T>(props: QueryComponentProps<T>) {
 
   const data = useQuery({
     queryKey,
-    queryFn: () => getData(api, { page: props.page, limit: props.limit }),
+    queryFn: () =>
+      getData(api, {
+        page: props.page,
+        limit: props.limit,
+        search: props.search,
+      }),
   });
 
   // If any of the mutations are loading, show a loading message

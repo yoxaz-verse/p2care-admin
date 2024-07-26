@@ -90,14 +90,16 @@ export default function CustomTable({
         );
       case "appointmentTime":
         return (
-          <div className="flex flex-row justify-around bg-white gap-4 items-center flex-row">
+          <div className="flex flex-row justify-around bg-white gap-4 items-center ">
             <TimeInput
               label="Meeting time"
               className="bg-white"
               defaultValue={new Time(9)}
             />
             <DatePicker className="bg-white" />
-            <Button color="secondary" className="p-4">Reschedule</Button>
+            <Button color="secondary" className="p-4">
+              Reschedule
+            </Button>
           </div>
         );
       case "image":
@@ -124,9 +126,7 @@ export default function CustomTable({
             className="max-w-full"
           >
             {status.map((s: any) => (
-              <SelectItem key={s}>
-                {s}
-              </SelectItem>
+              <SelectItem key={s}>{s}</SelectItem>
             ))}
           </Select>
         );
@@ -309,7 +309,6 @@ export default function CustomTable({
           </>
         );
 
-
       case "actions4":
         return (
           <>
@@ -440,11 +439,13 @@ export default function CustomTable({
         {(item: any) => (
           <TableRow key={item._id}>
             {(columnKey) => (
-              <TableCell className="self-center">{renderCell(item, columnKey)}</TableCell>
+              <TableCell className="self-center">
+                {renderCell(item, columnKey)}
+              </TableCell>
             )}
           </TableRow>
         )}
       </TableBody>
-    </Table >
+    </Table>
   );
 }
