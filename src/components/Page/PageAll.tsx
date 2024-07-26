@@ -13,9 +13,16 @@ interface Page {
   title: string;
   columns: any[];
   apiKey: string;
+  dropDownData?: any;
 }
 
-export default function Page({ api, title, columns, apiKey }: Page) {
+export default function Page({
+  api,
+  title,
+  columns,
+  apiKey,
+  dropDownData,
+}: Page) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const {
     isOpen: isOpenView,
@@ -69,6 +76,7 @@ export default function Page({ api, title, columns, apiKey }: Page) {
         queryKey={[apiKey, page.toString()]}
         title={title}
         columns={columns}
+        DropDownData={dropDownData}
         onOpenCreate={() => {}}
         onOpenDelete={(data: any) => handleDeleteData(data)}
         onOpenEdit={(data: any) => handleEditData(data)}
@@ -85,6 +93,7 @@ export default function Page({ api, title, columns, apiKey }: Page) {
         columns={columns}
         data={currData}
         large={false}
+        DropDownData={dropDownData}
         onClose={onCloseView}
       />
       <DeleteModal
@@ -100,6 +109,7 @@ export default function Page({ api, title, columns, apiKey }: Page) {
         onOpenChange={onOpenEditChange}
         data={currData}
         api={api}
+        DropDownData={dropDownData}
         apiKey={[apiKey]}
         newCols={columns}
         title={title}

@@ -6,7 +6,8 @@ export const DesignationRoutes = {
 };
 export const LocationRoutes = {
   city: "/city",
-  district: "/district"
+  district: "/district",
+  districtAll: "/district/all"
 }
 export const Doctor = {
   docotor: "/doctor",

@@ -10,6 +10,7 @@ interface ICurdTableProps {
   api: string;
   queryKey: string[];
   columns: any;
+  DropDownData?: any;
   onOpenEdit: (data: any) => void;
   onOpenDelete: (data: any) => void;
   onOpenView: (data: any) => void;
@@ -30,6 +31,7 @@ function CurdTable(props: ICurdTableProps) {
         <AddModal
           title={props.title}
           columns={props.columns}
+          DropDownData={props.DropDownData}
           api={props.api}
           apiKey={props.queryKey}
         />

@@ -22,6 +22,7 @@ import {
 interface AddModalProps {
   title: string;
   columns: any;
+  DropDownData?: any;
   api: string,
   apiKey: string[];
 }
@@ -31,7 +32,7 @@ import { queryAdmin } from "@/app/providers";
 import { toast } from "sonner";
 import { DesignationRoutes, Doctor, LocationRoutes } from "@/core/apiRoutes";
 
-export default function AddModal({ title, columns, api, apiKey }: AddModalProps) {
+export default function AddModal({ title, columns, api, apiKey, DropDownData }: AddModalProps) {
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [submitting, setSubmitting] = useState(false);
@@ -91,13 +92,6 @@ export default function AddModal({ title, columns, api, apiKey }: AddModalProps)
     }
     close();
   };
-  const { data: getDistrict } = useQuery({
-    queryKey: ["get-district"],
-    queryFn: () => {
-      return getData(LocationRoutes.district, {});
-    }
-  })
-
   const { data: getDepartment } = useQuery({
     queryKey: ["get-department"],
     queryFn: () => {
@@ -110,6 +104,8 @@ export default function AddModal({ title, columns, api, apiKey }: AddModalProps)
       return getData(DesignationRoutes.desgination, {});
     }
   })
+
+  console.log(DropDownData?.district?.items);
   return (
     <>
       <Button onPress={onOpen} className="bg-violet-700 text-white">{`Add ${title}`}</Button>
@@ -151,12 +147,11 @@ export default function AddModal({ title, columns, api, apiKey }: AddModalProps)
                         return (
                           <Autocomplete
                             label="Select an District"
-                            selectedKey={district}
                             onSelectionChange={(e) => setDistrict(e)}
                             className="max-w-full"
                           >
-                            {getDistrict?.data.data.data.map((d: any) => (
-                              <AutocompleteItem key={d._id} value={d._id}>
+                            {DropDownData?.district?.items.map((d: any) => (
+                              <AutocompleteItem key={d.name} value={d.name}>
                                 {d.name}
                               </AutocompleteItem>
                             ))}
