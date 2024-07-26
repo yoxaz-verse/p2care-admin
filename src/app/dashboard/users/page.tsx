@@ -49,8 +49,8 @@ const Users = () => {
       <Title title="Users" />
       <Page api={AdminRoutes.admin} apiKey={"admin"} columns={adminColumns} title="Admin" />
       <Page api={userRoutes.user} apiKey={"users"} columns={userColumns} title="Patient" />
-      <Page api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title="Appointment" />
-      <Page api={Doctor.enquiry} apiKey="enquiries" columns={enquiryColumns} title="Enquiries" />
+      <Page needAddModal={false} api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title="Appointment" />
+      <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiries" columns={enquiryColumns} title="Enquiries" />
     </div>
   );
 };

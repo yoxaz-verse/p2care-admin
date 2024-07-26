@@ -40,7 +40,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   paused: "danger",
   vacation: "warning",
 };
-
+import { motion } from "framer-motion";
 interface CustomTableProps {
   title: string;
   data: any;
@@ -407,7 +407,11 @@ export default function CustomTable({
 
   const pages = data?.totalPages || 1;
   return (
+
     <Table
+      classNames={{
+        table: "min-h-[200px]",
+      }}
       aria-label="Example table with custom cells"
       bottomContent={
         <div className="flex w-full justify-center">
@@ -435,7 +439,7 @@ export default function CustomTable({
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No data to display"} items={data?.data || data}>
+      <TableBody emptyContent={<div>No data is there</div>} className="max-h-[2000px]" items={data?.data || data}>
         {(item: any) => (
           <TableRow key={item._id}>
             {(columnKey) => (

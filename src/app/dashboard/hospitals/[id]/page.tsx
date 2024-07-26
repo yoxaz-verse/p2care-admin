@@ -133,8 +133,8 @@ export default function HospitalDetail() {
             }
           </CardBody>
         </Card>
-        <Page api={HospitalRoutes.enquiry} apiKey="enquiryforHospital" columns={enquiryColumns} title={`Enquiries for Apollo Hospital`} />
-        <Page api={HospitalRoutes.appointment} apiKey="appointments" columns={appointmentColumns} title="Appointment for Apollo Hospital" />
+        <Page needAddModal={false} api={HospitalRoutes.enquiry} apiKey="enquiryforHospital" columns={enquiryColumns} title={`Enquiries for Apollo Hospital`} />
+        <Page needAddModal={false} api={HospitalRoutes.appointment} apiKey="appointments" columns={appointmentColumns} title="Appointment for Apollo Hospital" />
         <Page api={HospitalRoutes.department} apiKey="doctor-department" columns={docDepartmentColumns} title="Docotor in Departments for Apollo Hospital" />
       </div>
     </>

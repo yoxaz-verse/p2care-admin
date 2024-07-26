@@ -39,8 +39,8 @@ const Hospitals = () => {
       <div className="flex flex-col w-full">
         <Title title={"Hopitals"} />
         <Page columns={Hospitalcolumns} api={HospitalRoutes.hospital} apiKey="hospital" title="Hospital Details" />
-        <Page api={HospitalRoutes.enquiry} apiKey="enquiryforHospital" columns={enquiryColumns} title={`Enquiries for All Hospitals`} />
-        <Page api={HospitalRoutes.appointment} apiKey="appointments" columns={appointmentColumns} title="Appointment for All Hospitals" />
+        <Page needAddModal={false} api={HospitalRoutes.enquiry} apiKey="enquiryforHospital" columns={enquiryColumns} title={`Enquiries for All Hospitals`} />
+        <Page needAddModal={false} api={HospitalRoutes.appointment} apiKey="appointments" columns={appointmentColumns} title="Appointment for All Hospitals" />
       </div>
     </>
   );

@@ -92,18 +92,7 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
     }
     close();
   };
-  const { data: getDepartment } = useQuery({
-    queryKey: ["get-department"],
-    queryFn: () => {
-      return getData(Doctor.department, {});
-    }
-  })
-  const { data: getDesignation } = useQuery({
-    queryKey: ["get-desgnation"],
-    queryFn: () => {
-      return getData(DesignationRoutes.desgination, {});
-    }
-  })
+
 
   console.log(DropDownData?.district?.items);
   return (

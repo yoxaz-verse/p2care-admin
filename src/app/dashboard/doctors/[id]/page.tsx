@@ -204,8 +204,8 @@ export default function GetDocDetials() {
             }
           </CardBody>
         </Card>
-        <Page api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title={`${data.docName} Enquiry`} />
-        <Page api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title={`${data.docName} Appointment`} />
+        <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title={`${data.docName} Enquiry`} />
+        <Page needAddModal={false} api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title={`${data.docName} Appointment`} />
       </div >
       <DeleteModal onOpenChange={onOpenChange} isOpen={isOpen} title="Doctor" api={Doctor.docotor} data={id} queryKey={["doctor"]} />
     </>

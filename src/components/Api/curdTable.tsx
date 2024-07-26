@@ -18,6 +18,7 @@ interface ICurdTableProps {
   onOpenCreate: (data: any) => void;
   redirect?: string;
   page: number;
+  addModal?: boolean;
   setPage: (page: number) => void;
   setSearch: (search: string) => void;
   limit: number;
@@ -31,11 +32,12 @@ function CurdTable(props: ICurdTableProps) {
       <Spacer y={5} />
       <div className="flex justify-between">
         <SubTitle title={props.title} />
-        <div className="flex gap-5">
+        <div className="flex items-center  gap-4">
           {props.searchBy && props.searchBy.length > 0 && (
             <Input
               type="text"
               label="Search"
+              className="bg-white border rounded-sm"
               placeholder={`Search by ${props.searchBy.map((item) => item).join(", ") || ""
                 }`}
               labelPlacement="inside"
@@ -48,17 +50,19 @@ function CurdTable(props: ICurdTableProps) {
                 return () => clearTimeout(delayDebounceFn);
               }}
               startContent={
-                <SearchIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
+                <SearchIcon className="text-xl text-default-400 pointer-events-none flex-shrink-0" />
               }
             />
           )}
-          <AddModal
-            title={props.title}
-            columns={props.columns}
-            DropDownData={props.DropDownData}
-            api={props.api}
-            apiKey={props.queryKey}
-          />
+          {props.addModal &&
+            <AddModal
+              title={props.title}
+              columns={props.columns}
+              DropDownData={props.DropDownData}
+              api={props.api}
+              apiKey={props.queryKey}
+            />
+          }
         </div>
       </div>
       <Spacer y={3} />

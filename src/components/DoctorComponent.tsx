@@ -23,6 +23,6 @@ export default function DoctorComponent({ DepartmentData, DesignationData }: Doc
   ]
 
   return (
-    <Page api={Doctor.docotor} apiKey="doctor" dropDownData={DropDownData} columns={docColumns} title="Doctor" />
+    <Page searchBy={["name"]} api={Doctor.docotor} apiKey="doctor" dropDownData={DropDownData} columns={docColumns} title="Doctor" />
   )
 }

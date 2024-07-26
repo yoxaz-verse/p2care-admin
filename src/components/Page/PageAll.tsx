@@ -13,6 +13,7 @@ interface Page {
   title: string;
   columns: any[];
   apiKey: string;
+  needAddModal?: boolean
   dropDownData?: any;
   searchBy?: string[];
 }
@@ -21,6 +22,7 @@ export default function Page({
   api,
   title,
   columns,
+  needAddModal = true,
   apiKey,
   dropDownData,
   searchBy,
@@ -79,11 +81,12 @@ export default function Page({
         title={title}
         columns={columns}
         DropDownData={dropDownData}
-        onOpenCreate={() => {}}
+        onOpenCreate={() => { }}
         onOpenDelete={(data: any) => handleDeleteData(data)}
         onOpenEdit={(data: any) => handleEditData(data)}
         onOpenView={(data: any) => handleViewData(data)}
         page={page}
+        addModal={needAddModal}
         setPage={setPage}
         limit={limit}
         search={search}

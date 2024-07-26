@@ -112,8 +112,8 @@ export default function() {
           }
         </CardBody>
       </Card>
-      <Page api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title={`John Doe's Appointment`} />
-      <Page api={Doctor.enquiry} apiKey="enquiries" columns={enquiryColumns} title={`John Doe's Enquiries`} />
+      <Page needAddModal={false} api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title={`John Doe's Appointment`} />
+      <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiries" columns={enquiryColumns} title={`John Doe's Enquiries`} />
     </div>
   )
 }

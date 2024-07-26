@@ -31,7 +31,7 @@ export default function Department() {
       <div className="flex flex-col gap-2 p-[1rem] w-full">
         <Title title="Departments" />
         <Page apiKey="department" api={Doctor.department} columns={departmentColumns} title="Department" />
-        <Page api={HospitalRoutes.enquiry} apiKey="enquiryforDepartments" columns={enquiryColumns} title={`Enquiries for All Departments`} />
+        <Page needAddModal={false} api={HospitalRoutes.enquiry} apiKey="enquiryforDepartments" columns={enquiryColumns} title={`Enquiries for All Departments`} />
       </div>
     </>
   );

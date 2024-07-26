@@ -63,8 +63,8 @@ const Doctors = () => {
       <div className="flex flex-col w-full p-[1rem] gap-4">
         <Title title={"Doctors"} />
         <DoctorComponent DesignationData={list} DepartmentData={list1} />
-        <Page api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title="Enquiry" />
-        <Page api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title="Appointment" />
+        <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title="Enquiry" />
+        <Page needAddModal={false} api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title="Appointment" />
       </div>
     </>
   );
