@@ -36,9 +36,8 @@ function CurdTable(props: ICurdTableProps) {
             <Input
               type="text"
               label="Search"
-              placeholder={`Search by ${
-                props.searchBy.map((item) => item).join(", ") || ""
-              }`}
+              placeholder={`Search by ${props.searchBy.map((item) => item).join(", ") || ""
+                }`}
               labelPlacement="inside"
               onChange={(e) => {
                 const delayDebounceFn = setTimeout(() => {

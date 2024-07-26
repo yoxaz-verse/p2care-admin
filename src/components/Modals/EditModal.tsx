@@ -144,12 +144,47 @@ export default function EditModal({
                           className="max-w-full"
                         >
                           {DropDownData?.district?.items.map((d: any) => (
-                            <AutocompleteItem key={d.name} value={d.name}>
+                            <AutocompleteItem key={d._id} value={d._id}>
                               {d.name}
                             </AutocompleteItem>
                           ))}
                         </Autocomplete>
                       );
+                    case "departmentDropdown":
+                      return (
+                        <Autocomplete
+                          defaultSelectedKey={currdata[column.name.toLowerCase()] || ""}
+                          isLoading={DropDownData.department.isLoading}
+                          items={DropDownData.department.items}
+                          label="Select an Department"
+                          className="max-w-full"
+                        >
+                          {DropDownData.department.items.map((d: any) => (
+                            <AutocompleteItem key={d._id} value={d._id}>
+                              {d.name}
+                            </AutocompleteItem>
+                          ))}
+                        </Autocomplete>
+                      );
+
+                    case "designationDropdown":
+                      return (
+                        <Autocomplete
+                          defaultSelectedKey={currdata[column.name.toLowerCase()] || ""}
+                          label="Select an Desigantion"
+                          isLoading={DropDownData.designation.isLoading}
+                          items={DropDownData.designation.items}
+                          className="max-w-full"
+                        >
+                          {DropDownData.designation.items.map((d: any) => (
+                            <AutocompleteItem key={d._id} value={d._id}>
+                              {d.name}
+                            </AutocompleteItem>
+                          ))}
+                        </Autocomplete>
+                      );
+
+
                     case "number":
                       return (
                         <Input

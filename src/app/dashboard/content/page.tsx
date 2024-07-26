@@ -12,14 +12,6 @@ const Content = () => {
     { name: "NAME", uid: "name", type: "text" },
     { name: "ACTIONS", uid: "actions", type: "action" },
   ];
-
-  const DistrictData = useQuery({
-    queryKey: ["get-district"],
-    queryFn: () => {
-      return getData(LocationRoutes.district, {});
-    }
-  });
-
   const list = useAsyncList<any>({
     async load() {
       let res = await getData(LocationRoutes.district, {});
@@ -30,7 +22,7 @@ const Content = () => {
       };
     },
   });
-  console.log(list?.items);
+
   return (
     <div className="flex flex-col w-full">
       <Title title="Content" />

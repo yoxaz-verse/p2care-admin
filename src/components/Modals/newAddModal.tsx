@@ -147,6 +147,9 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
                         return (
                           <Autocomplete
                             label="Select an District"
+                            selectedKey={district}
+                            isLoading={DropDownData.district.isLoading}
+                            items={DropDownData.district.items}
                             onSelectionChange={(e) => setDistrict(e)}
                             className="max-w-full"
                           >
@@ -162,10 +165,12 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
                           <Autocomplete
                             label="Select an Department"
                             selectedKey={department}
+                            isLoading={DropDownData.department.isLoading}
+                            items={DropDownData.department.items}
                             onSelectionChange={(e) => setDepartment(e)}
                             className="max-w-full"
                           >
-                            {getDepartment?.data.data.data.map((d: any) => (
+                            {DropDownData.department.items.map((d: any) => (
                               <AutocompleteItem key={d._id} value={d._id}>
                                 {d.name}
                               </AutocompleteItem>
@@ -180,7 +185,7 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
                             onSelectionChange={(e) => setDesignation(e)}
                             className="max-w-full"
                           >
-                            {getDesignation?.data.data.data.map((d: any) => (
+                            {DropDownData?.designation.items.map((d: any) => (
                               <AutocompleteItem key={d._id} value={d._id}>
                                 {d.name}
                               </AutocompleteItem>

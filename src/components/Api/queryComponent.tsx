@@ -23,7 +23,6 @@ function QueryComponent<T>(props: QueryComponentProps<T>) {
         search: props.search,
       }),
   });
-
   // If any of the mutations are loading, show a loading message
 
   if (data.isLoading) {

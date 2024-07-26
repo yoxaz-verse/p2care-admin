@@ -83,10 +83,13 @@ const ViewModal: React.FC<ViewModalProps> = ({
       case "departmentDropdown":
         return (
           <Autocomplete
+            selectedKey={value}
+            isLoading={DropDownData.department.isLoading}
+            items={DropDownData.department.items}
             label="Select an Department"
             className="max-w-full"
           >
-            {DropDownData["department"].map((d: any) => (
+            {DropDownData.department.items.map((d: any) => (
               <AutocompleteItem key={d._id} value={d._id}>
                 {d.name}
               </AutocompleteItem>
@@ -100,7 +103,7 @@ const ViewModal: React.FC<ViewModalProps> = ({
             label="Select an Desigantion"
             className="max-w-full"
           >
-            {DropDownData["desgination"].map((d: any) => (
+            {DropDownData.designation.items.map((d: any) => (
               <AutocompleteItem key={d._id} value={d._id}>
                 {d.name}
               </AutocompleteItem>
