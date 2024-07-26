@@ -102,6 +102,7 @@ export default function Page({ api, title, columns, apiKey, dropDownData }: Page
         isOpen={isOpenEdit}
         onOpenChange={onOpenEditChange}
         data={currData}
+        queryKey={[apiKey]}
         api={api}
         DropDownData={dropDownData}
         apiKey={[apiKey]}

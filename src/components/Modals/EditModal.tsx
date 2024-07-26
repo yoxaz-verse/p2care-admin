@@ -26,6 +26,7 @@ interface EditModalProps {
   data: any;
   isOpen: boolean;
   DropDownData?: any;
+  queryKey: string[];
   api: string;
   apiKey: string[];
   newCols: any[];
@@ -39,6 +40,7 @@ export default function EditModal({
   api,
   DropDownData,
   apiKey,
+  queryKey,
   isOpen,
   onOpenChange,
 }: EditModalProps) {
@@ -82,12 +84,10 @@ export default function EditModal({
     e.preventDefault();
     setSubmitting(true);
     console.log(currdata);
-    if (api === LocationRoutes.city && currdata[district] != district) {
-      currdata[district] = district
-    }
     setSubmitting(true);
     try {
       updateData.mutate({ data: currdata, id: data._id });
+      queryAdmin.invalidateQueries({ queryKey: queryKey })
     } catch (error) {
       console.error("Error updating data:", error);
       alert("An error occurred while updating data.");
@@ -140,7 +140,7 @@ export default function EditModal({
                         <Autocomplete
                           label="Select an District"
                           defaultSelectedKey={currdata[column.name.toLowerCase()] || ""}
-                          onSelectionChange={(e) => setDistrict(e)}
+                          onSelectionChange={(e) => handleChangeCurrentData(column.name.toLowerCase(), e)}
                           className="max-w-full"
                         >
                           {DropDownData?.district?.items.map((d: any) => (
