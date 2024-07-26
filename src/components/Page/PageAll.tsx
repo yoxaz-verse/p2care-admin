@@ -75,7 +75,7 @@ export default function Page({
     <main className="w-full p-5">
       <CurdTable
         api={api}
-        queryKey={[apiKey, page.toString()]}
+        queryKey={[apiKey, page.toString(), search]}
         title={title}
         columns={columns}
         DropDownData={dropDownData}
@@ -87,7 +87,9 @@ export default function Page({
         setPage={setPage}
         limit={limit}
         search={search}
-        setSearch={setSearch}
+        setSearch={(search) => {
+          setSearch(search);
+        }}
         searchBy={searchBy}
       />
       <ViewModal

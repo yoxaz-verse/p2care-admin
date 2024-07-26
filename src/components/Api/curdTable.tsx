@@ -44,7 +44,7 @@ function CurdTable(props: ICurdTableProps) {
                 const delayDebounceFn = setTimeout(() => {
                   props.setSearch(e.target.value);
                   props.setPage(1);
-                }, 300);
+                }, 1000);
 
                 return () => clearTimeout(delayDebounceFn);
               }}
