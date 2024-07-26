@@ -18,6 +18,7 @@ interface ICurdTableProps {
   page: number;
   setPage: (page: number) => void;
   limit: number;
+  search?: string;
 }
 
 function CurdTable(props: ICurdTableProps) {
@@ -39,6 +40,7 @@ function CurdTable(props: ICurdTableProps) {
         queryKey={props.queryKey}
         page={props.page}
         limit={props.limit}
+        search={props.search}
       >
         {(data) => {
           return (

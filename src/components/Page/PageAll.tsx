@@ -9,10 +9,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface Page {
-  api: string,
-  title: string,
-  columns: any[],
-  apiKey: string
+  api: string;
+  title: string;
+  columns: any[];
+  apiKey: string;
 }
 
 export default function Page({ api, title, columns, apiKey }: Page) {
@@ -40,7 +40,6 @@ export default function Page({ api, title, columns, apiKey }: Page) {
     setCurrData(data);
   };
 
-
   const router = useRouter();
   const handleViewData = (data: any) => {
     if (api === Doctor.docotor) {
@@ -54,14 +53,14 @@ export default function Page({ api, title, columns, apiKey }: Page) {
       if (data.type === "user") {
         router.push(`/dashboard/user/${currData._id}`);
       }
-    }
-    else {
+    } else {
       onOpenView();
       setCurrData(data);
     }
   };
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(5);
+  const [search, setSearch] = useState<string>("");
 
   return (
     <main className="w-full p-5">
@@ -70,13 +69,14 @@ export default function Page({ api, title, columns, apiKey }: Page) {
         queryKey={[apiKey, page.toString()]}
         title={title}
         columns={columns}
-        onOpenCreate={() => { }}
+        onOpenCreate={() => {}}
         onOpenDelete={(data: any) => handleDeleteData(data)}
         onOpenEdit={(data: any) => handleEditData(data)}
         onOpenView={(data: any) => handleViewData(data)}
         page={page}
         setPage={setPage}
         limit={limit}
+        search={search}
       />
       <ViewModal
         isOpen={isOpenView}
