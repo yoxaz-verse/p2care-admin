@@ -41,8 +41,12 @@ function CurdTable(props: ICurdTableProps) {
               }`}
               labelPlacement="inside"
               onChange={(e) => {
-                props.setSearch(e.target.value);
-                props.setPage(1);
+                const delayDebounceFn = setTimeout(() => {
+                  props.setSearch(e.target.value);
+                  props.setPage(1);
+                }, 300);
+
+                return () => clearTimeout(delayDebounceFn);
               }}
               startContent={
                 <SearchIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
