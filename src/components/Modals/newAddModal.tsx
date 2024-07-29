@@ -57,6 +57,12 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
       onClose();
     }
   })
+  function toCamelCase(str: string) {
+    console.log(str);
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+      return index === 0 ? word.toLowerCase() : word.toUpperCase();
+    }).replace(/\s+/g, '');
+  }
   const handleSubmit = async (e: any, close: () => void) => {
     e.preventDefault();
     setSubmitting(true);
@@ -67,11 +73,15 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
     inputs.forEach((input: any) => {
       const name = input.name;
       const value = input.value;
-      console.log(inputs, value);
+      console.log(name, value);
+
       if (name !== "" && name !== "main image") {
-        data[name] = value;
+        const camelCaseName = toCamelCase(name);
+        console.log(camelCaseName);
+        data[camelCaseName] = value;
       }
     });
+    console.log("data", data);
     if (api === Doctor.docotor) {
       const docInput = {
         ...data,

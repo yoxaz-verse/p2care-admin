@@ -10,8 +10,8 @@ export default function Department() {
     { name: "Name", uid: "name", type: "text" },
     { name: "Code", uid: "code", type: "text" },
     { name: "Description", uid: "description", type: "textbox" },
-    { name: "MetaTitle", uid: "metaTitle", type: "text" },
-    { name: "MetaDescription", uid: "metaDescription", type: "textbox" }
+    { name: "MetaTitle", uid: "meta Title", type: "text" },
+    { name: "MetaDescription", uid: "meta Description", type: "textbox" }
   ]
   const enquiryColumns = [
     { name: "Name", uid: "name", type: "text" },
