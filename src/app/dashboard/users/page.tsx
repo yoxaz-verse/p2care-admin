@@ -1,9 +1,5 @@
 "use client";
-import { generateTabColumns } from "@/content/table-columns";
-import generateData from "@/content/tableData";
 import Title from "@/components/titles";
-import { generateTable } from "@/utilis/content";
-import React, { useState } from "react";
 import Page from "@/components/Page/PageAll";
 import { AdminRoutes, Doctor, userRoutes } from "@/core/apiRoutes";
 

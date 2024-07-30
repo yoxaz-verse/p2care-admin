@@ -54,17 +54,20 @@ export default function Page({
   const router = useRouter();
   const handleViewData = (data: any) => {
     if (api === Doctor.docotor) {
-      setCurrData(data);
-      router.push(`/doctor/${currData._id}`);
+      router.push(`/dashboard/doctors/${data._id}`);
     } else if (api == Doctor.enquiry || api == Doctor.appointments) {
       setCurrData(data.data);
       if (data.type === "doctor") {
-        router.push(`/dashboard/doctor/${currData._id}`);
+        console.log(currData);
+        //router.push(`/dashboard/doctor/${currData._id}`);
       }
       if (data.type === "user") {
-        router.push(`/dashboard/user/${currData._id}`);
+        router.push(`/dashboard/user/${data._id}`);
       }
-    } else {
+    } if (api == Doctor.department) {
+      router.push(`/dashboard/departments/${data._id}`);
+    }
+    else {
       onOpenView();
       setCurrData(data);
     }

@@ -65,13 +65,26 @@ export default function CustomTable({
   const navigate = useRouter();
   const renderCell = React.useCallback((data: any, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof any];
-    const post_code = data["postal code"];
+    console.log(cellValue);
+    console.log(columnKey);
+    console.log(data);
+
 
     switch (columnKey) {
+      case "meta Title":
+        return <h3>{data?.metaTitle}</h3>;
+      case "meta Description":
+        return <h3>{data?.metaDescription}</h3>;
+      case "gender":
+        return <h3>{data?.gender?.name}</h3>
+      case "designation":
+        return <h3>{data?.designation?.name}</h3>
+      case "department":
+        return <h3>{data?.department?.name}</h3>
       case "name":
-        return <h3>{data.name}</h3>;
+        return <h3>{data?.name}</h3>;
       case "complete_date":
-        return <h3>{data.completion_date}</h3>;
+        return <h3>{data?.completion_date}</h3>;
       case "project_link":
         return (
           <Link href={data.project_link} target="_blank" underline={"hover"}>
@@ -81,10 +94,10 @@ export default function CustomTable({
       case "password":
         return null;
       case "heading":
-        return <h3>{data.heading}</h3>;
+        return <h3>{data?.heading}</h3>;
       case "youtubeLink":
         return (
-          <Link href={data.youtubeLink} target="_blank" underline={"hover"}>
+          <Link href={data?.youtubeLink} target="_blank" underline={"hover"}>
             {data.youtubeLink}
           </Link>
         );
@@ -136,8 +149,6 @@ export default function CustomTable({
             Click Here
           </Button>
         );
-      case "postal code":
-        return post_code;
       case "project_details":
         return (
           <div className="flex flex-col gap-4">

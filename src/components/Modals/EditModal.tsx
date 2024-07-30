@@ -54,7 +54,7 @@ export default function EditModal({
     setCurrData(data);
     setLoading(false);
   }, [data]);
-
+  console.log(data);
   const handleChangeCurrentData = (field: any, value: any) => {
     setCurrData((prev: any) => ({ ...prev, [field]: value }));
   };
@@ -117,6 +117,23 @@ export default function EditModal({
               {newCols
                 .filter((col: any) => col.name.toLowerCase() !== "actions")
                 .map((column: any, index: number) => {
+                  console.log(currdata["metaTitle"]);
+                  if (column.uid === "metaTitle" || column.uid === "metaDescription") {
+                    <Textarea
+                      key={index}
+                      label={column.name}
+                      placeholder={column.name}
+                      value={currdata[column.uid]}
+                      onChange={(e) =>
+                        handleChangeCurrentData(
+                          column.uid,
+                          e.target.value
+                        )
+                      }
+                      name={column.uid}
+                      required
+                    />
+                  }
                   switch (column.type) {
                     case "text":
                       return (
@@ -153,7 +170,7 @@ export default function EditModal({
                     case "departmentDropdown":
                       return (
                         <Autocomplete
-                          defaultSelectedKey={currdata[column.name.toLowerCase()] || ""}
+                          defaultSelectedKey={currdata[column.name.toLowerCase()]?._id || ""}
                           isLoading={DropDownData.department.isLoading}
                           items={DropDownData.department.items}
                           label="Select an Department"
@@ -166,11 +183,26 @@ export default function EditModal({
                           ))}
                         </Autocomplete>
                       );
-
+                    case "genderDropdown":
+                      return (
+                        <Autocomplete
+                          defaultSelectedKey={currdata[column.name.toLowerCase()]?._id || ""}
+                          label="Select an Gender"
+                          isLoading={DropDownData.gender.isLoading}
+                          items={DropDownData.gender.items}
+                          className="max-w-full"
+                        >
+                          {DropDownData.gender.items.map((d: any) => (
+                            <AutocompleteItem key={d._id} value={d._id}>
+                              {d.name}
+                            </AutocompleteItem>
+                          ))}
+                        </Autocomplete>
+                      );
                     case "designationDropdown":
                       return (
                         <Autocomplete
-                          defaultSelectedKey={currdata[column.name.toLowerCase()] || ""}
+                          defaultSelectedKey={currdata[column.name.toLowerCase()]._id || ""}
                           label="Select an Desigantion"
                           isLoading={DropDownData.designation.isLoading}
                           items={DropDownData.designation.items}

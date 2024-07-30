@@ -9,8 +9,12 @@ export const LocationRoutes = {
   district: "/district",
   districtAll: "/district/all"
 }
+export const offerRoute = "/offer";
+
 export const Doctor = {
   docotor: "/doctor",
+  quick: "/doctor/quick",
+  procedure: "/procedure",
   appointments: "/appointment",
   enquiry: "/enquiry",
   department: "/department"

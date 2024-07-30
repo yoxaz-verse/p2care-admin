@@ -38,6 +38,7 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
   const [submitting, setSubmitting] = useState(false);
   const [district, setDistrict] = useState<any>();
   const [department, setDepartment] = useState<any>();
+  const [gender, setGender] = useState<any>();
   const [designation, setDesignation] = useState<any>();
   console.log(api, apiKey);
   const AddModalData = useMutation({
@@ -48,6 +49,10 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
     },
     onSuccess: (data: any) => {
       console.log(data);
+      toast.success("Data added successfully", {
+        position: "top-right",
+        className: "bg-green-300"
+      })
       queryAdmin.invalidateQueries({ queryKey: apiKey });
       setSubmitting(false);
       onClose();
@@ -74,7 +79,12 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
       const name = input.name;
       const value = input.value;
       console.log(name, value);
-
+      if (name === "metadescription") {
+        data["metaDescription"] = value;
+      }
+      if (name === "metatitle") {
+        data["metaTitle"] = value;
+      }
       if (name !== "" && name !== "main image") {
         const camelCaseName = toCamelCase(name);
         console.log(camelCaseName);
@@ -83,11 +93,21 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
     });
     console.log("data", data);
     if (api === Doctor.docotor) {
+      api = Doctor.quick;
       const docInput = {
         ...data,
         department,
-        designation
+        designation,
+        gender
       }
+      AddModalData.mutate(docInput);
+    }
+    if (api === Doctor.procedure) {
+      const procedureData = {
+        ...data,
+        department
+      }
+      AddModalData.mutate(procedureData);
     }
     if (api === LocationRoutes.city) {
       const cityInput = {
@@ -103,8 +123,6 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
     close();
   };
 
-
-  console.log(DropDownData?.district?.items);
   return (
     <>
       <Button onPress={onOpen} className="bg-violet-700 text-white">{`Add ${title}`}</Button>
@@ -159,6 +177,24 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
                             ))}
                           </Autocomplete>
                         );
+                      case "genderDropdown":
+                        return (
+                          <Autocomplete
+                            label="Select an Gender"
+                            selectedKey={gender}
+                            isLoading={DropDownData.gender.isLoading}
+                            items={DropDownData.gender.items}
+                            onSelectionChange={(e) => setGender(e)}
+                            className="max-w-full"
+                          >
+                            {DropDownData.gender.items.map((d: any) => (
+                              <AutocompleteItem key={d._id} value={d._id}>
+                                {d.name}
+                              </AutocompleteItem>
+                            ))}
+                          </Autocomplete>
+                        );
+
                       case "departmentDropdown":
                         return (
                           <Autocomplete

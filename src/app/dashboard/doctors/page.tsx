@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 import { useState } from "react";
 import Page from "@/components/Page/PageAll";
-import { DesignationRoutes, Doctor } from "@/core/apiRoutes";
+import { DesignationRoutes, Doctor, GenderRoutes } from "@/core/apiRoutes";
 import { Button, DateInput, DatePicker, TimeInput } from "@nextui-org/react";
 import { Time } from "@internationalized/date";
 import DoctorComponent from "@/components/DoctorComponent";
@@ -48,6 +48,16 @@ const Doctors = () => {
       };
     },
   });
+  const genderList = useAsyncList<any>({
+    async load() {
+      let res = await getData(GenderRoutes.gender, {});
+      let json = await res.data.data.data;
+
+      return {
+        items: json
+      };
+    },
+  });
   const list1 = useAsyncList<any>({
     async load() {
       let res = await getData(Doctor.department, {});
@@ -62,7 +72,7 @@ const Doctors = () => {
     <>
       <div className="flex flex-col w-full p-[1rem] gap-4">
         <Title title={"Doctors"} />
-        <DoctorComponent DesignationData={list} DepartmentData={list1} />
+        <DoctorComponent DesignationData={list} DepartmentData={list1} GenderData={genderList} />
         <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title="Enquiry" />
         <Page needAddModal={false} api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title="Appointment" />
       </div>
