@@ -215,8 +215,8 @@ export default function GetDocDetials() {
       {isLoading ? <Spinner title="Loading Doctor Details" /> : (
         <div className="flex flex-col w-full gap-4 p-[1rem]">
           <Breadcrumbs color="secondary">
-            {header.map((h: any) => {
-              return <BreadcrumbItem onClick={() => router.push(h.link)}>{h.name}</BreadcrumbItem>
+            {header.map((h: any, index: any) => {
+              return <BreadcrumbItem key={index} onClick={() => router.push(h.link)}>{h.name}</BreadcrumbItem>
             })}
           </Breadcrumbs>
           <div className="flex flex-row justify-between w-full gap-4">
@@ -244,7 +244,6 @@ export default function GetDocDetials() {
                     accept="image/*"
                     className="hidden"
                     onChange={(e: any) => {
-                      console.log(e.target.value);
                       handleChange(e);
                     }}
                   />
@@ -395,14 +394,14 @@ export default function GetDocDetials() {
               Scheduling
             </CardHeader>
             <CardBody className="flex flex-col gap-4">
-              {sechudling.map((s: any) => {
+              {sechudling.map((s: any, index: any) => {
                 return (
                   <>
-                    <div className="flex flex-row items-center w-1/4 justify-around">
+                    <div key={index} className="flex flex-row items-center w-1/4 justify-around">
                       <h1 className="font-bold">{s.name}</h1>
-                      {s.timings.map((t: any) => {
+                      {s.timings.map((t: any, index: any) => {
                         return (
-                          <div className="flex flex-row justify-start w-20">
+                          <div key={index} className="flex flex-row justify-start w-20">
                             <Chip color="secondary" radius="full" variant="solid">{t} </Chip>
                           </div>
                         )
@@ -438,8 +437,8 @@ export default function GetDocDetials() {
               }
             </CardBody>
           </Card>
-          <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title={`${data.docName} Enquiry`} />
-          <Page needAddModal={false} api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title={`${data.docName} Appointment`} />
+          <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title={`${getDocDetails?.data.data?.data[0]?.name} Enquiry`} />
+          <Page needAddModal={false} api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title={`${getDocDetails?.data.data?.data[0]?.name} Appointment`} />
         </div >
       )
       }

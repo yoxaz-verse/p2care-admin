@@ -69,8 +69,8 @@ export default function HospitalDetail() {
       <div className="flex flex-col w-full">
         <div className="flex flex-col gap-4 p-[1rem]">
           <Breadcrumbs color="secondary" className="text-xl font-bold">
-            {breadCrumps.map((b: any) => {
-              return <BreadcrumbItem onClick={() => router.push(b.link)}>{b.name}</BreadcrumbItem>
+            {breadCrumps.map((b: any, index: any) => {
+              return <BreadcrumbItem key={index} onClick={() => router.push(b.link)}>{b.name}</BreadcrumbItem>
             })}
           </Breadcrumbs>
           <div className="flex flex-row justify-between items-center w-full">

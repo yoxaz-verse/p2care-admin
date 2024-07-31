@@ -3,7 +3,7 @@ import CurdTable from "@/components/Api/curdTable";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import EditModal from "@/components/Modals/EditModal";
 import ViewModal from "@/components/Modals/newViewModal";
-import { Doctor, GenderRoutes } from "@/core/apiRoutes";
+import { Doctor, GenderRoutes, patientRoutes } from "@/core/apiRoutes";
 import { useDisclosure } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -66,6 +66,9 @@ export default function Page({
       }
     } if (api == Doctor.department) {
       router.push(`/dashboard/departments/${data._id}`);
+    }
+    if (api == patientRoutes.patient) {
+      router.push(`/dashboard/users/${data._id}`);
     }
     else {
       onOpenView();

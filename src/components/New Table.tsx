@@ -423,7 +423,7 @@ export default function CustomTable({
       classNames={{
         table: "min-h-[200px]",
       }}
-      aria-label="Example table with custom cells"
+      aria-label="Table"
       bottomContent={
         <div className="flex w-full justify-center">
           <Pagination
@@ -431,7 +431,7 @@ export default function CustomTable({
             showControls
             showShadow
             color="secondary"
-            page={data.currentPage}
+            page={data?.currentPage ?? 1}
             total={pages}
             onChange={(page) => {
               setPage(page);

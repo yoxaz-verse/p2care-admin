@@ -25,8 +25,8 @@ export const HospitalRoutes = {
   department: '/hospital-department',
   appointment: '/appointment'
 }
-export const userRoutes = {
-  user: "/user"
+export const patientRoutes = {
+  patient: "/patient"
 }
 const admin = "/admin";
 export const AdminRoutes = {
