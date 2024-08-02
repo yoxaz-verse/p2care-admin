@@ -21,6 +21,9 @@ export const Doctor = {
 }
 export const HospitalRoutes = {
   hospital: "/hospital",
+  image: "/hospital/image",
+  quick: "/hospital/quick",
+  description: "/hospital/description",
   enquiry: '/enquiry',
   department: '/hospital-department',
   appointment: '/appointment'

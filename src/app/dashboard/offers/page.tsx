@@ -6,7 +6,7 @@ const Offers = () => {
   const offerColumns = [
     { name: "Percentage", uid: "percentage", type: "text" },
     { name: "Title", uid: "title", type: "text" },
-    { name: "Actions", uid: "actions", type: "actions" },
+    { name: "Actions", uid: "action", type: "action" },
   ]
   return (
     <Page columns={offerColumns} api={offerRoute} title="Offers" apiKey="offers" />

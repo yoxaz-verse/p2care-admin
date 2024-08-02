@@ -81,6 +81,10 @@ export default function CustomTable({
         return <h3>{data?.designation?.name}</h3>
       case "department":
         return <h3>{data?.department?.name}</h3>
+      case "district":
+        return <h3>{data?.district?.name}</h3>
+      case "city":
+        return <h3>{data?.city?.name}</h3>
       case "name":
         return <h3>{data?.name}</h3>;
       case "complete_date":
@@ -142,23 +146,6 @@ export default function CustomTable({
               <SelectItem key={s}>{s}</SelectItem>
             ))}
           </Select>
-        );
-      case "resume":
-        return (
-          <Button color="secondary" onClick={() => navigate.push(data.resume)}>
-            Click Here
-          </Button>
-        );
-      case "project_details":
-        return (
-          <div className="flex flex-col gap-4">
-            {data?.projectDetails &&
-              data.projectDetails.map((p: any, index: number) => (
-                <Chip color="primary" key={index}>
-                  {p}
-                </Chip>
-              ))}
-          </div>
         );
       case "role":
         return (

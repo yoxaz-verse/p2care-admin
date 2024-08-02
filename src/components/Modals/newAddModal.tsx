@@ -30,13 +30,14 @@ import { getData, postData } from "@/core/apiHandler";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryAdmin } from "@/app/providers";
 import { toast } from "sonner";
-import { DesignationRoutes, Doctor, LocationRoutes } from "@/core/apiRoutes";
+import { DesignationRoutes, Doctor, HospitalRoutes, LocationRoutes } from "@/core/apiRoutes";
 
 export default function AddModal({ title, columns, api, apiKey, DropDownData }: AddModalProps) {
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [submitting, setSubmitting] = useState(false);
   const [district, setDistrict] = useState<any>();
+  const [city, setCity] = useState<any>();
   const [department, setDepartment] = useState<any>();
   const [gender, setGender] = useState<any>();
   const [designation, setDesignation] = useState<any>();
@@ -102,6 +103,16 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
       }
       AddModalData.mutate(docInput);
     }
+    if (api === HospitalRoutes.hospital) {
+      api = HospitalRoutes.quick;
+      const hosInput = {
+        ...data,
+        district,
+        city
+      }
+      AddModalData.mutate(hosInput);
+    }
+
     if (api === Doctor.procedure) {
       const procedureData = {
         ...data,
@@ -171,7 +182,24 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
                             className="max-w-full"
                           >
                             {DropDownData?.district?.items.map((d: any) => (
-                              <AutocompleteItem key={d.name} value={d.name}>
+                              <AutocompleteItem key={d._id} value={d._id}>
+                                {d.name}
+                              </AutocompleteItem>
+                            ))}
+                          </Autocomplete>
+                        );
+                      case "cityDropdown":
+                        return (
+                          <Autocomplete
+                            label="Select an city"
+                            selectedKey={city}
+                            isLoading={DropDownData.city.isLoading}
+                            items={DropDownData.city.items}
+                            onSelectionChange={(e) => setCity(e)}
+                            className="max-w-full"
+                          >
+                            {DropDownData?.city?.items.map((d: any) => (
+                              <AutocompleteItem key={d._id} value={d._id}>
                                 {d.name}
                               </AutocompleteItem>
                             ))}

@@ -3,7 +3,7 @@ import CurdTable from "@/components/Api/curdTable";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import EditModal from "@/components/Modals/EditModal";
 import ViewModal from "@/components/Modals/newViewModal";
-import { Doctor, GenderRoutes, patientRoutes } from "@/core/apiRoutes";
+import { Doctor, GenderRoutes, patientRoutes, offerRoute, HospitalRoutes } from "@/core/apiRoutes";
 import { useDisclosure } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -55,6 +55,7 @@ export default function Page({
   const handleViewData = (data: any) => {
     if (api === Doctor.docotor) {
       router.push(`/dashboard/doctors/${data._id}`);
+      return;
     } else if (api == Doctor.enquiry || api == Doctor.appointments) {
       setCurrData(data.data);
       if (data.type === "doctor") {
@@ -66,9 +67,18 @@ export default function Page({
       }
     } if (api == Doctor.department) {
       router.push(`/dashboard/departments/${data._id}`);
+      return;
+    }
+    if (api == offerRoute) {
+      return router.push(`/dashboard/offers/${data._id}`);
     }
     if (api == patientRoutes.patient) {
       router.push(`/dashboard/users/${data._id}`);
+      return;
+    }
+    if (api == HospitalRoutes.hospital) {
+      router.push(`/dashboard/hospitals/${data._id}`);
+      return;
     }
     else {
       onOpenView();
