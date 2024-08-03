@@ -409,6 +409,9 @@ export default function CustomTable({
   return (
     <Table
       aria-label="Example table with custom cells"
+      classNames={{
+        table: "min-h-[400px]",
+      }}
       bottomContent={
         <div className="flex w-full justify-center">
           <Pagination
