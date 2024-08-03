@@ -11,7 +11,10 @@ export default function Department() {
     { name: "Code", uid: "code", type: "text" },
     { name: "Description", uid: "description", type: "textbox" },
     { name: "MetaTitle", uid: "metaTitle", type: "text" },
-    { name: "MetaDescription", uid: "metaDescription", type: "textbox" }
+    { name: "MetaDescription", uid: "metaDescription", type: "textbox" },
+    {
+      name: "Actions", uid: "actions", type: "actions"
+    }
   ]
   const enquiryColumns = [
     { name: "Name", uid: "name", type: "text" },
@@ -31,7 +34,7 @@ export default function Department() {
       <div className="flex flex-col gap-2 p-[1rem] w-full">
         <Title title="Departments" />
         <Page apiKey="department" api={Doctor.department} columns={departmentColumns} title="Department" />
-        <Page api={HospitalRoutes.enquiry} apiKey="enquiryforDepartments" columns={enquiryColumns} title={`Enquiries for All Departments`} />
+        <Page needAddModal={false} api={HospitalRoutes.enquiry} apiKey="enquiryforDepartments" columns={enquiryColumns} title={`Enquiries for All Departments`} />
       </div>
     </>
   );

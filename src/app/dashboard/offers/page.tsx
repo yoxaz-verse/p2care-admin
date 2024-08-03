@@ -1,36 +1,15 @@
-"use client";
-import { generateTabColumns } from "@/content/table-columns";
-import generateData from "@/content/tableData";
-import Title from "@/components/titles";
-import { generateTable } from "@/utilis/content";
-import React, { useState } from "react";
+
+import Page from "@/components/Page/PageAll";
+import { offerRoute } from "@/core/apiRoutes";
 
 const Offers = () => {
-  const [page, setPage] = useState<any>(1);
-  const [data, setData] = useState<any>();
-  const handleView = () => {};
-  const handlePageChange = (page: number) => {
-    setPage(page + 1);
-  };
+  const offerColumns = [
+    { name: "Percentage", uid: "percentage", type: "text" },
+    { name: "Title", uid: "title", type: "text" },
+    { name: "Actions", uid: "action", type: "action" },
+  ]
   return (
-    <div className="flex flex-col w-full">
-      <Title title="Offers" />
-      {generateTable({
-        columns: generateTabColumns({
-          onView: () => handleView(),
-          setData: setData,
-          type: "Status 1",
-          tableName: "Doctors",
-        }),
-        isSuccess: true,
-        currentPage: page,
-        onPageChange: (currentPage: any) => handlePageChange(currentPage),
-        tableData: generateData({ tableName: "Doctors" }),
-        isLoading: false,
-        totalItems: generateData({ tableName: "Doctors" }).length,
-        isError: false,
-      })}
-    </div>
+    <Page columns={offerColumns} api={offerRoute} title="Offers" apiKey="offers" />
   );
 };
 

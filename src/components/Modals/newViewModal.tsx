@@ -55,8 +55,15 @@ const ViewModal: React.FC<ViewModalProps> = ({
 
   const renderField = (column: any, value: any, index: number) => {
     console.log(column);
+    console.log(data);
     if (column.name === "Admin Name") {
       return <Input key={index} label={"Admin Name"} value={data.name || ""} disabled />;
+    }
+    if (column.uid === "MetaTitle") {
+      return <Input key={index} label={"Meta Title"} value={data.metaTitle || ""} disabled />;
+    }
+    if (column.uid === "MetaDescription") {
+      return <Input key={index} label={"Meta Description"} value={data.metaDescription || ""} disabled />;
     }
     switch (column.type) {
       case "text":
@@ -69,7 +76,7 @@ const ViewModal: React.FC<ViewModalProps> = ({
 
             <Autocomplete
               label="Select an District"
-              selectedKey={value}
+              selectedKey={value?._id}
               isLoading={DropDownData.district.isLoading}
               items={DropDownData.district.items}
               className="max-w-full"
@@ -80,18 +87,41 @@ const ViewModal: React.FC<ViewModalProps> = ({
             </Autocomplete>
           </>
         );
+      case "genderDropdown":
+        return (
+          <>
+
+            <Autocomplete
+              label="Select an Gender"
+              selectedKey={value?._id}
+              isLoading={DropDownData.gender.isLoading}
+              items={DropDownData.gender.items}
+              className="max-w-full"
+            >
+              {DropDownData.gender.items.map((d: any) => (
+                <AutocompleteItem key={d.name} value={d.name}>{d.name}</AutocompleteItem>
+              ))}
+            </Autocomplete>
+          </>
+        );
+
       case "departmentDropdown":
         return (
-          <Autocomplete
-            label="Select an Department"
-            className="max-w-full"
-          >
-            {DropDownData["department"].map((d: any) => (
-              <AutocompleteItem key={d._id} value={d._id}>
-                {d.name}
-              </AutocompleteItem>
-            ))}
-          </Autocomplete>
+          <>
+            <Autocomplete
+              selectedKey={value?._id}
+              isLoading={DropDownData.department.isLoading}
+              items={DropDownData.department.items}
+              label="Select an Department"
+              className="max-w-full"
+            >
+              {DropDownData.department.items.map((d: any) => (
+                <AutocompleteItem key={d._id} value={d._id}>
+                  {d.name}
+                </AutocompleteItem>
+              ))}
+            </Autocomplete>
+          </>
         );
 
       case "designationDropdown":
@@ -100,7 +130,7 @@ const ViewModal: React.FC<ViewModalProps> = ({
             label="Select an Desigantion"
             className="max-w-full"
           >
-            {DropDownData["desgination"].map((d: any) => (
+            {DropDownData.designation.items.map((d: any) => (
               <AutocompleteItem key={d._id} value={d._id}>
                 {d.name}
               </AutocompleteItem>

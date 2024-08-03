@@ -30,14 +30,16 @@ import { getData, postData } from "@/core/apiHandler";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryAdmin } from "@/app/providers";
 import { toast } from "sonner";
-import { DesignationRoutes, Doctor, LocationRoutes } from "@/core/apiRoutes";
+import { DesignationRoutes, Doctor, HospitalRoutes, LocationRoutes } from "@/core/apiRoutes";
 
 export default function AddModal({ title, columns, api, apiKey, DropDownData }: AddModalProps) {
 
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [submitting, setSubmitting] = useState(false);
   const [district, setDistrict] = useState<any>();
+  const [city, setCity] = useState<any>();
   const [department, setDepartment] = useState<any>();
+  const [gender, setGender] = useState<any>();
   const [designation, setDesignation] = useState<any>();
   console.log(api, apiKey);
   const AddModalData = useMutation({
@@ -48,6 +50,10 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
     },
     onSuccess: (data: any) => {
       console.log(data);
+      toast.success("Data added successfully", {
+        position: "top-right",
+        className: "bg-green-300"
+      })
       queryAdmin.invalidateQueries({ queryKey: apiKey });
       setSubmitting(false);
       onClose();
@@ -57,6 +63,12 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
       onClose();
     }
   })
+  function toCamelCase(str: string) {
+    console.log(str);
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
+      return index === 0 ? word.toLowerCase() : word.toUpperCase();
+    }).replace(/\s+/g, '');
+  }
   const handleSubmit = async (e: any, close: () => void) => {
     e.preventDefault();
     setSubmitting(true);
@@ -67,17 +79,46 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
     inputs.forEach((input: any) => {
       const name = input.name;
       const value = input.value;
-      console.log(inputs, value);
+      console.log(name, value);
+      if (name === "metadescription") {
+        data["metaDescription"] = value;
+      }
+      if (name === "metatitle") {
+        data["metaTitle"] = value;
+      }
       if (name !== "" && name !== "main image") {
-        data[name] = value;
+        const camelCaseName = toCamelCase(name);
+        console.log(camelCaseName);
+        data[camelCaseName] = value;
       }
     });
+    console.log("data", data);
     if (api === Doctor.docotor) {
+      api = Doctor.quick;
       const docInput = {
         ...data,
         department,
-        designation
+        designation,
+        gender
       }
+      AddModalData.mutate(docInput);
+    }
+    if (api === HospitalRoutes.hospital) {
+      api = HospitalRoutes.quick;
+      const hosInput = {
+        ...data,
+        district,
+        city
+      }
+      AddModalData.mutate(hosInput);
+    }
+
+    if (api === Doctor.procedure) {
+      const procedureData = {
+        ...data,
+        department
+      }
+      AddModalData.mutate(procedureData);
     }
     if (api === LocationRoutes.city) {
       const cityInput = {
@@ -92,20 +133,7 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
     }
     close();
   };
-  const { data: getDepartment } = useQuery({
-    queryKey: ["get-department"],
-    queryFn: () => {
-      return getData(Doctor.department, {});
-    }
-  })
-  const { data: getDesignation } = useQuery({
-    queryKey: ["get-desgnation"],
-    queryFn: () => {
-      return getData(DesignationRoutes.desgination, {});
-    }
-  })
 
-  console.log(DropDownData?.district?.items);
   return (
     <>
       <Button onPress={onOpen} className="bg-violet-700 text-white">{`Add ${title}`}</Button>
@@ -147,25 +175,65 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
                         return (
                           <Autocomplete
                             label="Select an District"
+                            selectedKey={district}
+                            isLoading={DropDownData.district.isLoading}
+                            items={DropDownData.district.items}
                             onSelectionChange={(e) => setDistrict(e)}
                             className="max-w-full"
                           >
                             {DropDownData?.district?.items.map((d: any) => (
-                              <AutocompleteItem key={d.name} value={d.name}>
+                              <AutocompleteItem key={d._id} value={d._id}>
                                 {d.name}
                               </AutocompleteItem>
                             ))}
                           </Autocomplete>
                         );
+                      case "cityDropdown":
+                        return (
+                          <Autocomplete
+                            label="Select an city"
+                            selectedKey={city}
+                            isLoading={DropDownData.city.isLoading}
+                            items={DropDownData.city.items}
+                            onSelectionChange={(e) => setCity(e)}
+                            className="max-w-full"
+                          >
+                            {DropDownData?.city?.items.map((d: any) => (
+                              <AutocompleteItem key={d._id} value={d._id}>
+                                {d.name}
+                              </AutocompleteItem>
+                            ))}
+                          </Autocomplete>
+                        );
+                      case "genderDropdown":
+                        return (
+                          <Autocomplete
+                            label="Select an Gender"
+                            selectedKey={gender}
+                            isLoading={DropDownData.gender.isLoading}
+                            items={DropDownData.gender.items}
+                            onSelectionChange={(e) => setGender(e)}
+                            className="max-w-full"
+                          >
+                            {DropDownData.gender.items.map((d: any) => (
+                              <AutocompleteItem key={d._id} value={d._id}>
+                                {d.name}
+                              </AutocompleteItem>
+                            ))}
+                          </Autocomplete>
+                        );
+
                       case "departmentDropdown":
                         return (
                           <Autocomplete
                             label="Select an Department"
                             selectedKey={department}
+                            isLoading={DropDownData.department.isLoading}
+                            items={DropDownData.department.items}
                             onSelectionChange={(e) => setDepartment(e)}
                             className="max-w-full"
                           >
-                            {getDepartment?.data.data.data.map((d: any) => (
+                            {DropDownData.department.items.map((d: any) => (
                               <AutocompleteItem key={d._id} value={d._id}>
                                 {d.name}
                               </AutocompleteItem>
@@ -180,7 +248,7 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
                             onSelectionChange={(e) => setDesignation(e)}
                             className="max-w-full"
                           >
-                            {getDesignation?.data.data.data.map((d: any) => (
+                            {DropDownData?.designation.items.map((d: any) => (
                               <AutocompleteItem key={d._id} value={d._id}>
                                 {d.name}
                               </AutocompleteItem>

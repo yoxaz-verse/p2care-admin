@@ -40,7 +40,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   paused: "danger",
   vacation: "warning",
 };
-
+import { motion } from "framer-motion";
 interface CustomTableProps {
   title: string;
   data: any;
@@ -65,13 +65,29 @@ export default function CustomTable({
   const navigate = useRouter();
   const renderCell = React.useCallback((data: any, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof any];
-    const post_code = data["postal code"];
+    console.log(cellValue);
+    console.log(columnKey);
+    console.log(data);
 
     switch (columnKey) {
+      case "meta Title":
+        return <h3>{data?.metaTitle}</h3>;
+      case "meta Description":
+        return <h3>{data?.metaDescription}</h3>;
+      case "gender":
+        return <h3>{data?.gender?.name}</h3>;
+      case "designation":
+        return <h3>{data?.designation?.name}</h3>;
+      case "department":
+        return <h3>{data?.department?.name}</h3>;
+      case "district":
+        return <h3>{data?.district?.name}</h3>;
+      case "city":
+        return <h3>{data?.city?.name}</h3>;
       case "name":
-        return <h3>{data.name}</h3>;
+        return <h3>{data?.name}</h3>;
       case "complete_date":
-        return <h3>{data.completion_date}</h3>;
+        return <h3>{data?.completion_date}</h3>;
       case "project_link":
         return (
           <Link href={data.project_link} target="_blank" underline={"hover"}>
@@ -81,10 +97,10 @@ export default function CustomTable({
       case "password":
         return null;
       case "heading":
-        return <h3>{data.heading}</h3>;
+        return <h3>{data?.heading}</h3>;
       case "youtubeLink":
         return (
-          <Link href={data.youtubeLink} target="_blank" underline={"hover"}>
+          <Link href={data?.youtubeLink} target="_blank" underline={"hover"}>
             {data.youtubeLink}
           </Link>
         );
@@ -129,25 +145,6 @@ export default function CustomTable({
               <SelectItem key={s}>{s}</SelectItem>
             ))}
           </Select>
-        );
-      case "resume":
-        return (
-          <Button color="secondary" onClick={() => navigate.push(data.resume)}>
-            Click Here
-          </Button>
-        );
-      case "postal code":
-        return post_code;
-      case "project_details":
-        return (
-          <div className="flex flex-col gap-4">
-            {data?.projectDetails &&
-              data.projectDetails.map((p: any, index: number) => (
-                <Chip color="primary" key={index}>
-                  {p}
-                </Chip>
-              ))}
-          </div>
         );
       case "role":
         return (
@@ -408,10 +405,10 @@ export default function CustomTable({
   const pages = data?.totalPages || 1;
   return (
     <Table
-      aria-label="Example table with custom cells"
       classNames={{
-        table: "min-h-[400px]",
+        table: "min-h-[200px]",
       }}
+      aria-label="Table"
       bottomContent={
         <div className="flex w-full justify-center">
           <Pagination
@@ -419,7 +416,7 @@ export default function CustomTable({
             showControls
             showShadow
             color="secondary"
-            page={data.currentPage}
+            page={data?.currentPage ?? 1}
             total={pages}
             onChange={(page) => {
               setPage(page);
@@ -438,7 +435,11 @@ export default function CustomTable({
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody emptyContent={"No data to display"} items={data?.data || data}>
+      <TableBody
+        emptyContent={<div>No data is there</div>}
+        className="max-h-[2000px]"
+        items={data?.data || data}
+      >
         {(item: any) => (
           <TableRow key={item._id}>
             {(columnKey) => (
