@@ -193,12 +193,15 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
                           <Autocomplete
                             label="Select an city"
                             selectedKey={city}
+                            disabled={district !== ''}
                             isLoading={DropDownData.city.isLoading}
                             items={DropDownData.city.items}
                             onSelectionChange={(e) => setCity(e)}
                             className="max-w-full"
                           >
-                            {DropDownData?.city?.items.map((d: any) => (
+                            {DropDownData?.city?.items.filter((item: any) => {
+                              return item.district._id === district
+                            }).map((d: any) => (
                               <AutocompleteItem key={d._id} value={d._id}>
                                 {d.name}
                               </AutocompleteItem>

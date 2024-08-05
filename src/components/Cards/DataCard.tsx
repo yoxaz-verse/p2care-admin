@@ -14,11 +14,11 @@ import {
   SelectItem,
 } from "@nextui-org/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Title from "../titles";
+import Title, { SubTitle } from "../titles";
 import { useEffect, useState } from "react";
 import { queryAdmin } from "@/app/providers";
 import { toast } from "sonner";
-import { ImageSingle } from "../ImageUpload";
+import { ImageSingle, ImageUploadMultiple } from "../ImageUpload";
 import { HospitalRoutes } from "@/core/apiRoutes";
 
 interface DataCardProps {
@@ -27,10 +27,12 @@ interface DataCardProps {
   getapi: string;
   DropDownData?: any;
   getapikey: string;
+  isDelete?: boolean;
   editapi: string;
   editApikey: string;
   id: any;
   postimageapikey?: string;
+  postimagesapikey?: string;
   onOpen?: () => void;
   setIsEdit?: (val: boolean) => void;
 }
@@ -43,21 +45,24 @@ export default function DataCard({
   getapikey,
   postimageapikey,
   editapi,
+  isDelete,
   DropDownData,
+  postimagesapikey,
   editApikey,
   onOpen,
-  setIsEdit,
 }: DataCardProps) {
+  const [isEdit, setIsEdit] = useState<boolean>(false);
   const [avilDaysEdit, setavailEdit] = useState<boolean>(false);
-
-  const { data: getValue, isLoading } = useQuery({
+  const [modesEdit, setmodesEdit] = useState<boolean>(false);
+  const { data: getValue, isLoading, isSuccess } = useQuery({
     queryKey: [getapikey],
     queryFn: async () => {
       return await getData(`${getapi}/${id}`, {});
     },
   });
   const [avialableDays, setavailableDays] = useState<any>(new Set());
-
+  const [modes, setmodes] = useState<any>(new Set());
+  const mode = ["Credit Card", "UPI", "Debit Card", "Cash"]
   const days = [
     "Monday",
     "Tuesday",
@@ -89,30 +94,44 @@ export default function DataCard({
         className: "bg-green-300",
       });
       queryAdmin.invalidateQueries({ queryKey: [getapikey] });
+      setIsEdit(false);
     },
     onError: (error: any) => {
-      console.error(error);
-      toast.error(`Error in updating ${title}`, {
+      console.log(error.response.data.error);
+      toast.error(`Error in updating ${error.response.data.error}`, {
         position: "top-right",
         className: "bg-red-300",
       });
     },
   });
   useEffect(() => {
+    if (isSuccess) {
+      console.log("data", getValue.data.data);
+    }
+    setCity(getValue?.data?.data?.city?._id);
+    setmodes(new Set(getValue?.data?.data?.modesOfPayment));
     console.log(getValue);
-    setCity(getValue?.data.data.city._id);
-    setDistrict(getValue?.data.data.district._id);
-  }, []);
+    setavailableDays(new Set(getValue?.data?.data?.availableDays));
+    setDistrict(getValue?.data?.data?.district?._id);
+  }, [isSuccess, getValue]);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(editapi);
     if (editapi === HospitalRoutes.quick) {
       setFormData((data: any) => ({
         ...data,
         district,
-        availableDays: avialableDays,
         city,
       }));
     }
+    if (editapi === HospitalRoutes.description) {
+      setFormData((data: any) => ({
+        ...data,
+        availableDays: Array.from(avialableDays),
+        modesOfPayment: Array.from(modes)
+      }));
+    }
+    console.log(formData);
     handlePut.mutate(formData);
   };
 
@@ -126,7 +145,7 @@ export default function DataCard({
       <CardBody>
         <>
           <div className="flex flex-row justify-between items-center w-full">
-            <Title title={title} />
+            <SubTitle title={title} />
             <div className="flex flex-row gap-4">
               <Button
                 color="primary"
@@ -137,23 +156,30 @@ export default function DataCard({
               >
                 Edit
               </Button>
-              <Button
-                color="danger"
-                radius="full"
-                onClick={() => {
-                  onOpen && onOpen();
-                }}
-              >
-                Delete
-              </Button>
+              {isDelete && (
+                <Button
+                  color="danger"
+                  radius="full"
+                  onClick={() => {
+                    onOpen && onOpen();
+                  }}
+                >
+                  Delete
+                </Button>
+              )}
             </div>
           </div>
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col gap-4 justify-center p-[1rem]"
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center justify-center p-[1rem]"
           >
             {columns.map((c: any, index: number) => {
               switch (c.type) {
+                case "images":
+                  return postimagesapikey ? (
+                    <ImageUploadMultiple postapi={postimagesapikey} images={getValue?.data?.data[c.uid]} id={id} getapikey={getapikey} />
+                  ) : null;
+
                 case "image":
                   return postimageapikey ? (
                     <ImageSingle
@@ -169,10 +195,10 @@ export default function DataCard({
                       key={index}
                       type="text"
                       onChange={(e) =>
-                        handleChange(e.target.value, c.name.toLowerCase())
+                        handleChange(e.target.value, c.uid)
                       }
                       value={
-                        formData[c.name.toLowerCase()] ||
+                        formData[c.uid] ||
                         getValue?.data?.data[c.uid] ||
                         ""
                       }
@@ -185,30 +211,90 @@ export default function DataCard({
                       key={index}
                       type="number"
                       onChange={(e) =>
-                        handleChange(e.target.value, c.name.toLowerCase())
+                        handleChange(e.target.value, c.uid)
                       }
                       value={
-                        formData[c.name.toLowerCase()] ||
+                        formData[c.uid] ||
                         getValue?.data?.data[c.uid] ||
                         ""
                       }
                       label={c.name}
                     />
                   );
-                case "array":
+                case "array2":
                   return (
                     <div className="flex flex-col gap-4 w-full">
-                      <div className="flex flex-row items-center gap-4 w-1/4">
-                        <h3 className="text-xl font-bold">Available Days</h3>
+                      <div className="flex flex-row items-center gap-4">
+                        <h3 className="text-xl font-bold">Modes of Payment</h3>
                         <Button
                           color="primary"
                           radius="lg"
-                          onClick={() => setavailEdit(true)}
+                          onClick={() => setmodesEdit(true)}
                         >
                           Edit
                         </Button>
                       </div>
                       <div className="flex flex-row gap-4">
+                        {Array.from(modes).map(
+                          (day: any, index: any) => (
+                            <Chip
+                              key={index}
+                              color="primary"
+                              variant="flat"
+                              onClose={() => {
+                                setmodes((prevDays: any) => {
+                                  const newDays = new Set(prevDays);
+                                  newDays.delete(day);
+                                  return newDays;
+                                });
+                              }}
+                            >
+                              {day}
+                            </Chip>
+                          )
+                        )}
+                      </div>
+                      {modesEdit && (
+                        <Select
+                          size="sm"
+                          label="Select Modes of Payment"
+                          onChange={(e: any) => {
+                            const selectedDay = e.target.value;
+                            if (selectedDay) {
+                              setmodes((prevDays: any) =>
+                                new Set(prevDays).add(selectedDay)
+                              );
+                              setmodesEdit(false);
+                            }
+                          }}
+                          className="max-w-sm"
+                        >
+                          {mode.map((day: any) => (
+                            <SelectItem key={day} value={day}>
+                              {day}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                      )}
+                    </div>
+                  );
+
+                case "array":
+                  return (
+                    <div className="flex flex-col gap-4 w-full">
+                      <div className="flex flex-row items-center gap-4">
+                        <h3 className="text-xl font-bold">Available Days</h3>
+                        {isEdit && (
+                          <Button
+                            color="primary"
+                            radius="lg"
+                            onClick={() => setavailEdit(true)}
+                          >
+                            Edit
+                          </Button>
+                        )}
+                      </div>
+                      <div className="flex flex-row w-full gap-4">
                         {Array.from(avialableDays).map(
                           (day: any, index: any) => (
                             <Chip
@@ -257,10 +343,10 @@ export default function DataCard({
                     <Textarea
                       key={index}
                       onChange={(e) =>
-                        handleChange(e.target.value, c.name.toLowerCase())
+                        handleChange(e.target.value, c.uid)
                       }
                       value={
-                        formData[c.name.toLowerCase()] ||
+                        formData[c.uid] ||
                         getValue?.data?.data[c.uid] ||
                         ""
                       }
@@ -269,32 +355,51 @@ export default function DataCard({
                   );
                 case "districtDropdown":
                   return (
-                    <Autocomplete
-                      label="Select an District"
-                      selectedKey={district}
-                      isLoading={DropDownData.district.isLoading}
-                      items={DropDownData.district.items}
-                      onSelectionChange={(e) => setDistrict(e)}
-                      className="max-w-full"
-                    >
-                      {DropDownData?.district?.items.map((d: any) => (
-                        <AutocompleteItem key={d._id} value={d._id}>
-                          {d.name}
-                        </AutocompleteItem>
-                      ))}
-                    </Autocomplete>
+                    isEdit ?
+                      <Autocomplete
+                        disabled
+                        label="Select an District"
+                        defaultSelectedKey={district}
+                        isLoading={DropDownData?.district?.isLoading}
+                        items={DropDownData?.district?.items}
+                        className="max-w-full"
+                      >
+                        {DropDownData?.district?.items.map((d: any) => (
+                          <AutocompleteItem key={d._id} value={d._id}>
+                            {d.name}
+                          </AutocompleteItem>
+                        ))}
+                      </Autocomplete>
+                      : <Autocomplete
+                        label="Select an District"
+                        defaultSelectedKey={district}
+                        isLoading={DropDownData?.district?.isLoading}
+                        items={DropDownData?.district?.items}
+                        onSelectionChange={(e) => setDistrict(e)}
+                        className="max-w-full"
+                      >
+                        {DropDownData?.district?.items.map((d: any) => (
+                          <AutocompleteItem key={d._id} value={d._id}>
+                            {d.name}
+                          </AutocompleteItem>
+                        ))}
+                      </Autocomplete>
+
                   );
                 case "cityDropdown":
                   return (
                     <Autocomplete
                       label="Select an city"
-                      selectedKey={city}
-                      isLoading={DropDownData.city.isLoading}
-                      items={DropDownData.city.items}
+                      disabled={district === ''}
+                      defaultSelectedKey={city}
+                      isLoading={DropDownData?.city?.isLoading}
+                      items={DropDownData?.city?.items}
                       onSelectionChange={(e) => setCity(e)}
                       className="max-w-full"
                     >
-                      {DropDownData?.city?.items.map((d: any) => (
+                      {DropDownData?.city?.items.filter((item: any) => {
+                        return item?.district?._id === district
+                      }).map((d: any) => (
                         <AutocompleteItem key={d._id} value={d._id}>
                           {d.name}
                         </AutocompleteItem>
@@ -306,14 +411,27 @@ export default function DataCard({
                   return null;
               }
             })}
-            <Button
-              type="submit"
-              className="w-full"
-              color="secondary"
-              radius="full"
-            >
-              Submit
-            </Button>
+            {isEdit && (
+              <>
+                <Button
+                  type="submit"
+                  className="w-full place-self-center"
+                  color="primary"
+                  radius="full"
+                >
+                  Submit
+                </Button>
+                <Button
+                  onClick={() => setIsEdit(false)}
+                  className="w-full place-self-center"
+                  color="danger"
+                  variant="ghost"
+                  radius="full"
+                >
+                  Cancel
+                </Button>
+              </>
+            )}
           </form>
         </>
       </CardBody>

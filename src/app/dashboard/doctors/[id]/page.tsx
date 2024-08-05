@@ -70,7 +70,7 @@ export default function GetDocDetials() {
     district: string;
     dob: Date;
     email: string;
-    experience: number;
+    experience: string;
     gender: string;
     hospital?: string;
     image?: string;
@@ -83,7 +83,7 @@ export default function GetDocDetials() {
     metaTitle: string;
     name: string;
     phone: number;
-    price: number;
+    price: string;
     procedure?: string;
     publications: string[];
     qualifications: string[];
@@ -95,11 +95,11 @@ export default function GetDocDetials() {
     }[];
   }
   const [formData, setformData] = useState<Partial<IDoctor>>({
-    district: "",
     address: "",
+    department: "",
     locationUrl: "",
-    price: 0,
-    experience: 0
+    price: "0",
+    experience: "0"
   })
   const [achivements, setAchivements] = useState<any>([]);
   const [qualifications, setQualifications] = useState<any>([]);
@@ -117,8 +117,8 @@ export default function GetDocDetials() {
       value
     ]);
   };
-  const [department, setDepartment] = useState<any>();
-  const [designation, setDesignation] = useState<any>();
+  const [department, setDepartment] = useState<any>('');
+  const [designation, setDesignation] = useState<any>('');
   const [gender, setGender] = useState<any>();
   const appointmentColumns = [
     { name: "Name", uid: "name", type: "text" },
@@ -261,10 +261,11 @@ export default function GetDocDetials() {
     setMemeberShips(getDocDetails?.data?.data?.memberships);
     setDepartment(getDocDetails?.data?.data?.department?._id);
     setGender(getDocDetails?.data?.data?.gender?._id);
-
+    console.log(getDocDetails?.data.data.department._id);
     setformData((prev) => ({
       ...prev,
       price: getDocDetails?.data?.data?.price,
+      department: getDocDetails?.data.data.department._id,
       locationUrl: getDocDetails?.data?.data?.locationUrl,
       address: getDocDetails?.data.data?.address,
       experience: getDocDetails?.data.data.experience
@@ -353,6 +354,11 @@ export default function GetDocDetials() {
         availableDays: [...avialableDays]
       }))
     }
+    console.log("Department", department);
+    setformData((prev: any) => ({
+      ...prev,
+      department: department
+    }))
     if (visitingTime.length > 0) {
       setformData((prev: any) => ({
         ...prev,
@@ -414,10 +420,19 @@ export default function GetDocDetials() {
               />
               <Autocomplete
                 label="Select an Department"
-                selectedKey={department}
+                defaultSelectedKey={formData.department}
                 isLoading={list1.isLoading}
                 items={list1.items}
-                onSelectionChange={(e) => setDepartment(e)}
+                onSelectionChange={(e) => {
+                  if (e !== undefined) {
+                    setformData((prev: any) => ({
+                      ...prev,
+                      department: e
+                    }));
+                    console.log('Selected value:', e);
+                  }
+                }
+                }
                 className="max-w-full"
               >
                 {list1.items.map((d: any) => (
@@ -465,7 +480,7 @@ export default function GetDocDetials() {
               <Input
                 label="Experince"
                 className="w-1/4"
-                value={String(formData.experience)}
+                value={String(formData?.experience)}
                 endContent={
                   <h3 className="font-bold">Years</h3>
                 }

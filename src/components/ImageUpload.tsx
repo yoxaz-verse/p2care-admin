@@ -1,37 +1,45 @@
 "use client";
 import { queryAdmin } from "@/app/providers";
+import { uploadLogo } from "@/content/assets";
 import { postMultipart } from "@/core/apiHandler";
 import { Button, Avatar } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 interface ImageUploadProps {
   getapikey: string;
+  id: any;
   postapi: string;
-  images: string[];
+  images: any;
 }
-
-export function ImageUploadMutiple({
+export function ImageUploadMultiple({
   images,
   getapikey,
+  id,
   postapi,
 }: ImageUploadProps) {
   const [files, setFiles] = useState<File[]>([]);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [imageUrls, setImageUrls] = useState<any[]>([]);
+
 
   const addImage = useMutation({
-    mutationKey: [`add images`],
-    mutationFn: (formData: FormData) => {
-      return postMultipart(postapi, {}, formData);
-    },
+    mutationKey: ['add-images'],
+    mutationFn: (formData: FormData) => postMultipart(`${postapi}/${id}`, {}, formData),
     onSuccess: (data: any) => {
       console.log(data);
-      toast.success("Images uploaded successfully", {
-        position: "top-right",
-        className: "bg-green-300",
+      toast.success('Images uploaded successfully', {
+        position: 'top-right',
+        className: 'bg-green-300',
       });
       queryAdmin.invalidateQueries({ queryKey: [getapikey] });
+    },
+    onError: (error: any) => {
+      console.error(error);
+      toast.error('Failed to upload images', {
+        position: 'top-right',
+        className: 'bg-red-300',
+      });
     },
   });
 
@@ -61,7 +69,7 @@ export function ImageUploadMutiple({
     const formData = new FormData();
     files.forEach((file, index) => {
       if (file) {
-        formData.append(`image${index}`, file);
+        formData.append(`images`, file);
       }
     });
     addImage.mutate(formData);
@@ -69,18 +77,14 @@ export function ImageUploadMutiple({
 
   return (
     <div>
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-row w-full gap-4">
         {[...Array(5)].map((_, index) => (
-          <div key={index} className="flex items-center justify-center">
+          <div key={index} className="flex flex-row items-center justify-center">
             <label htmlFor={`image-upload-${index}`} className="cursor-pointer">
               <Avatar
-                src={
-                  images[index]
-                    ? images[index]
-                    : "https://i.pravatar.cc/150?u=a04258114e29026708c"
-                }
+                src={imageUrls[index] || images[index] || uploadLogo}
                 alt={`image-${index}`}
-                className="w-80 h-80 rounded-full"
+                className="w-60 h-60 rounded-full"
               />
               <input
                 id={`image-upload-${index}`}
@@ -93,12 +97,13 @@ export function ImageUploadMutiple({
           </div>
         ))}
       </div>
-      <Button onClick={handleUpload} disabled={files.length === 0}>
+      <Button onClick={handleUpload} color="primary" disabled={files.length === 0}>
         Upload Images
       </Button>
     </div>
   );
 }
+
 
 interface ImageSingleProps {
   getapikey: string;
@@ -122,8 +127,20 @@ export function ImageSingle({
       return postMultipart(`${postapi}/${id}`, {}, data);
     },
     onSuccess: (data: any) => {
+      console.log(data);
+      toast.success("Image uploaded successfully", {
+        position: "top-right",
+        className: "bg-green-300"
+      })
       queryAdmin.invalidateQueries({ queryKey: [getapikey] });
     },
+    onError: (error: any) => {
+      console.log(error);
+      toast.error("Image uploaded error", {
+        position: "top-right",
+        className: "bg-red-300"
+      })
+    }
   });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e);
@@ -151,7 +168,7 @@ export function ImageSingle({
             image
               ? image?.path
               : uploadImageUrl ||
-                "https://i.pravatar.cc/150?u=a04258114e29026708c"
+              uploadLogo
           }
           alt="docImage"
           className="w-full h-full rounded-xl"

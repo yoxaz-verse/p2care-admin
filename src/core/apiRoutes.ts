@@ -10,7 +10,7 @@ export const LocationRoutes = {
   districtAll: "/district/all"
 }
 export const offerRoute = "/offer";
-
+export const offerImageRoute = "/offer/upload"
 export const Doctor = {
   docotor: "/doctor",
   quick: "/doctor/quick",
@@ -21,10 +21,14 @@ export const Doctor = {
 }
 export const HospitalRoutes = {
   hospital: "/hospital",
+  adddoctor: "/hospital-doctor",
+  getdoctor: "/hospital-doctor/hospital",
   image: "/hospital/image",
+  address: '/hospital/address',
   quick: "/hospital/quick",
   description: "/hospital/description",
   enquiry: '/enquiry',
+  images: "/hospital/images",
   department: '/hospital-department',
   appointment: '/appointment'
 }

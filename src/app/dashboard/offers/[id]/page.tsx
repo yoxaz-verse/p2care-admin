@@ -1,7 +1,7 @@
 'use client';
 
 import DataCard from "@/components/Cards/DataCard";
-import { offerRoute } from "@/core/apiRoutes";
+import { offerImageRoute, offerRoute } from "@/core/apiRoutes";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
 import { useParams, usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -26,6 +26,7 @@ export default function OffersPage() {
     }
   ]
   const cols = [
+    { name: "Banner", uid: "image", type: "image" },
     { name: "Percentage", uid: "percentage", type: "text" },
     { name: "Title", uid: "title", type: "text" },
   ]
@@ -36,7 +37,7 @@ export default function OffersPage() {
           return <BreadcrumbItem key={index} onClick={() => router.push(b.link)}>{b.name}</BreadcrumbItem>
         })}
       </Breadcrumbs>
-      <DataCard columns={cols} title={"Banner Details"} id={id} getapikey="getbanner" getapi={offerRoute} editapi={offerRoute} editApikey="editbanner" />
+      <DataCard columns={cols} title={"Banner Details"} id={id} postimageapikey={offerImageRoute} getapikey="getbanner" getapi={offerRoute} editapi={offerRoute} editApikey="editbanner" />
     </div>
   )
 }

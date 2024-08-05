@@ -24,7 +24,7 @@ const Doctors = () => {
       name: "Appointment Time", uid: "appointment", type: "appointmentTime"
     },
     {
-      name: "Actions", uid: "actions", type: "actions"
+      name: "Actions", uid: "action", type: "action"
     }
   ]
   const enquiryColumns = [
@@ -35,7 +35,7 @@ const Doctors = () => {
       name: "Status", uid: "status", type: "enquirystatus"
     },
     {
-      name: "Actions", uid: "actions", type: "actions"
+      name: "Actions", uid: "action", type: "action"
     }
   ]
   const list = useAsyncList<any>({

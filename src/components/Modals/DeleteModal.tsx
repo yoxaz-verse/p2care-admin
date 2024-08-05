@@ -9,6 +9,7 @@ import {
   Button,
 } from "@nextui-org/react";
 import { useMutation } from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -28,10 +29,13 @@ export default function DeleteModal({
   queryKey,
   data,
 }: ModalProps) {
+  const route = useRouter();
+  console.log(`${api}/${data}`);
+  const { id } = useParams();
   const removeData = useMutation({
     mutationKey: [`delete-${queryKey}`],
     mutationFn: (data: any) => {
-      return deleteData(api + "/" + data, {});
+      return deleteData(`${api}/${id}`, {});
     },
     onSuccess: (data: any) => {
       if (data.data) {
@@ -41,6 +45,7 @@ export default function DeleteModal({
           position: "top-right",
         });
         setisLoading(false);
+        route.push("/dashboard");
       }
     },
     onError: (error: any) => {

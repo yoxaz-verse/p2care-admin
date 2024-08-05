@@ -13,7 +13,7 @@ export default function Department() {
     { name: "MetaTitle", uid: "metaTitle", type: "text" },
     { name: "MetaDescription", uid: "metaDescription", type: "textbox" },
     {
-      name: "Actions", uid: "actions", type: "actions"
+      name: "Actions", uid: "action", type: "action"
     }
   ]
   const enquiryColumns = [
@@ -24,7 +24,7 @@ export default function Department() {
       name: "Status", uid: "status", type: "enquirystatus"
     },
     {
-      name: "Actions", uid: "actions", type: "actions"
+      name: "Actions", uid: "action", type: "action"
     }
   ]
 

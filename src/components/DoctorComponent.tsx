@@ -24,7 +24,7 @@ export default function DoctorComponent({ DepartmentData, DesignationData, Gende
     {
       name: "Gender", uid: "gender", type: "genderDropdown"
     },
-    { name: "Actions", uid: "actions", type: "actions" }
+    { name: "Actions", uid: "action", type: "action" }
   ]
 
   return (
