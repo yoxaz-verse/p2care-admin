@@ -23,7 +23,7 @@ export default function SideBar({ view, setView }: ViewProps) {
       <motion.div
         animate={{ width: view ? 0 : 300 }}
         transition={{ duration: 1, ease: "easeInOut" }}
-        className={` w-[300px] relative lg:fixed  bg-white z-50 flex flex-col fixed justify-between rounded-lg shadow-md `}
+        className={` w-[300px] relative  bg-white z-50 flex flex-col  justify-between rounded-lg shadow-md `}
       >
         <div className="flex flex-col gap-4 w-full ">
           {SideBarLink.map((s: SideBarLinkProps) => {
@@ -35,19 +35,20 @@ export default function SideBar({ view, setView }: ViewProps) {
                       !view
                         ? { x: 0, width: 300, display: "block" }
                         : {
-                          x: -150,
-                          width: 0,
-                          transitionEnd: {
-                            display: "none",
-                          },
-                        }
+                            x: -150,
+                            width: 0,
+                            transitionEnd: {
+                              display: "none",
+                            },
+                          }
                     }
                     // onClick={() =>  setView(true)}
                     transition={{ duration: 1, ease: "easeInOut" }}
-                    className={`${s.link === pathname
-                      ? "bg-[#4880FF] text-white p-4  rounded-lg  font-bold h-[50px]"
-                      : "h-[30px]"
-                      } ms-2 me-4 max-w-[280px] select-none   text-lg  cursor-pointer`}
+                    className={`${
+                      s.link === pathname
+                        ? "bg-[#4880FF] text-white p-4  rounded-lg  font-bold h-[50px]"
+                        : "h-[30px]"
+                    } ms-2 me-4 max-w-[280px] select-none   text-lg  cursor-pointer`}
                   >
                     {s.name}
                   </motion.div>
@@ -61,12 +62,12 @@ export default function SideBar({ view, setView }: ViewProps) {
             !view
               ? { x: 0, width: 300, display: "block" }
               : {
-                x: -150,
-                width: 0,
-                transitionEnd: {
-                  display: "none",
-                },
-              }
+                  x: -150,
+                  width: 0,
+                  transitionEnd: {
+                    display: "none",
+                  },
+                }
           }
           transition={{ duration: 1, ease: "easeInOut" }}
           className="flex flex-col items-center justify-center gap-4 w-full"

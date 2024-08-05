@@ -2,7 +2,7 @@
 import { queryAdmin } from "@/app/providers";
 import { postMultipart } from "@/core/apiHandler";
 import { Button, Avatar } from "@nextui-org/react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Dispatch, SetStateAction, useState } from "react";
 import { toast } from "sonner";
 
@@ -12,8 +12,11 @@ interface ImageUploadProps {
   images: string[];
 }
 
-
-export function ImageUploadMutiple({ images, getapikey, postapi }: ImageUploadProps) {
+export function ImageUploadMutiple({
+  images,
+  getapikey,
+  postapi,
+}: ImageUploadProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
 
@@ -26,13 +29,16 @@ export function ImageUploadMutiple({ images, getapikey, postapi }: ImageUploadPr
       console.log(data);
       toast.success("Images uploaded successfully", {
         position: "top-right",
-        className: "bg-green-300"
-      })
+        className: "bg-green-300",
+      });
       queryAdmin.invalidateQueries({ queryKey: [getapikey] });
-    }
+    },
   });
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const handleFileChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
     if (!e.target.files) return;
 
     const newFile = e.target.files[0];
@@ -68,7 +74,11 @@ export function ImageUploadMutiple({ images, getapikey, postapi }: ImageUploadPr
           <div key={index} className="flex items-center justify-center">
             <label htmlFor={`image-upload-${index}`} className="cursor-pointer">
               <Avatar
-                src={images[index] ? images[index] : "https://i.pravatar.cc/150?u=a04258114e29026708c"}
+                src={
+                  images[index]
+                    ? images[index]
+                    : "https://i.pravatar.cc/150?u=a04258114e29026708c"
+                }
                 alt={`image-${index}`}
                 className="w-80 h-80 rounded-full"
               />
@@ -91,12 +101,17 @@ export function ImageUploadMutiple({ images, getapikey, postapi }: ImageUploadPr
 }
 
 interface ImageSingleProps {
-  getapikey: string,
-  postapi: string
-  image: any,
-  id: any
+  getapikey: string;
+  postapi: string;
+  image: any;
+  id: any;
 }
-export function ImageSingle({ image, getapikey, id, postapi }: ImageSingleProps) {
+export function ImageSingle({
+  image,
+  getapikey,
+  id,
+  postapi,
+}: ImageSingleProps) {
   console.log(image);
   const [File, setfile] = useState<any>(null);
   const [uploadImageUrl, setUploadImageUrl] = useState<any>(null);
@@ -108,8 +123,8 @@ export function ImageSingle({ image, getapikey, id, postapi }: ImageSingleProps)
     },
     onSuccess: (data: any) => {
       queryAdmin.invalidateQueries({ queryKey: [getapikey] });
-    }
-  })
+    },
+  });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e);
     if (!e.target.files) {
@@ -132,7 +147,12 @@ export function ImageSingle({ image, getapikey, id, postapi }: ImageSingleProps)
     <div className="flex items-center justify-center">
       <label htmlFor="imageinput" className="cursor-pointer">
         <Avatar
-          src={image ? image?.path : uploadImageUrl || "https://i.pravatar.cc/150?u=a04258114e29026708c"}
+          src={
+            image
+              ? image?.path
+              : uploadImageUrl ||
+                "https://i.pravatar.cc/150?u=a04258114e29026708c"
+          }
           alt="docImage"
           className="w-full h-full rounded-xl"
         />
@@ -147,6 +167,5 @@ export function ImageSingle({ image, getapikey, id, postapi }: ImageSingleProps)
         />
       </label>
     </div>
-  )
+  );
 }
-

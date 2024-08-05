@@ -1,112 +1,95 @@
 "use client";
-import { useState } from "react";
-import { generateTabColumns } from "@/content/table-columns";
-import Title from "@/components/titles";
-import { generateTable } from "@/utilis/content";
-import generateData from "@/content/tableData";
-import { Avatar, BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Input, useDisclosure } from "@nextui-org/react";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import DeleteModal from "@/components/Modals/DeleteModal";
-import { Doctor, HospitalRoutes, LocationRoutes } from "@/core/apiRoutes";
-import Page from "@/components/Page/PageAll";
-import AttachCard from "@/components/AttachCard";
-import DataCard from "@/components/Cards/DataCard";
-import { getData } from "@/core/apiHandler";
+
+import { queryAdmin } from "@/app/providers";
+import { uploadImage } from "@/content/assets";
+import { getData, postMultipart } from "@/core/apiHandler";
+import { HospitalRoutes } from "@/core/apiRoutes";
+import {
+  Autocomplete,
+  AutocompleteItem,
+  BreadcrumbItem,
+  Breadcrumbs,
+  Button,
+  Input,
+} from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
+export default function HospitalDetail({ params }: { params: { id: string } }) {
+  // id from params
 
-
-export default function HospitalDetail() {
-  const path = usePathname();
+  const [uploadImageSrc, setUploadImageSrc] = useState<string>(uploadImage);
   const breadCrumps = [
     {
       name: "Dashboard",
-      link: "/dashboard"
+      link: "/dashboard",
     },
     {
       name: "Hospital",
-      link: "/dashboard/hospitals"
+      link: "/dashboard/hospitals",
     },
     {
       name: "Hospital Details",
-      link: path
-    }
-  ]
+      link: `/dashboard/hospitals/${params.id}`,
+    },
+  ];
   const router = useRouter();
-  const { id } = useParams();
-  const { isOpen, onOpenChange, onOpen, onClose } = useDisclosure();
-  const [isEdit, setisEdit] = useState<boolean>(false);
-  const appointmentColumns = [
-    { name: "Name", uid: "name", type: "text" },
-    { name: "Phone", uid: "phoneno", type: "text" },
-    { name: "Email", uid: "email", type: "text" },
-    {
-      name: "Appointment Time", uid: "appointment", type: "appointmentTime"
-    },
-    {
-      name: "Actions", uid: "actions", type: "actions"
-    }
-  ]
-  const enquiryColumns = [
-    { name: "Name", uid: "name", type: "text" },
-    { name: "Phone", uid: "phoneno", type: "text" },
-    { name: "Email", uid: "email", type: "text" },
-    {
-      name: "Status", uid: "status", type: "enquirystatus"
-    },
-    {
-      name: "Actions", uid: "actions", type: "actions"
-    }
-  ]
-  const HospitalColums = [
-    { name: "Hospital Image", uid: "image", type: "image" },
-    { name: "Hospital Name", uid: "name", type: "text" },
-    { name: "Hospital Phone", uid: "phone", type: "text" },
-    { name: "Hospital Email", uid: "email", type: "text" },
-    { name: "City", uid: "city", type: "cityDropdown" },
-    { name: "District", uid: "district", type: "districtDropdown" }
-  ]
-  const HospitalDescriptionColums = [
-    { name: "Hospital Description", uid: "description", type: "textbox" },
-    { name: "About", uid: "about", type: "textbox" },
-    { name: "Avilable Days", uid: "availableDays", type: "array" },
-    { name: "Modes of Payment", uid: "modesOfPayment", type: "text" },
-    { name: "No Of Beds", uid: "noOfBeds", type: "number" },
-    { name: "No Of Ambulances", uid: "noOfAmbulances", type: "number" },
-  ]
-  const docDepartmentColumns = [
-    { name: "Doctor Name", uid: "name", type: "text" },
-    { name: "Department Name", uid: "name", type: "text" },
-    { name: "Doctor Email", uid: "email", type: "text" },
-    { name: "Doctor Phone", uid: "phone", type: "text" },
-    {
-      name: "Actions", uid: "actions6", type: "actions6"
-    }
-  ]
-  const list = useAsyncList<any>({
-    async load() {
-      let res = await getData(LocationRoutes.district, {});
-      let json = await res.data.data.data;
 
-      return {
-        items: json
-      };
+  // fetch
+  const data = useQuery({
+    queryKey: ["hospital", params.id],
+    queryFn: () => getData(HospitalRoutes.hospital + `/${params.id}`, {}),
+  });
+
+  useEffect(() => {
+    if (data.isSuccess) {
+      if (data?.data?.data?.data.image) {
+        setUploadImageSrc(data?.data?.data?.data.image.path);
+      }
+    }
+  }, [data]);
+
+  const imageMutation = useMutation({
+    mutationKey: ["post image"],
+    mutationFn: (data: FormData) => {
+      return postMultipart(
+        HospitalRoutes.hospital + "/image" + `/${params.id}`,
+        {},
+        data
+      );
+    },
+    onSuccess: (data: any) => {
+      // stop loading
+      toast.success("Image Saved Successfully");
+      queryAdmin.invalidateQueries({ queryKey: ["hospital", params.id] });
+    },
+    onError: (error: any) => {
+      toast.error(error.message);
     },
   });
-  const list2 = useAsyncList<any>({
-    async load() {
-      let res = await getData(LocationRoutes.city, {});
-      let json = await res.data.data.data;
-
-      return {
-        items: json
-      };
-    },
-  });
-  const DropDownData = {
-    district: list,
-    city: list2
+  type SWCharacter = {
+    name: string;
+    height: string;
+    mass: string;
+    birth_year: string;
   };
+  let city = useAsyncList<SWCharacter>({
+    async load({ signal, filterText }) {
+      let res = await fetch(
+        `https://swapi.py4e.com/api/people/?search=${filterText}`,
+        { signal }
+      );
+      let json = await res.json();
+
+      return {
+        items: json.results,
+      };
+    },
+  });
 
   return (
     <>
@@ -114,39 +97,94 @@ export default function HospitalDetail() {
         <div className="flex flex-col gap-4 p-[1rem]">
           <Breadcrumbs color="secondary" className="text-xl font-bold">
             {breadCrumps.map((b: any, index: any) => {
-              return <BreadcrumbItem key={index} onClick={() => router.push(b.link)}>{b.name}</BreadcrumbItem>
+              return (
+                <BreadcrumbItem key={index} onClick={() => router.push(b.link)}>
+                  {b.name}
+                </BreadcrumbItem>
+              );
             })}
           </Breadcrumbs>
-          <div className="flex flex-row justify-between items-center w-full">
-            <Title title="Apollo Hosptial" />
-            <div className="flex flex-row gap-4">
-              <Button color="primary" radius="full" onClick={() => setisEdit(true)}>Edit</Button>
-              <Button color="danger" radius="full" onClick={() => onOpen()}>Delete</Button>
+        </div>
+        <div className="bg-white p-5 rounded-lg max-h-[500px]">
+          <div className="flex justify-between px-5">
+            <h1 className="text-[15px] md:text-[35px] text-secondary-300">
+              Hospital Name
+            </h1>
+            <div className="flex gap-2">
+              <Button color="primary">Publish</Button>
+              <Button color="danger">Delete</Button>
             </div>
           </div>
-          <DataCard
-            getapikey="gethospital"
-            DropDownData={DropDownData}
-            postimageapikey={HospitalRoutes.image}
-            editApikey="edithospital"
-            columns={HospitalColums}
-            title={"Hospital Details"}
-            editapi={HospitalRoutes.quick}
-            getapi={HospitalRoutes.hospital}
-            id={id} />
-          <DataCard
-            getapikey="gethospitaldescription"
-            editApikey="edithospitaldescription"
-            columns={HospitalDescriptionColums}
-            title={"Hospital Description"}
-            editapi={HospitalRoutes.description}
-            getapi={HospitalRoutes.hospital}
-            id={id} />
-          <DeleteModal onOpenChange={onOpenChange} title="Hospital" data={id} isOpen={isOpen} api={HospitalRoutes.hospital} queryKey={["Docotor"]} />
+          <div className="grid grid-cols-2 p-5">
+            <form>
+              <label htmlFor="hospital-image" className="text-secondary-300">
+                <Image
+                  src={uploadImageSrc}
+                  width={2000}
+                  height={2000}
+                  className="cursor-pointer w-full h-[300px] p-5 object-contain"
+                  alt="hospital"
+                />
+              </label>
+              <input
+                onChange={(e: any) => {
+                  const file = e.target.files[0];
+                  // if no file selected
+                  if (!file) return;
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setUploadImageSrc(reader.result as string);
+                  };
+                  reader.readAsDataURL(file);
+                  const formData = new FormData();
+                  formData.append("image", file);
+                  imageMutation.mutate(formData);
+                }}
+                className="hidden"
+                id="hospital-image"
+                type="file"
+              />
+            </form>
+            <form className="flex flex-col gap-2">
+              <Input
+                label="Hospital Name"
+                placeholder="Hospital Name"
+                className="w-full"
+              />
+              {/* email */}
+              <Input label="Email" placeholder="Email" className="w-full" />
+              {/* phone */}
+              <Input label="Phone" placeholder="Phone" className="w-full" />
+              {/* city */}
+              <Autocomplete
+                className="max-w-xs"
+                inputValue={city.filterText}
+                isLoading={city.isLoading}
+                items={city.items}
+                label="Select a character"
+                placeholder="Type to search..."
+                variant="bordered"
+                onInputChange={city.setFilterText}
+              >
+                {(item) => (
+                  <AutocompleteItem key={item.name} className="capitalize">
+                    {item.name ?? "No Name"}
+                  </AutocompleteItem>
+                )}
+              </Autocomplete>
+              {/* district */}
+              <Input
+                label="District"
+                placeholder="District"
+                className="w-full"
+              />
+              {/* submit */}
+              <Button type="submit" color="primary">
+                Save
+              </Button>
+            </form>
+          </div>
         </div>
-        <Page needAddModal={false} api={HospitalRoutes.enquiry} apiKey="enquiryforHospital" columns={enquiryColumns} title={`Enquiries for Apollo Hospital`} />
-        <Page needAddModal={false} api={HospitalRoutes.appointment} apiKey="appointments" columns={appointmentColumns} title="Appointment for Apollo Hospital" />
-        <Page api={HospitalRoutes.department} apiKey="doctor-department" columns={docDepartmentColumns} title="Docotor in Departments for Apollo Hospital" />
       </div>
     </>
   );
