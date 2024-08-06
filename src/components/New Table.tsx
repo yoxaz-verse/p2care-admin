@@ -41,6 +41,7 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   vacation: "warning",
 };
 import { motion } from "framer-motion";
+import { Statuses } from "@/utilis/content";
 interface CustomTableProps {
   title: string;
   data: any;
@@ -94,16 +95,25 @@ export default function CustomTable({
             {data.project_link}
           </Link>
         );
+      case "leadsStatus":
+        return (
+          <Select
+            placeholder="Update the Status"
+            description="Update the status from here"
+            defaultSelectedKeys={[data.status]}
+            className="max-w-xs"
+          >
+            {Statuses.map((status: any) => (
+              <SelectItem key={status} value={status}>
+                {status}
+              </SelectItem>
+            ))}
+          </Select>
+        )
       case "password":
         return null;
       case "heading":
         return <h3>{data?.heading}</h3>;
-      case "youtubeLink":
-        return (
-          <Link href={data?.youtubeLink} target="_blank" underline={"hover"}>
-            {data.youtubeLink}
-          </Link>
-        );
       case "appointmentTime":
         return (
           <div className="flex flex-row justify-around bg-white gap-4 items-center ">

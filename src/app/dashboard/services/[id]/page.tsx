@@ -1,9 +1,13 @@
 "use client";
+import AttachCard from "@/components/AttachCard";
+import DataCard from "@/components/Cards/DataCard";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import Page from "@/components/Page/PageAll";
 import Title from "@/components/titles";
-import { Doctor, HospitalRoutes } from "@/core/apiRoutes";
+import { getData } from "@/core/apiHandler";
+import { Doctor, HospitalRoutes, serviceRoutes } from "@/core/apiRoutes";
 import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Input, useDisclosure } from "@nextui-org/react";
+import { useAsyncList } from "@react-stately/data";
 import { useParams, usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -39,6 +43,41 @@ export default function ServiceName() {
     }
   ]
 
+  const serviceCols = [
+    { name: "Service Image", uid: "image", type: "image" },
+    { name: "Service Name", uid: "title", type: "text" },
+    { name: "Service Description", uid: "description", type: "textbox" },
+  ]
+  const departmentList = useAsyncList<any>({
+    async load() {
+      let res = await getData(Doctor.department, {});
+      let json = await res.data.data.data;
+
+      return {
+        items: json,
+      };
+    },
+  });
+  const hospitalList = useAsyncList<any>({
+    async load() {
+      let res = await getData(HospitalRoutes.hospital, {});
+      let json = await res.data.data.data;
+
+      return {
+        items: json,
+      };
+    },
+  });
+  const doctorList = useAsyncList<any>({
+    async load() {
+      let res = await getData(Doctor.docotor, {});
+      let json = await res.data.data.data;
+
+      return {
+        items: json,
+      };
+    },
+  });
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
@@ -50,32 +89,43 @@ export default function ServiceName() {
           })}
         </Breadcrumbs>
         <div className="flex flex-row justify-between items-center w-full">
-          <Title title="Service 1" />
+          <Title title="Service Details" />
           <div className="flex flex-row gap-4">
-            <Button color="primary" radius="full" onClick={() => setIsEdit(true)}>Edit</Button>
             <Button color="danger" radius="full" onClick={() => onOpen()}>Delete</Button>
           </div>
         </div>
-        <DeleteModal onOpenChange={onOpenChange} title="Serivice" data={id} isOpen={isOpen} api={HospitalRoutes.hospital} queryKey={["Docotor"]} />
+        <DeleteModal onOpenChange={onOpenChange} title="Serivice" data={id} isOpen={isOpen} api={serviceRoutes.service} queryKey={["service"]} />
       </div>
-      <Card shadow="lg" radius="lg">
-        <CardHeader className="text-[15px] md:text-[30px] font-bold">Service Details</CardHeader>
-        <CardBody className="flex flex-col justify-center items-center gap-4 h-[30vh]">
-          <Input
-            label="Service Name"
-            isReadOnly={isEdit}
-            placeholder="Service Name"
-          />
-          <Input
-            label="Hospital Name"
-            isReadOnly={isEdit}
-            placeholder="Hospital Name"
-          />
-          {isEdit && (
-            <Button type="submit" className="w-1/2" radius="full" color="primary">Submit</Button>
-          )}
-        </CardBody>
-      </Card>
+      <DataCard
+        editApikey="servicename"
+        editapi={serviceRoutes.service}
+        getapi={serviceRoutes.service}
+        postimageapikey={serviceRoutes.image}
+        getapikey="getservice"
+        title="Service Details"
+        columns={serviceCols}
+        id={id}
+      />
+      <AttachCard
+        id={id}
+        getapi={serviceRoutes.addDepartment}
+        api={serviceRoutes.addDepartment}
+        title="Add Department"
+        DropDown={departmentList} />
+      <AttachCard
+        id={id}
+        getapi={serviceRoutes.addHospital}
+        api={serviceRoutes.addHospital}
+        title="Add Hospital"
+        DropDown={hospitalList} />
+      <AttachCard
+        id={id}
+        getapi={serviceRoutes.addDoctor}
+        api={serviceRoutes.addDoctor}
+        title="Add Doctor"
+        DropDown={doctorList} />
+
+
       <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title={`Enquiry`} />
     </div>
   )

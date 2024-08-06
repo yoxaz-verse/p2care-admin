@@ -27,6 +27,14 @@ export const deleteData = async (url: string, params: any) => {
   return await instance.delete(url, { params });
 };
 
+export const deleteDataBody = async (url: string, params: any, data: any) => {
+  return await instance.request({
+    method: 'DELETE',
+    url,
+    params,
+    data
+  });
+};
 export const putMultipart = async (
   url: string,
   params: any,

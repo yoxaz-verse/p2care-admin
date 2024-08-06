@@ -58,7 +58,12 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
       setSubmitting(false);
       onClose();
     },
-    onError: (data: any) => {
+    onError: (error: any) => {
+      console.log(error);
+      toast.error("Data added failed", {
+        position: "top-right",
+        className: "bg-red-300"
+      })
       setSubmitting(false);
       onClose();
     }

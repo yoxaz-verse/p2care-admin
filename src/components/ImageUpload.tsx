@@ -21,7 +21,7 @@ export function ImageUploadMultiple({
 }: ImageUploadProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [imageUrls, setImageUrls] = useState<any[]>([]);
-
+  console.log(images);
 
   const addImage = useMutation({
     mutationKey: ['add-images'],
@@ -82,7 +82,7 @@ export function ImageUploadMultiple({
           <div key={index} className="flex flex-row items-center justify-center">
             <label htmlFor={`image-upload-${index}`} className="cursor-pointer">
               <Avatar
-                src={imageUrls[index] || images[index] || uploadLogo}
+                src={imageUrls[index] || images[index]?.path || uploadLogo}
                 alt={`image-${index}`}
                 className="w-60 h-60 rounded-full"
               />

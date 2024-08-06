@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteData, getData, postData } from "@/core/apiHandler";
+import { deleteData, deleteDataBody, getData, postData } from "@/core/apiHandler";
 import { Button, Card, CardBody, Image, Autocomplete, AutocompleteItem, Spinner } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
@@ -8,7 +8,8 @@ import Subtitle, { SubTitle } from "./titles";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryAdmin } from "@/app/providers";
 import { toast } from "sonner";
-import { Doctor, HospitalRoutes } from "@/core/apiRoutes";
+import { Doctor, HospitalRoutes, serviceRoutes } from "@/core/apiRoutes";
+import ServiceName from "@/app/dashboard/services/[id]/page";
 
 interface AttachCardProps {
   DropDown: any,
@@ -34,7 +35,6 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
   const removeAttachData = useMutation({
     mutationKey: ["removeAttachData"],
     mutationFn: (id: any) => {
-      console.log(id);
       return deleteData(`${api}/${id}`, {});
     },
     onSuccess: () => {
@@ -47,6 +47,22 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
       toast.error("Error removing data", { position: "top-right", className: "bg-red-300" });
     }
   });
+  const removeAttach = useMutation({
+    mutationKey: ["removeAttach", id],
+    mutationFn: (data: any) => {
+      return deleteDataBody(api, {}, data);
+    },
+    onSuccess: () => {
+      toast.success("Removed data", { position: "top-right", className: "bg-green-300" });
+      queryAdmin.invalidateQueries({ queryKey: [`get-${title}`, id] });
+    },
+    onError: (error: any) => {
+      console.log(id, error);
+
+      toast.error("Error removing data", { position: "top-right", className: "bg-red-300" });
+    }
+  });
+
 
   const attachData = useMutation({
     mutationKey: ["add-data"],
@@ -63,7 +79,7 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
   useEffect(() => {
     console.log(getAttachData?.data);
     if (isFetched) {
-      const valuesArray = Object.values(getAttachData?.data?.data);
+      const valuesArray = Object.values(getAttachData?.data?.data) || [];
       setArray(valuesArray);
       // setArray(getAttachData?.data?.data || []);
     }
@@ -105,10 +121,41 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
       }
       attachData.mutate(item);
     }
+    if (api === serviceRoutes.addDepartment) {
+      const item = {
+        departmentId: data[0]._id,
+        serviceId: id
+      }
+      attachData.mutate(item);
+    }
+    if (api === serviceRoutes.addDoctor) {
+      const item = {
+        doctorId: data[0]._id,
+        serviceId: id
+      }
+      attachData.mutate(item);
+    }
+    if (api === serviceRoutes.addHospital) {
+      const item = {
+        hospitalId: data[0]._id,
+        serviceId: id
+      }
+      attachData.mutate(item);
+    }
   };
 
-  const remove = (id: any) => {
-    removeAttachData.mutate(id);
+  const remove = (index: any) => {
+    if (api == serviceRoutes.addDoctor) {
+      alert(index);
+      const item = {
+        doctorId: index,
+        serviceId: id
+      }
+      removeAttach.mutate(item);
+      return;
+    } else {
+      removeAttachData.mutate(index);
+    }
   };
 
   console.log("Array:", array);
@@ -148,10 +195,10 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
       <div className="flex flex-col gap-4">
         {isFetchingAttachData ? <Spinner /> : (
           array.map((d: any, index: number) => (
-            <Card shadow="sm" key={index} className="w-1/2 h-1/4">
+            <Card shadow="sm" key={index} className="w-full lg:w-1/2 h-full">
               <CardBody className="flex flex-row items-center justify-around">
-                <Image src={d.image} width={300} height={300} radius="full" />
-                <h3 className="text-xl font-bold">{d.name}</h3>
+                <Image src={d?.image?.path} width={300} height={300} radius="full" />
+                <h3 className="text-md lg:text-xl font-bold">{d.name}</h3>
                 <RxCross2 size={30} className="cursor-pointer" onClick={() => remove(d._id)} />
               </CardBody>
             </Card>

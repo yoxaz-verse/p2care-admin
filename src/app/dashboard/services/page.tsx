@@ -6,7 +6,7 @@ import Title from "@/components/titles";
 import { generateTable } from "@/utilis/content";
 import React from "react";
 import Page from "@/components/Page/PageAll";
-import { Doctor } from "@/core/apiRoutes";
+import { Doctor, serviceRoutes } from "@/core/apiRoutes";
 
 const Services = () => {
   const [page, setPage] = useState<any>(1);
@@ -23,28 +23,29 @@ const Services = () => {
       name: "Status", uid: "status", type: "enquirystatus"
     },
     {
-      name: "Actions", uid: "actions", type: "actions"
+      name: "Actions", uid: "action", type: "action"
     }
+  ]
+  const servicesArr = [
+    { name: "Title", uid: "title", type: "text" },
+    { name: "Description", uid: "description", type: "text" },
+    {
+      name: "Actions", uid: "action", type: "action"
+    }
+
   ]
   return (
     <div className="flex flex-col w-full gap-4">
       <Title title={"Services"} />
-      {generateTable({
-        columns: generateTabColumns({
-          onView: () => handleView(),
-          setData: setData,
-          type: "Status 1",
-          tableName: "Services",
-        }),
-        isSuccess: true,
-        currentPage: page,
-        onPageChange: (currentPage: any) => handlePageChange(currentPage),
-        tableData: generateData({ tableName: "Services" }),
-        isLoading: false,
-        totalItems: generateData({ tableName: "Services" }).length,
-        isError: false,
-      })}
-      <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title="Enquiry" />
+      <Page
+        api={serviceRoutes.service}
+
+        apiKey="services"
+        title="Services"
+        columns={servicesArr}
+        needAddModal={true} />
+      <Page needAddModal={false} api={Doctor.enquiry}
+        apiKey="enquiryByHospital" columns={enquiryColumns} title="Enquiry" />
 
     </div>
   );

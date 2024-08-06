@@ -32,6 +32,14 @@ export const HospitalRoutes = {
   department: '/hospital-department',
   appointment: '/appointment'
 }
+export const serviceRoutes = {
+  service: "/service",
+  addDoctor: "/service/doctor",
+  addHospital: "/service/hospital",
+  addDepartment: "/service/department",
+  image: "/service/image"
+}
+
 export const patientRoutes = {
   patient: "/patient"
 }
