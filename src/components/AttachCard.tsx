@@ -8,7 +8,7 @@ import Subtitle, { SubTitle } from "./titles";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryAdmin } from "@/app/providers";
 import { toast } from "sonner";
-import { Doctor, HospitalRoutes, serviceRoutes } from "@/core/apiRoutes";
+import { Doctor, HospitalRoutes, offers, serviceRoutes } from "@/core/apiRoutes";
 import ServiceName from "@/app/dashboard/services/[id]/page";
 
 interface AttachCardProps {
@@ -79,8 +79,9 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
   useEffect(() => {
     console.log(getAttachData?.data);
     if (isFetched) {
-      const valuesArray = Object.values(getAttachData?.data?.data) || [];
+      const valuesArray = getAttachData?.data?.data || [];
       setArray(valuesArray);
+      console.log(valuesArray);
       // setArray(getAttachData?.data?.data || []);
     }
     setData(DropDown);
@@ -105,20 +106,34 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
       }
       attachData.mutate(item);
     }
+    if (api === offers.hospital) {
+      const item = {
+        hospitalId: data[0]._id,
+        offerId: id
+      }
+      attachData.mutate(item);
+    }
+    if (api === offers.doctor) {
+      const item = {
+        doctorId: data[0]._id,
+        offerId: id
+      }
+      attachData.mutate(item);
+    }
+    if (api === offers.department) {
+      const item = {
+        departmentId: data[0]._id,
+        offerId: id
+      }
+      attachData.mutate(item);
+    }
     if (api === HospitalRoutes.department) {
       console.log(data);
       const item = {
-        price: data[0].price,
-        department: data[0].department._id
+        hospital: id,
+        department: data[0]._id
       };
-      const { price, department } = item;
 
-      if (!price || !department) {
-        return toast.error("department data needs to be updated as price or  department for the hospital", {
-          position: "top-right",
-          className: "bg-red-300"
-        });
-      }
       attachData.mutate(item);
     }
     if (api === serviceRoutes.addDepartment) {
@@ -153,8 +168,34 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
       }
       removeAttach.mutate(item);
       return;
-    } else {
-      removeAttachData.mutate(index);
+    }
+    if (api === offers.hospital) {
+      const item = {
+        hospitalId: index,
+        offerId: id
+      }
+      removeAttach.mutate(item);
+      return;
+    }
+    if (api === offers.doctor) {
+      const item = {
+        doctorId: index,
+        offerId: id
+      }
+      removeAttach.mutate(item);
+      return;
+    }
+    if (api === offers.department) {
+      const item = {
+        departmentId: index,
+        offerId: id
+      }
+      removeAttach.mutate(item);
+      return;
+    }
+    else {
+      console.log(index);
+      removeAttachData.mutate(index._id);
     }
   };
 
@@ -198,7 +239,7 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
             <Card shadow="sm" key={index} className="w-full lg:w-1/2 h-full">
               <CardBody className="flex flex-row items-center justify-around">
                 <Image src={d?.image?.path} width={300} height={300} radius="full" />
-                <h3 className="text-md lg:text-xl font-bold">{d.name}</h3>
+                <h3 className="text-md lg:text-xl font-bold">{d?.name || d?.department?.name}</h3>
                 <RxCross2 size={30} className="cursor-pointer" onClick={() => remove(d._id)} />
               </CardBody>
             </Card>

@@ -11,6 +11,11 @@ export const LocationRoutes = {
 }
 export const offerRoute = "/offer";
 export const offerImageRoute = "/offer/upload"
+export const offers = {
+  doctor: "/offer/doctor",
+  hospital: "/offer/hospital",
+  department: "/offer/department"
+}
 export const Doctor = {
   docotor: "/doctor",
   quick: "/doctor/quick",

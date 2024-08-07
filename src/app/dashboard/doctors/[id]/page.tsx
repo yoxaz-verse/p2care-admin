@@ -28,7 +28,7 @@ import { useState, useEffect, Fragment, use } from "react";
 import { FaEdit } from "react-icons/fa";
 import { Time } from "@internationalized/date";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getData, patchData, postData, postMultipart } from "@/core/apiHandler";
+import { deleteData, getData, patchData, postData, postMultipart } from "@/core/apiHandler";
 import { useAsyncList } from "@react-stately/data";
 import { toast } from "sonner";
 import { queryAdmin } from "@/app/providers";
@@ -53,6 +53,28 @@ export default function GetDocDetials() {
   const data = generateData({ tableName: "Doctors" })[1];
   const router = useRouter();
   const { id } = useParams();
+  const deletSlot = useMutation({
+    mutationKey: ["deletSlot"],
+    mutationFn: (id) => {
+      return deleteData(`/doctor-slot/${id}`, {})
+    },
+    onSuccess: (id: any) => {
+      toast.success("Slot removed", {
+        position: "top-right",
+        className: "bg-green-300"
+      })
+      setSechduling((prevScheduling: any) => {
+        return prevScheduling.map((schedule: any) => {
+          return {
+            ...schedule,
+            data: schedule.data._id === id
+          };
+        });
+      });
+      queryAdmin.invalidateQueries({ queryKey: ["get-doctorSlot", id] });
+    },
+
+  })
   const { data: getDocDetails, isFetched, isLoading } = useQuery({
     queryKey: ["doctorDetails", id],
     queryFn: () => {
@@ -149,30 +171,102 @@ export default function GetDocDetials() {
   const [sechudling, setSechduling] = useState<any>([
     {
       name: "Morning",
-      timings: ["9:00AM"]
+      timings: [],
+      data: {}
     },
     {
       name: "Afternoon",
-      timings: ["12:00AM"]
+      timings: [],
+      data: {}
     },
     {
       name: "Evening",
-      timings: ["6:00PM"]
+      timings: [],
+      data: {}
     },
   ]);
 
+  const createSlot = useMutation({
+    mutationKey: ["doctorSlot"],
+    mutationFn: (data: any) => {
+      return postData(`/doctor-slot/`, data, {});
+    },
+    onSuccess: (data: any) => {
+      console.log(data);
+      toast.success("Added Slot", {
+        position: "top-right",
+        className: "bg-green-300"
+      })
+      queryAdmin.invalidateQueries({ queryKey: ["get-doctorSlot"] });
+    },
+    onError: (error: any) => {
+      console.log(error);
+      toast.error("Error in adding Slot", {
+        position: "top-right",
+        className: "bg-red-300"
+      })
+    }
+  })
+  const { data: getSlot, isLoading: isLoadingslot } = useQuery({
+    queryKey: ["get-doctorSlot"],
+    queryFn: () => {
+      return getData("/doctor-slot", { id });
+    }
+  })
+  useEffect(() => {
+    if (!isLoadingslot) {
+      const slot = getSlot?.data?.data?.data;
+      console.log(getSlot?.data.data.data);
+      slot.map((s: any) => {
+        const date = new Date(s.slotTime);
+
+        let hours = date.getUTCHours();
+
+        let minutes = date.getUTCMinutes();
+
+        let period = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+        const item = {
+          name: s.session,
+          timings: `${hours}:${formattedMinutes} ${period}`,
+          data: s
+        }
+        console.log(item);
+        setSechduling((prevScheduling: any) => {
+          return prevScheduling.map((schedule: any) => {
+            console.log(schedule.name.toLowerCase() === item.name);
+            if (schedule.name.toLowerCase() === item.name) {
+              return {
+                ...schedule,
+                timings: [...schedule.timings, item.timings],
+                data: { ...schedule.data, ...item.data }
+              };
+            }
+            return schedule;
+          })
+        });
+
+      })
+      console.log(sechudling);
+    }
+  }, [isLoadingslot]);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const handleUpdate = (type: any) => {
-    const updated = sechudling.map((s: any) => {
-      if (s.name === type) {
-        return {
-          ...s,
-          timings: [...s.timings, `${valuetime?.hour} : ${valuetime?.minute === 0 ? "00" : valuetime?.minute} AM`]
-        };
+    console.log(valuetime);
+    if (valuetime?.hour || valuetime?.minute) {
+      const date = new Date();
+      date.setHours(valuetime.hour);
+      date.setMinutes(valuetime.minute);
+      const item = {
+        session: type.toLowerCase(),
+        slotTime: date,
+        doctorId: id
       }
-      return s;
-    })
-    setSechduling(updated);
+      console.log(item);
+      createSlot.mutate(item);
+    }
     setype('');
   }
   interface VisitngTime {
@@ -367,6 +461,21 @@ export default function GetDocDetials() {
     }
     editMutaion.mutate(formData);
   }
+  const removeTime = (data: any) => {
+    deletSlot.mutate(data._id);
+  }
+  const getMaxValue = (type: string) => {
+    switch (type) {
+      case 'morning':
+        return new Time(12, 0);
+      case 'afternoon':
+        return new Time(16, 0);
+      case 'evening':
+        return new Time(21, 0);
+      default:
+        return new Time(24, 0);
+    }
+  };
   return (
     <>
       {isLoading ? <Spinner title="Loading Doctor Details" /> : (
@@ -741,23 +850,28 @@ export default function GetDocDetials() {
                 )}
               </div>
 
-              <h3 className="font-bold text-lg">Appointments</h3>
-              {sechudling.map((s: any, index: any) => {
+              <h3 className="font-bold text-lg">Slots</h3>
+              {sechudling?.map((s: any, index: any) => {
                 return (
                   <>
                     <div key={index} className="flex flex-row items-center w-full md:w-1/2 justify-around">
                       <h1 className="font-bold">{s.name}</h1>
-                      {s.timings.map((t: any, index: any) => {
+                      {s?.timings.map((t: any, index: any) => {
                         return (
                           <div key={index} className="flex flex-row justify-start w-20">
-                            <Chip color="secondary" radius="full" variant="solid">{t} </Chip>
+                            <Chip color="secondary" onClose={() => removeTime(s.data)} radius="full" variant="solid">{t} </Chip>
                           </div>
                         )
                       })}
                       <FaEdit className="cursor-pointer" onClick={() => setype(s)} />
-                      {s.name === type.name && (
+                      {s?.name === type.name && (
                         <div className="flex items-center w-1/4">
-                          <TimeInput value={valuetime} onChange={(e) => setValueTime(e)} defaultValue={type.timings[type.timings.length]} maxValue={new Time(12)} />
+                          <TimeInput
+                            value={valuetime}
+                            onChange={(e) => setValueTime(e)}
+                            // defaultValue={type.timings[type.timings.length - 1]}
+                            maxValue={getMaxValue(type.name.toLowerCase())}
+                          />
                           <Button color="secondary" onClick={() => handleUpdate(type.name)}>Update</Button>
                         </div>
                       )}

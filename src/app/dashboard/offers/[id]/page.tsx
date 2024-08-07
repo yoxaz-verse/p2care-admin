@@ -1,15 +1,50 @@
 'use client';
 
+import AttachCard from "@/components/AttachCard";
 import DataCard from "@/components/Cards/DataCard";
-import { offerImageRoute, offerRoute } from "@/core/apiRoutes";
+import { getData } from "@/core/apiHandler";
+import { Doctor, HospitalRoutes, offerImageRoute, offerRoute, offers } from "@/core/apiRoutes";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
+import { useAsyncList } from "@react-stately/data";
 import { useParams, usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { off } from "process";
 
 export default function OffersPage() {
   const path = usePathname();
   const router = useRouter();
   const { id } = useParams();
+  const departmentList = useAsyncList<any>({
+    async load() {
+      let res = await getData(Doctor.department, {});
+      let json = await res.data.data.data;
+
+      return {
+        items: json,
+      };
+    },
+  });
+  const doctorList = useAsyncList<any>({
+    async load() {
+      let res = await getData(Doctor.docotor, {});
+      let json = await res.data.data.data;
+
+      return {
+        items: json,
+      };
+    },
+  });
+  const hoapitalList = useAsyncList<any>({
+    async load() {
+      let res = await getData(HospitalRoutes.hospital, {});
+      let json = await res.data.data.data;
+
+      return {
+        items: json,
+      };
+    },
+  });
+
 
   const breadCrumps = [
     {
@@ -38,6 +73,15 @@ export default function OffersPage() {
         })}
       </Breadcrumbs>
       <DataCard columns={cols} title={"Banner Details"} id={id} postimageapikey={offerImageRoute} getapikey="getbanner" getapi={offerRoute} editapi={offerRoute} editApikey="editbanner" />
+      <AttachCard id={id} getapi={offers.hospital} api={offers.hospital}
+        title="Add Hospital"
+        DropDown={hoapitalList} />
+      <AttachCard id={id} getapi={offers.doctor} api={offers.doctor}
+        title="Add Doctor"
+        DropDown={doctorList} />
+      <AttachCard id={id} getapi={offers.department} api={offers.department}
+        title="Add Department"
+        DropDown={departmentList} />
     </div>
   )
 }

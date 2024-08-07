@@ -18,11 +18,11 @@ import {
   Avatar,
   Spinner,
 } from "@nextui-org/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { getSystemErrorMap } from "util";
+
 
 export default function UserName() {
   const router = useRouter();

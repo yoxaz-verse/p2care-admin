@@ -219,9 +219,9 @@ export default function HospitalDetail() {
         <AttachCard id={id} getapi={HospitalRoutes.getdoctor} api={HospitalRoutes.adddoctor}
           title="Add Doctor"
           DropDown={doctorList} />
-        {/* <AttachCard id={id} getapi={HospitalRoutes.department} api={HospitalRoutes.department}
+        <AttachCard id={id} getapi={HospitalRoutes.department} api={HospitalRoutes.department}
           title="Add Department"
-          DropDown={departmentList} /> */}
+          DropDown={departmentList} />
       </div>
     </>
   );
