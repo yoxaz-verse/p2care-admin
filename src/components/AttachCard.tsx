@@ -47,6 +47,8 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
       toast.error("Error removing data", { position: "top-right", className: "bg-red-300" });
     }
   });
+
+
   const removeAttach = useMutation({
     mutationKey: ["removeAttach", id],
     mutationFn: (data: any) => {
@@ -62,8 +64,6 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
       toast.error("Error removing data", { position: "top-right", className: "bg-red-300" });
     }
   });
-
-
   const attachData = useMutation({
     mutationKey: ["add-data"],
     mutationFn: (data: any) => postData(api, data, {}),
@@ -161,11 +161,30 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
 
   const remove = (index: any) => {
     if (api == serviceRoutes.addDoctor) {
-      alert(index);
+
       const item = {
         doctorId: index,
         serviceId: id
       }
+      api = `${serviceRoutes.addDoctor}/test`
+      removeAttach.mutate(item);
+      return;
+    }
+    if (api == serviceRoutes.addHospital) {
+      const item = {
+        hospitalId: index,
+        serviceId: id
+      }
+      api = `${serviceRoutes.addHospital}/test`
+      removeAttach.mutate(item);
+      return;
+    }
+    if (api == serviceRoutes.addDepartment) {
+      const item = {
+        departmentId: index,
+        serviceId: id
+      }
+      api = `${serviceRoutes.addDepartment}/test`
       removeAttach.mutate(item);
       return;
     }
@@ -199,7 +218,7 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
     }
   };
 
-  console.log("Array:", array);
+
 
   return (
     <>
