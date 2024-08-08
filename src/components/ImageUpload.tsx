@@ -117,7 +117,6 @@ export function ImageSingle({
   id,
   postapi,
 }: ImageSingleProps) {
-  console.log(image);
   const [File, setfile] = useState<any>(null);
   const [uploadImageUrl, setUploadImageUrl] = useState<any>(null);
   const addImage = useMutation({

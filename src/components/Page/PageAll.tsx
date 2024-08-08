@@ -45,6 +45,7 @@ export default function Page({
   const handleDeleteData = (data: any) => {
     onOpen();
     setCurrData(data);
+    console.log(data);
   };
   const handleEditData = (data: any) => {
     onOpenEdit();
