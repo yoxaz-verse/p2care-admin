@@ -65,14 +65,12 @@ export default function CustomTable({
   setPage,
   limit,
 }: CustomTableProps) {
-
-
   const { data: status, isLoading } = useQuery({
     queryKey: ["getstatus"],
     queryFn: () => {
       return getData("/enquiry-status", {});
-    }
-  })
+    },
+  });
   const navigate = useRouter();
   const renderCell = React.useCallback((data: any, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof any];
@@ -115,11 +113,11 @@ export default function CustomTable({
           >
             {Statuses.map((status: any) => (
               <SelectItem key={status} value={status}>
-                {status}
+                {status.name}
               </SelectItem>
             ))}
           </Select>
-        )
+        );
       case "password":
         return null;
       case "heading":
