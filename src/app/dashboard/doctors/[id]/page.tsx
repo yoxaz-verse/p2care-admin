@@ -22,13 +22,24 @@ import {
 } from "@nextui-org/react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import Page from "@/components/Page/PageAll";
-import { DesignationRoutes, Doctor, GenderRoutes, LocationRoutes } from "@/core/apiRoutes";
+import {
+  DesignationRoutes,
+  Doctor,
+  GenderRoutes,
+  LocationRoutes,
+} from "@/core/apiRoutes";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import { useState, useEffect, Fragment, use } from "react";
 import { FaEdit } from "react-icons/fa";
 import { Time } from "@internationalized/date";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteData, getData, patchData, postData, postMultipart } from "@/core/apiHandler";
+import {
+  deleteData,
+  getData,
+  patchData,
+  postData,
+  postMultipart,
+} from "@/core/apiHandler";
 import { useAsyncList } from "@react-stately/data";
 import { toast } from "sonner";
 import { queryAdmin } from "@/app/providers";
@@ -39,48 +50,51 @@ export default function GetDocDetials() {
   const header = [
     {
       name: "Dashboard",
-      link: "/dashboard"
+      link: "/dashboard",
     },
     {
       name: "Doctors",
-      link: "/dashboard/doctors"
+      link: "/dashboard/doctors",
     },
     {
       name: "Doctor Detail",
-      link: path
-    }
-  ]
+      link: path,
+    },
+  ];
   const data = generateData({ tableName: "Doctors" })[1];
   const router = useRouter();
   const { id } = useParams();
   const deletSlot = useMutation({
     mutationKey: ["deletSlot"],
     mutationFn: (id) => {
-      return deleteData(`/doctor-slot/${id}`, {})
+      return deleteData(`/doctor-slot/${id}`, {});
     },
     onSuccess: (id: any) => {
       toast.success("Slot removed", {
         position: "top-right",
-        className: "bg-green-300"
-      })
+        className: "bg-green-300",
+      });
       setSechduling((prevScheduling: any) => {
         return prevScheduling.map((schedule: any) => {
           return {
             ...schedule,
-            data: schedule.data._id === id
+            data: schedule.data._id === id,
           };
         });
       });
       queryAdmin.invalidateQueries({ queryKey: ["get-doctorSlot", id] });
     },
-
-  })
-  const { data: getDocDetails, isFetched, isLoading } = useQuery({
+  });
+  const {
+    data: getDocDetails,
+    isFetched,
+    isLoading,
+  } = useQuery({
     queryKey: ["doctorDetails", id],
     queryFn: () => {
       return getData(`${Doctor.docotor}/${id}`, {});
-    }
-  })
+    },
+  });
   interface IDoctor {
     achievements: string[];
     address: string;
@@ -121,68 +135,84 @@ export default function GetDocDetials() {
     department: "",
     locationUrl: "",
     price: "0",
-    experience: "0"
-  })
+    experience: "0",
+  });
   const [achivements, setAchivements] = useState<any>([]);
   const [qualifications, setQualifications] = useState<any>([]);
   const [memeberships, setMemeberShips] = useState<any>([]);
   const [publishcations, setPublications] = useState<any>([]);
   const [avilDaysEdit, setavailEdit] = useState<boolean>(false);
   const [pubVal, setpubVal] = useState<any>("");
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
   const [achivementVal, setachivementVal] = useState<any>("");
   const [qualificationVal, setqualificationVal] = useState<any>("");
   const [memeberVal, setmemeberVal] = useState<any>("");
-  const push = (value: any, setValue: React.Dispatch<React.SetStateAction<any[]>>) => {
-    setValue((prev: any[]) => [
-      ...prev,
-      value
-    ]);
+  const push = (
+    value: any,
+    setValue: React.Dispatch<React.SetStateAction<any[]>>
+  ) => {
+    setValue((prev: any[]) => [...prev, value]);
   };
-  const [department, setDepartment] = useState<any>('');
-  const [designation, setDesignation] = useState<any>('');
+  const [department, setDepartment] = useState<any>("");
+  const [designation, setDesignation] = useState<any>("");
   const [gender, setGender] = useState<any>();
   const appointmentColumns = [
     { name: "Name", uid: "name", type: "text" },
     { name: "Phone", uid: "phoneno", type: "text" },
     { name: "Email", uid: "email", type: "text" },
     {
-      name: "Appointment Time", uid: "appointment", type: "appointmentTime"
+      name: "Appointment Time",
+      uid: "appointment",
+      type: "appointmentTime",
     },
     {
-      name: "Actions", uid: "actions", type: "actions"
-    }
-  ]
+      name: "Actions",
+      uid: "actions",
+      type: "actions",
+    },
+  ];
   const enquiryColumns = [
     { name: "Name", uid: "name", type: "text" },
     { name: "Phone", uid: "phoneno", type: "text" },
     { name: "Email", uid: "email", type: "text" },
     {
-      name: "Status", uid: "status", type: "enquirystatus"
+      name: "Status",
+      uid: "status",
+      type: "enquirystatus",
     },
     {
-      name: "Actions", uid: "actions", type: "actions"
-    }
-  ]
+      name: "Actions",
+      uid: "actions",
+      type: "actions",
+    },
+  ];
   const [isEdit, setisEdit] = useState<boolean>(false);
-  const [type, setype] = useState<any>('');
+  const [type, setype] = useState<any>("");
   const [avialableDays, setavailableDays] = useState<any>(new Set());
   const [valuetime, setValueTime] = useState<TimeInputValue>();
   const [sechudling, setSechduling] = useState<any>([
     {
       name: "Morning",
       timings: [],
-      data: {}
+      data: {},
     },
     {
       name: "Afternoon",
       timings: [],
-      data: {}
+      data: {},
     },
     {
       name: "Evening",
       timings: [],
-      data: {}
+      data: {},
     },
   ]);
 
@@ -195,24 +225,24 @@ export default function GetDocDetials() {
       console.log(data);
       toast.success("Added Slot", {
         position: "top-right",
-        className: "bg-green-300"
-      })
-      queryAdmin.invalidateQueries({ queryKey: ["get-doctorSlot"] });
+        className: "bg-green-300",
+      });
+      queryAdmin.invalidateQueries({ queryKey: ["get-doctorSlot", id] });
     },
     onError: (error: any) => {
       console.log(error);
       toast.error("Error in adding Slot", {
         position: "top-right",
-        className: "bg-red-300"
-      })
-    }
-  })
+        className: "bg-red-300",
+      });
+    },
+  });
   const { data: getSlot, isLoading: isLoadingslot } = useQuery({
-    queryKey: ["get-doctorSlot"],
+    queryKey: ["get-doctorSlot", id],
     queryFn: () => {
       return getData("/doctor-slot", { id });
-    }
-  })
+    },
+  });
   useEffect(() => {
     if (!isLoadingslot) {
       const slot = getSlot?.data?.data?.data;
@@ -220,55 +250,51 @@ export default function GetDocDetials() {
       slot.map((s: any) => {
         const date = new Date(s.slotTime);
 
-        let hours = date.getUTCHours();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = hours >= 12 ? "PM" : "AM";
+        const formattedHours = hours % 12 || 12;
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
 
-        let minutes = date.getUTCMinutes();
-
-        let period = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12;
-        hours = hours ? hours : 12;
-        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
         const item = {
           name: s.session,
-          timings: `${hours}:${formattedMinutes} ${period}`,
-          data: s
-        }
-        console.log(item);
+          timings: `${formattedHours}:${formattedMinutes} ${period}`,
+          data: s,
+        };
+
         setSechduling((prevScheduling: any) => {
           return prevScheduling.map((schedule: any) => {
-            console.log(schedule.name.toLowerCase() === item.name);
             if (schedule.name.toLowerCase() === item.name) {
               return {
                 ...schedule,
                 timings: [...schedule.timings, item.timings],
-                data: { ...schedule.data, ...item.data }
+                data: { ...schedule.data, ...item.data },
               };
             }
             return schedule;
-          })
+          });
         });
-
-      })
+      });
       console.log(sechudling);
     }
-  }, [isLoadingslot]);
+  }, [isLoadingslot, getSlot]);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const handleUpdate = (type: any) => {
-    console.log(valuetime);
     if (valuetime?.hour || valuetime?.minute) {
       const date = new Date();
       date.setHours(valuetime.hour);
       date.setMinutes(valuetime.minute);
+      alert(date);
       const item = {
         session: type.toLowerCase(),
         slotTime: date,
-        doctorId: id
-      }
+        doctorId: id,
+      };
       console.log(item);
       createSlot.mutate(item);
     }
-    setype('');
-  }
+    setype("");
+  };
   interface VisitngTime {
     from: string;
     to: string;
@@ -277,23 +303,23 @@ export default function GetDocDetials() {
   const [valTime, setValTime] = useState<VisitngTime>({
     from: "",
     to: "",
-  })
+  });
   const deleteVisiting = (index: number) => {
-    setVistingTime(prev => prev.filter((_, i) => i !== index));
-  }
+    setVistingTime((prev) => prev.filter((_, i) => i !== index));
+  };
   const [editVisit, seteditVisit] = useState<boolean>(false);
   const pushVisting = (from: string, to: string) => {
     const time: VisitngTime = {
       from: from,
-      to: to
-    }
-    setVistingTime(prev => [...prev, time]);
+      to: to,
+    };
+    setVistingTime((prev) => [...prev, time]);
     seteditVisit(false);
     setValTime({
       from: "",
-      to: ""
+      to: "",
     });
-  }
+  };
 
   const [file, setFile] = useState<File>();
   const [uploadImageUrl, setUploadImageUrl] = useState<string>();
@@ -305,7 +331,7 @@ export default function GetDocDetials() {
     onSuccess: (data: any) => {
       toast.success("Image is uploaded successfully", {
         position: "top-right",
-        className: "bg-green-300"
+        className: "bg-green-300",
       });
       queryAdmin.invalidateQueries({ queryKey: ["doctorDetails", id] });
     },
@@ -313,17 +339,17 @@ export default function GetDocDetials() {
       console.log(error);
       toast.success(error.response.data, {
         position: "top-right",
-        className: "bg-green-500"
-      })
-    }
-  })
+        className: "bg-green-500",
+      });
+    },
+  });
   const list = useAsyncList<any>({
     async load() {
       let res = await getData(DesignationRoutes.desgination, {});
       let json = await res.data.data.data;
 
       return {
-        items: json
+        items: json,
       };
     },
   });
@@ -333,7 +359,7 @@ export default function GetDocDetials() {
       let json = await res.data.data.data;
 
       return {
-        items: json
+        items: json,
       };
     },
   });
@@ -343,29 +369,34 @@ export default function GetDocDetials() {
       let json = await res.data.data.data;
 
       return {
-        items: json
+        items: json,
       };
     },
   });
   useEffect(() => {
-    console.log(getDocDetails?.data?.data);
-    setPublications(getDocDetails?.data?.data?.publications);
-    setQualifications(getDocDetails?.data?.data?.qualifications);
-    setAchivements(getDocDetails?.data.data?.achievements);
-    setMemeberShips(getDocDetails?.data?.data?.memberships);
-    setDepartment(getDocDetails?.data?.data?.department?._id);
-    setGender(getDocDetails?.data?.data?.gender?._id);
-    console.log(getDocDetails?.data.data.department._id);
-    setformData((prev) => ({
-      ...prev,
-      price: getDocDetails?.data?.data?.price,
-      department: getDocDetails?.data.data.department._id,
-      locationUrl: getDocDetails?.data?.data?.locationUrl,
-      address: getDocDetails?.data.data?.address,
-      experience: getDocDetails?.data.data.experience
-    }))
-    setDesignation(getDocDetails?.data?.data.designation?._id);
-  }, [gender, department, isFetched]);
+    if (isFetched) {
+      setPublications(getDocDetails?.data?.data?.publications);
+      setQualifications(getDocDetails?.data?.data?.qualifications);
+      setAchivements(getDocDetails?.data.data?.achievements);
+      setMemeberShips(getDocDetails?.data?.data?.memberships);
+      setDepartment(getDocDetails?.data?.data?.department?._id);
+      setGender(getDocDetails?.data?.data?.gender?._id);
+      console.log(getDocDetails?.data.data.department._id);
+      setavailableDays(new Set(getDocDetails?.data?.data?.availableDays));
+      console.log(getDocDetails?.data?.data);
+
+      setVistingTime(getDocDetails?.data?.data?.visitingTime);
+      // setformData((prev) => ({
+      //   ...prev,
+      //   price: getDocDetails?.data?.data?.price,
+      //   department: getDocDetails?.data.data.department._id,
+      //   locationUrl: getDocDetails?.data?.data?.locationUrl,
+      //   address: getDocDetails?.data.data?.address,
+      //   experience: getDocDetails?.data.data.experience,
+      // }));
+      setDesignation(getDocDetails?.data?.data.designation?._id);
+    }
+  }, [isFetched]);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
       alert("No file uploaded");
@@ -388,89 +419,108 @@ export default function GetDocDetials() {
       let json = await res.data.data.data;
 
       return {
-        items: json
+        items: json,
       };
     },
   });
-  const removeValue = (value: any, setValue: React.Dispatch<React.SetStateAction<any[]>>) => {
-    setValue((prev: any[]) => prev.filter(item => item !== value));
+  const removeValue = (
+    value: any,
+    setValue: React.Dispatch<React.SetStateAction<any[]>>
+  ) => {
+    setValue((prev: any[]) => prev.filter((item) => item !== value));
   };
   const editMutaion = useMutation({
     mutationFn: (data: any) => {
-      return patchData(`/doctor/${id}/description`, data, {});
+      return patchData(`/doctor/${id}/description`, formData, {});
     },
     onSuccess: (data: any) => {
       toast.success("Doctor Data Updated", {
         position: "top-right",
-        className: "bg-green-300"
-      })
+        className: "bg-green-300",
+      });
       queryAdmin.invalidateQueries({ queryKey: ["doctorDetails", id] });
       setisEdit(false);
     },
     onError: (error: any) => {
       toast.error("Doctor Data Updated failed", {
         position: "top-right",
-        className: "bg-red-300"
-      })
+        className: "bg-red-300",
+      });
       setisEdit(false);
-    }
-  })
+    },
+  });
   const handleChangeUpdate = (e: any) => {
     e.preventDefault();
-    if (getDocDetails?.data?.data?.data?.publications?.length > 0 || publishcations.length > 0) {
+    if (
+      getDocDetails?.data?.data?.data?.publications?.length > 0 ||
+      publishcations.length > 0
+    ) {
       setformData((prev: any) => ({
         ...prev,
-        publications: publishcations
-      }))
+        publications: publishcations,
+      }));
     }
-    if (getDocDetails?.data?.data?.data?.qualifications?.length > 0 || qualifications.length > 0) {
+    if (
+      getDocDetails?.data?.data?.data?.qualifications?.length > 0 ||
+      qualifications.length > 0
+    ) {
       setformData((prev: any) => ({
         ...prev,
-        qualifications: qualifications
-      }))
+        qualifications: qualifications,
+      }));
     }
-    if (getDocDetails?.data?.data?.data?.achievements?.length > 0 || achivements.length > 0) {
+    if (
+      getDocDetails?.data?.data?.data?.achievements?.length > 0 ||
+      achivements.length > 0
+    ) {
       setformData((prev: any) => ({
         ...prev,
-        achievements: achivements
-      }))
+        achievements: achivements,
+      }));
     }
 
-    if (getDocDetails?.data?.data?.data?.memberships?.length > 0 || memeberships.length > 0) {
+    if (
+      getDocDetails?.data?.data?.data?.memberships?.length > 0 ||
+      memeberships.length > 0
+    ) {
       setformData((prev: any) => ({
         ...prev,
-        memberships: memeberships
-      }))
+        memberships: memeberships,
+      }));
     }
     if (avialableDays.size > 0) {
       setformData((prev: any) => ({
         ...prev,
-        availableDays: [...avialableDays]
-      }))
+        availableDays: [...avialableDays],
+      }));
     }
     console.log("Department", department);
     setformData((prev: any) => ({
       ...prev,
-      department: department
-    }))
+      department: department,
+    }));
     if (visitingTime.length > 0) {
+      console.log("Visiting Time", visitingTime);
+
       setformData((prev: any) => ({
         ...prev,
-        visitingTime: visitingTime
-      }))
+        visitingTime: visitingTime,
+      }));
     }
+    console.log("Form Data", formData);
+
     editMutaion.mutate(formData);
-  }
+  };
   const removeTime = (data: any) => {
     deletSlot.mutate(data._id);
-  }
+  };
   const getMaxValue = (type: string) => {
     switch (type) {
-      case 'morning':
+      case "morning":
         return new Time(12, 0);
-      case 'afternoon':
+      case "afternoon":
         return new Time(16, 0);
-      case 'evening':
+      case "evening":
         return new Time(21, 0);
       default:
         return new Time(24, 0);
@@ -478,18 +528,32 @@ export default function GetDocDetials() {
   };
   return (
     <>
-      {isLoading ? <Spinner title="Loading Doctor Details" /> : (
+      {isLoading ? (
+        <Spinner title="Loading Doctor Details" />
+      ) : (
         <div className="flex flex-col w-full gap-4 p-[1rem]">
           <Breadcrumbs color="secondary">
             {header.map((h: any, index: any) => {
-              return <BreadcrumbItem key={index} onClick={() => router.push(h.link)}>{h.name}</BreadcrumbItem>
+              return (
+                <BreadcrumbItem key={index} onClick={() => router.push(h.link)}>
+                  {h.name}
+                </BreadcrumbItem>
+              );
             })}
           </Breadcrumbs>
           <div className="flex flex-row justify-between w-full gap-4">
             <Title title={getDocDetails?.data.data?.name} />
             <div className="flex flex-row gap-4 justify-between">
-              <Button color="danger" radius="full" onPress={onOpen}>Delete</Button>
-              <Button color="primary" radius="full" onClick={() => setisEdit(true)}>Edit</Button>
+              <Button color="danger" radius="full" onPress={onOpen}>
+                Delete
+              </Button>
+              <Button
+                color="primary"
+                radius="full"
+                onClick={() => setisEdit(true)}
+              >
+                Edit
+              </Button>
             </div>
           </div>
           <Card className="flex flex-col justify-ceneter items-center">
@@ -500,7 +564,11 @@ export default function GetDocDetials() {
               <div className="flex items-center justify-center">
                 <label htmlFor="docImageInput" className="cursor-pointer">
                   <Avatar
-                    src={getDocDetails?.data.data?.image ? getDocDetails?.data.data?.image.path : data.docImage}
+                    src={
+                      getDocDetails?.data.data?.image
+                        ? getDocDetails?.data.data?.image.path
+                        : data.docImage
+                    }
                     alt="docImage"
                     className="w-80 h-80 rounded-full"
                   />
@@ -529,19 +597,18 @@ export default function GetDocDetials() {
               />
               <Autocomplete
                 label="Select an Department"
-                defaultSelectedKey={formData.department}
+                selectedKey={formData.department}
                 isLoading={list1.isLoading}
                 items={list1.items}
                 onSelectionChange={(e) => {
                   if (e !== undefined) {
                     setformData((prev: any) => ({
                       ...prev,
-                      department: e
+                      department: e,
                     }));
-                    console.log('Selected value:', e);
+                    console.log("Selected value:", e);
                   }
-                }
-                }
+                }}
                 className="max-w-full"
               >
                 {list1.items.map((d: any) => (
@@ -590,13 +657,13 @@ export default function GetDocDetials() {
                 label="Experince"
                 className="w-1/4"
                 value={String(formData?.experience)}
-                endContent={
-                  <h3 className="font-bold">Years</h3>
+                endContent={<h3 className="font-bold">Years</h3>}
+                onValueChange={(e) =>
+                  setformData((prev: any) => ({
+                    ...prev,
+                    experience: e,
+                  }))
                 }
-                onValueChange={(e) => setformData((prev: any) => ({
-                  ...prev,
-                  experience: e
-                }))}
               />
               {/*
               <DatePicker
@@ -627,68 +694,128 @@ export default function GetDocDetials() {
                   <h3 className="text-xl font-bold">Publications</h3>
                   <div className="flex flex-row gap-4 w-full">
                     {publishcations?.map((fruit: any, index: any) => (
-                      <Chip color="primary" key={index} onClose={() => removeValue(fruit, setPublications)} variant="flat">
+                      <Chip
+                        color="primary"
+                        key={index}
+                        onClose={() => removeValue(fruit, setPublications)}
+                        variant="flat"
+                      >
                         {fruit}
                       </Chip>
                     ))}
                   </div>
                   <div className="flex flex-row gap-2 w-full">
-                    <Input className="w-1/2" value={pubVal} onValueChange={(e) => setpubVal(e)} placeholder="Add Publishcation" />
-                    <Button onClick={() => {
-                      push(pubVal, setPublications);
-                      setpubVal("");
-                    }} color="primary">Add</Button>
+                    <Input
+                      className="w-1/2"
+                      value={pubVal}
+                      onValueChange={(e) => setpubVal(e)}
+                      placeholder="Add Publishcation"
+                    />
+                    <Button
+                      onClick={() => {
+                        push(pubVal, setPublications);
+                        setpubVal("");
+                      }}
+                      color="primary"
+                    >
+                      Add
+                    </Button>
                   </div>
                 </div>
                 <div className="flex flex-col gap-4 w-full">
                   <h3 className="text-xl font-bold">Memeberships</h3>
                   <div className="flex flex-row gap-4 w-full">
                     {memeberships?.map((fruit: any, index: any) => (
-                      <Chip color="primary" key={index} onClose={() => removeValue(fruit, setMemeberShips)} variant="flat">
+                      <Chip
+                        color="primary"
+                        key={index}
+                        onClose={() => removeValue(fruit, setMemeberShips)}
+                        variant="flat"
+                      >
                         {fruit}
                       </Chip>
                     ))}
                   </div>
                   <div className="flex flex-row gap-2 w-full">
-                    <Input className="w-1/2" value={memeberVal} onValueChange={(e) => setmemeberVal(e)} placeholder="Add Memeberships" />
-                    <Button onClick={() => {
-                      push(memeberVal, setMemeberShips);
-                      setmemeberVal("");
-                    }} color="primary">Add</Button>
+                    <Input
+                      className="w-1/2"
+                      value={memeberVal}
+                      onValueChange={(e) => setmemeberVal(e)}
+                      placeholder="Add Memeberships"
+                    />
+                    <Button
+                      onClick={() => {
+                        push(memeberVal, setMemeberShips);
+                        setmemeberVal("");
+                      }}
+                      color="primary"
+                    >
+                      Add
+                    </Button>
                   </div>
                 </div>
                 <div className="flex flex-col gap-4 w-full">
                   <h3 className="text-xl font-bold">Qualifications</h3>
                   <div className="flex flex-row gap-4 w-full">
                     {qualifications?.map((fruit: any, index: any) => (
-                      <Chip color="primary" key={index} onClose={() => removeValue(fruit, setQualifications)} variant="flat">
+                      <Chip
+                        color="primary"
+                        key={index}
+                        onClose={() => removeValue(fruit, setQualifications)}
+                        variant="flat"
+                      >
                         {fruit}
                       </Chip>
                     ))}
                   </div>
                   <div className="flex flex-row gap-2 w-full">
-                    <Input className="w-1/2" value={qualificationVal} onValueChange={(e) => setqualificationVal(e)} placeholder="Add Qualifications" />
-                    <Button onClick={() => {
-                      push(qualificationVal, setQualifications);
-                      setqualificationVal("");
-                    }} color="primary">Add</Button>
+                    <Input
+                      className="w-1/2"
+                      value={qualificationVal}
+                      onValueChange={(e) => setqualificationVal(e)}
+                      placeholder="Add Qualifications"
+                    />
+                    <Button
+                      onClick={() => {
+                        push(qualificationVal, setQualifications);
+                        setqualificationVal("");
+                      }}
+                      color="primary"
+                    >
+                      Add
+                    </Button>
                   </div>
                 </div>
                 <div className="flex flex-col gap-4 w-full">
                   <h3 className="text-xl font-bold">Achivements</h3>
                   <div className="flex flex-row gap-4 w-full">
                     {achivements?.map((fruit: any, index: any) => (
-                      <Chip color="primary" key={index} onClose={() => removeValue(fruit, setAchivements)} variant="flat">
+                      <Chip
+                        color="primary"
+                        key={index}
+                        onClose={() => removeValue(fruit, setAchivements)}
+                        variant="flat"
+                      >
                         {fruit}
                       </Chip>
                     ))}
                   </div>
                   <div className="flex flex-row gap-2 w-full">
-                    <Input className="w-1/2" value={achivementVal} onValueChange={(e) => setachivementVal(e)} placeholder="Add Achivements" />
-                    <Button onClick={() => {
-                      push(achivementVal, setAchivements);
-                      setachivementVal("");
-                    }} color="primary">Add</Button>
+                    <Input
+                      className="w-1/2"
+                      value={achivementVal}
+                      onValueChange={(e) => setachivementVal(e)}
+                      placeholder="Add Achivements"
+                    />
+                    <Button
+                      onClick={() => {
+                        push(achivementVal, setAchivements);
+                        setachivementVal("");
+                      }}
+                      color="primary"
+                    >
+                      Add
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -701,15 +828,25 @@ export default function GetDocDetials() {
             <CardBody className="flex flex-col w-full gap-4">
               <div className="flex flex-row items-center gap-3">
                 <h3 className="font-bold text-lg">Visitng Time</h3>
-                <Button className="w-[20px]" color="primary" onClick={() => seteditVisit(true)}>Add</Button>
+                <Button
+                  className="w-[20px]"
+                  color="primary"
+                  onClick={() => seteditVisit(true)}
+                >
+                  Add
+                </Button>
               </div>
               <div className="flex flex-col w-full">
                 <div className="flex flex-row w-1/2">
-                  <div className="flex flex-row w-1/2">
+                  <div className="flex flex-row w-1/2 gap-3">
                     {visitingTime.map((v: VisitngTime, index: number) => (
                       <Fragment key={index}>
-                        <Chip color="primary" variant="flat"
-                          className="w-20 h-10 border border-blue-300 text-md" onClose={() => deleteVisiting(index)}>
+                        <Chip
+                          color="primary"
+                          variant="flat"
+                          className="w-20 h-10 border border-blue-300 text-md"
+                          onClose={() => deleteVisiting(index)}
+                        >
                           {v.from} - {v.to}
                         </Chip>
                       </Fragment>
@@ -719,96 +856,47 @@ export default function GetDocDetials() {
                     <div className="flex flex-col md:flex-row w-full gap-4">
                       <Input
                         label="From"
-                        onValueChange={(e) => setValTime((prev: any) => ({
-                          ...prev,
-                          from: e
-                        }))}
-                        endContent={
-                          <Select
-                            isRequired
-                            placeholder="Am or Pm"
-                            onChange={(e) => {
-                              const period = e.target.value;
-                              setValTime(prev => {
-                                const fromTime = prev.from;
-                                if (!fromTime) {
-                                  toast.error("Please enter time first", {
-                                    position: "top-right",
-                                    className: "bg-red-300"
-                                  })
-                                  return prev;
-                                }
-                                if (fromTime.includes("AM") || fromTime.includes("PM")) {
-                                  return {
-                                    ...prev,
-                                    from: `${fromTime} ${period}`
-                                  }
-                                }
-                                return {
-                                  ...prev,
-                                  from: `${fromTime} ${period}`
-                                };
-                              });
-                            }}
-                            className="max-w-xs"
-                          >
-                            {["AM", "PM"].map((animal: any, index: any) => (
-                              <SelectItem key={animal} value={animal}>
-                                {animal}
-                              </SelectItem>
-                            ))}
-                          </Select>
+                        type="time"
+                        onValueChange={(e) =>
+                          setValTime((prev: any) => ({
+                            ...prev,
+                            from: e,
+                          }))
                         }
                         value={valTime.from}
                       />
                       <Input
                         label="To"
-                        onValueChange={(e) => setValTime((prev: any) => ({
-                          ...prev,
-                          to: e
-                        }))}
-                        endContent={
-                          <Select
-                            isRequired
-                            placeholder="Am or Pm"
-                            onChange={(e) => {
-                              const period = e.target.value;
-                              setValTime(prev => {
-                                const toTime = prev.to;
-                                if (!toTime) {
-                                  toast.error("Please enter time first", {
-                                    position: "top-right",
-                                    className: "bg-red-300"
-                                  })
-                                  return prev;
-                                }
-                                return {
-                                  ...prev,
-                                  to: `${toTime} ${period}`
-                                };
-                              });
-                            }}
-                            className="max-w-xs"
-                          >
-                            {["AM", "PM"].map((animal: any, index: any) => (
-                              <SelectItem key={animal} value={animal}>
-                                {animal}
-                              </SelectItem>
-                            ))}
-                          </Select>
-                        }
+                        type="time"
+                        onValueChange={(e) => {
+                          setValTime((prev: any) => ({
+                            ...prev,
+                            to: e,
+                          }));
+                        }}
                         value={valTime.to}
                       />
-                      <Button color="primary" onClick={() => pushVisting(valTime.from, valTime.to)}>Save</Button>
+
+                      <Button
+                        color="primary"
+                        onClick={() => pushVisting(valTime.from, valTime.to)}
+                      >
+                        Save
+                      </Button>
                     </div>
                   )}
-
                 </div>
               </div>
               <div className="flex flex-col gap-4 w-full">
                 <div className="flex flex-row items-center gap-4 w-1/4">
                   <h3 className="text-xl font-bold">Available Days</h3>
-                  <Button color="primary" radius="lg" onClick={() => setavailEdit(true)}>Edit</Button>
+                  <Button
+                    color="primary"
+                    radius="lg"
+                    onClick={() => setavailEdit(true)}
+                  >
+                    Edit
+                  </Button>
                 </div>
                 <div className="flex flex-row gap-4">
                   {Array.from(avialableDays).map((day: any, index: any) => (
@@ -835,7 +923,9 @@ export default function GetDocDetials() {
                     onChange={(e: any) => {
                       const selectedDay = e.target.value;
                       if (selectedDay) {
-                        setavailableDays((prevDays: any) => new Set(prevDays).add(selectedDay));
+                        setavailableDays((prevDays: any) =>
+                          new Set(prevDays).add(selectedDay)
+                        );
                         setavailEdit(false);
                       }
                     }}
@@ -854,16 +944,32 @@ export default function GetDocDetials() {
               {sechudling?.map((s: any, index: any) => {
                 return (
                   <>
-                    <div key={index} className="flex flex-row items-center w-full md:w-1/2 justify-around">
+                    <div
+                      key={index}
+                      className="flex flex-row items-center w-full md:w-1/2 justify-around"
+                    >
                       <h1 className="font-bold">{s.name}</h1>
                       {s?.timings.map((t: any, index: any) => {
                         return (
-                          <div key={index} className="flex flex-row justify-start w-20">
-                            <Chip color="secondary" onClose={() => removeTime(s.data)} radius="full" variant="solid">{t} </Chip>
+                          <div
+                            key={index}
+                            className="flex flex-row justify-start w-20"
+                          >
+                            <Chip
+                              color="secondary"
+                              onClose={() => removeTime(s.data)}
+                              radius="full"
+                              variant="solid"
+                            >
+                              {t}{" "}
+                            </Chip>
                           </div>
-                        )
+                        );
                       })}
-                      <FaEdit className="cursor-pointer" onClick={() => setype(s)} />
+                      <FaEdit
+                        className="cursor-pointer"
+                        onClick={() => setype(s)}
+                      />
                       {s?.name === type.name && (
                         <div className="flex items-center w-1/4">
                           <TimeInput
@@ -872,12 +978,17 @@ export default function GetDocDetials() {
                             // defaultValue={type.timings[type.timings.length - 1]}
                             maxValue={getMaxValue(type.name.toLowerCase())}
                           />
-                          <Button color="secondary" onClick={() => handleUpdate(type.name)}>Update</Button>
+                          <Button
+                            color="secondary"
+                            onClick={() => handleUpdate(type.name)}
+                          >
+                            Update
+                          </Button>
                         </div>
                       )}
                     </div>
                   </>
-                )
+                );
               })}
             </CardBody>
           </Card>
@@ -886,24 +997,38 @@ export default function GetDocDetials() {
               Address
             </CardHeader>
             <CardBody className="flex flex-col gap-4 items-center">
-              <Input label="Location URL" value={formData.locationUrl} onValueChange={(e) => setformData((prev) => ({
-                ...prev,
-                locationUrl: e
-              }))} />
+              <Input
+                label="Location URL"
+                value={formData.locationUrl}
+                onValueChange={(e) =>
+                  setformData((prev) => ({
+                    ...prev,
+                    locationUrl: e,
+                  }))
+                }
+              />
               <div className="flex flex-row gap-4 w-full">
-                <Input label="Address" value={formData.address} onValueChange={(e) => setformData((prev) => ({
-                  ...prev,
-                  address: e
-                }))} />
+                <Input
+                  label="Address"
+                  value={formData.address}
+                  onValueChange={(e) =>
+                    setformData((prev) => ({
+                      ...prev,
+                      address: e,
+                    }))
+                  }
+                />
                 <Autocomplete
                   label="Select an District"
                   selectedKey={formData.district}
                   isLoading={district.isLoading}
                   items={district.items}
-                  onSelectionChange={(e) => setformData((prev: any) => ({
-                    ...prev,
-                    district: e
-                  }))}
+                  onSelectionChange={(e) =>
+                    setformData((prev: any) => ({
+                      ...prev,
+                      district: e,
+                    }))
+                  }
                   className="max-w-full"
                 >
                   {district.items.map((d: any) => (
@@ -912,7 +1037,6 @@ export default function GetDocDetials() {
                     </AutocompleteItem>
                   ))}
                 </Autocomplete>
-
               </div>
             </CardBody>
           </Card>
@@ -925,28 +1049,52 @@ export default function GetDocDetials() {
               <Input
                 label="Pricing"
                 value={String(formData.price)}
-                endContent={
-                  <h3 className="font-bold">Rs</h3>
-                }
+                endContent={<h3 className="font-bold">Rs</h3>}
                 className="w-1/2"
-                onValueChange={(e) => setformData((prev: any) => ({
-                  ...prev,
-                  price: e
-                }))}
+                onValueChange={(e) =>
+                  setformData((prev: any) => ({
+                    ...prev,
+                    price: e,
+                  }))
+                }
               />
             </CardBody>
           </Card>
-          {isEdit &&
-            <Button variant="ghost" color="secondary" onClick={(e) => handleChangeUpdate(e)} radius="full" className="w-full">
+          {isEdit && (
+            <Button
+              variant="ghost"
+              color="secondary"
+              onClick={(e) => handleChangeUpdate(e)}
+              radius="full"
+              className="w-full"
+            >
               Submit
             </Button>
-          }
-          <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title={`${getDocDetails?.data.data?.name} Enquiry`} />
-          <Page needAddModal={false} api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title={`${getDocDetails?.data.data?.name} Appointment`} />
-        </div >
-      )
-      }
-      <DeleteModal onOpenChange={onOpenChange} isOpen={isOpen} title="Doctor" api={Doctor.docotor} data={id} queryKey={["doctor"]} />
+          )}
+          <Page
+            needAddModal={false}
+            api={Doctor.enquiry}
+            apiKey="enquiryByHospital"
+            columns={enquiryColumns}
+            title={`${getDocDetails?.data.data?.name} Enquiry`}
+          />
+          <Page
+            needAddModal={false}
+            api={Doctor.appointments}
+            apiKey="appointments"
+            columns={appointmentColumns}
+            title={`${getDocDetails?.data.data?.name} Appointment`}
+          />
+        </div>
+      )}
+      <DeleteModal
+        onOpenChange={onOpenChange}
+        isOpen={isOpen}
+        title="Doctor"
+        api={Doctor.docotor}
+        data={id}
+        queryKey={["doctor"]}
+      />
     </>
   );
 }

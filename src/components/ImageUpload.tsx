@@ -21,24 +21,22 @@ export function ImageUploadMultiple({
 }: ImageUploadProps) {
   const [files, setFiles] = useState<File[]>([]);
   const [imageUrls, setImageUrls] = useState<any[]>([]);
-  console.log(images);
 
   const addImage = useMutation({
-    mutationKey: ['add-images'],
-    mutationFn: (formData: FormData) => postMultipart(`${postapi}/${id}`, {}, formData),
+    mutationKey: ["add-images"],
+    mutationFn: (formData: FormData) =>
+      postMultipart(`${postapi}/${id}`, {}, formData),
     onSuccess: (data: any) => {
-      console.log(data);
-      toast.success('Images uploaded successfully', {
-        position: 'top-right',
-        className: 'bg-green-300',
+      toast.success("Images uploaded successfully", {
+        position: "top-right",
+        className: "bg-green-300",
       });
       queryAdmin.invalidateQueries({ queryKey: [getapikey] });
     },
     onError: (error: any) => {
-      console.error(error);
-      toast.error('Failed to upload images', {
-        position: 'top-right',
-        className: 'bg-red-300',
+      toast.error("Failed to upload images", {
+        position: "top-right",
+        className: "bg-red-300",
       });
     },
   });
@@ -75,35 +73,69 @@ export function ImageUploadMultiple({
     addImage.mutate(formData);
   };
 
+  useEffect(() => {
+    if (images) {
+      setImageUrls(images.map((image: any) => image.path));
+    }
+  }, [images]);
+
   return (
     <div>
       <div className="flex flex-row w-full gap-4">
-        {[...Array(5)].map((_, index) => (
-          <div key={index} className="flex flex-row items-center justify-center">
+        {imageUrls.map((item, index) => (
+          <div
+            key={index}
+            className="flex flex-row items-center justify-center"
+          >
             <label htmlFor={`image-upload-${index}`} className="cursor-pointer">
               <Avatar
-                src={imageUrls[index] || images[index]?.path || uploadLogo}
+                src={item}
                 alt={`image-${index}`}
-                className="w-60 h-60 rounded-full"
+                className="w-[200px] h-[200px] rounded-xl"
               />
               <input
                 id={`image-upload-${index}`}
                 type="file"
                 accept="image/*"
                 className="hidden"
+                // max allow 5 images
+                disabled={index >= 5}
                 onChange={(e) => handleFileChange(e, index)}
               />
             </label>
           </div>
         ))}
+        {
+          // if images less than 5, add more
+          imageUrls.length < 5 && (
+            <div className="flex flex-row items-center justify-center">
+              <label
+                htmlFor={`image-upload-${imageUrls.length}`}
+                className="cursor-pointer"
+              >
+                <Avatar
+                  src={uploadLogo}
+                  alt={`image-${imageUrls.length}`}
+                  className="w-[200px] h-[200px] rounded-xl"
+                />
+                <input
+                  id={`image-upload-${imageUrls.length}`}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => handleFileChange(e, imageUrls.length)}
+                />
+              </label>
+            </div>
+          )
+        }
       </div>
-      <Button onClick={handleUpload} color="primary" disabled={files.length === 0}>
+      <Button onClick={handleUpload} color="primary">
         Upload Images
       </Button>
     </div>
   );
 }
-
 
 interface ImageSingleProps {
   getapikey: string;
@@ -122,27 +154,23 @@ export function ImageSingle({
   const addImage = useMutation({
     mutationKey: ["post image"],
     mutationFn: (data: FormData) => {
-      console.log(data);
       return postMultipart(`${postapi}/${id}`, {}, data);
     },
     onSuccess: (data: any) => {
-      console.log(data);
       toast.success("Image uploaded successfully", {
         position: "top-right",
-        className: "bg-green-300"
-      })
+        className: "bg-green-300",
+      });
       queryAdmin.invalidateQueries({ queryKey: [getapikey] });
     },
     onError: (error: any) => {
-      console.log(error);
       toast.error("Image uploaded error", {
         position: "top-right",
-        className: "bg-red-300"
-      })
-    }
+        className: "bg-red-300",
+      });
+    },
   });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e);
     if (!e.target.files) {
       alert("No file uploaded");
       return;
@@ -155,20 +183,13 @@ export function ImageSingle({
     };
     reader.readAsDataURL(file);
     const formData: FormData = new FormData();
-    console.log(file);
-    console.log(formData.append("image", file));
     addImage.mutate(formData);
   };
   return (
     <div className="flex items-center justify-center">
       <label htmlFor="imageinput" className="cursor-pointer">
         <Avatar
-          src={
-            image
-              ? image?.path
-              : uploadImageUrl ||
-              uploadLogo
-          }
+          src={image ? image?.path : uploadImageUrl || uploadLogo}
           alt="docImage"
           className="w-full h-full rounded-xl"
         />
