@@ -1,8 +1,10 @@
 "use client";
 import Page from "@/components/Page/PageAll";
 import Title, { SubTitle } from "@/components/titles";
+import { getData, postData } from "@/core/apiHandler";
 import { Doctor } from "@/core/apiRoutes";
 import { Tabs, Tab, Card, Breadcrumbs, BreadcrumbItem } from "@nextui-org/react";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 const DepartmentTableColums = [
@@ -12,9 +14,9 @@ const DepartmentTableColums = [
     type: "text"
   },
   {
-    name: "Department Name",
-    uid: "name",
-    type: "text"
+    name: "Enquiry Type",
+    uid: "enquiryType",
+    type: "text",
   },
   {
     name: "Email",
@@ -23,7 +25,7 @@ const DepartmentTableColums = [
   },
   {
     name: "Status",
-    uid: "status",
+    uid: "enquirystatus",
     type: "leadsStatus"
   },
   {
@@ -139,6 +141,12 @@ const breadCrumbs = [
 export default function Dev() {
   const router = useRouter();
   const arr = ["Status 1", "Status 2", "Status 3"];
+  const getEnuiry = useQuery({
+    queryKey: ["getenuiry"],
+    queryFn: () => {
+      return getData("/enquiry", {});
+    }
+  })
   return (
     <div className="flex flex-col w-full">
       <Title title="Leads" />
@@ -153,7 +161,10 @@ export default function Dev() {
           {arr.map((a: any, index: any) => {
             return <Tab key={index} name={a} title={a}>
               <Card shadow="none">
-                <Page api={Doctor.department} apiKey="getdepartment" columns={DepartmentTableColums} title={a} needAddModal={false} />
+                <Page
+                  api={"/enquiry"}
+                  apiKey="getdepartment"
+                  columns={DepartmentTableColums} title={a} needAddModal={false} />
               </Card>
             </Tab>
           })}
