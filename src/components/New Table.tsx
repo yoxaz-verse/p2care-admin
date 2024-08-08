@@ -42,6 +42,9 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
 };
 import { motion } from "framer-motion";
 import { Statuses } from "@/utilis/content";
+import { useAsyncList } from "@react-stately/data";
+import { getData } from "@/core/apiHandler";
+import { useQuery } from "@tanstack/react-query";
 interface CustomTableProps {
   title: string;
   data: any;
@@ -62,7 +65,14 @@ export default function CustomTable({
   setPage,
   limit,
 }: CustomTableProps) {
-  const status = ["Pending", "Completed", "In way"];
+
+
+  const { data: status, isLoading } = useQuery({
+    queryKey: ["getstatus"],
+    queryFn: () => {
+      return getData("/enquiry-status", {});
+    }
+  })
   const navigate = useRouter();
   const renderCell = React.useCallback((data: any, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof any];
@@ -148,10 +158,9 @@ export default function CustomTable({
             isRequired
             label="Status"
             placeholder="Update Status"
-            defaultSelectedKeys={["Pending"]}
             className="max-w-full"
           >
-            {status.map((s: any) => (
+            {status?.data.data.map((s: any) => (
               <SelectItem key={s}>{s}</SelectItem>
             ))}
           </Select>
