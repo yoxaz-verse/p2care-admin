@@ -74,14 +74,7 @@ export default function GetDocDetials() {
         position: "top-right",
         className: "bg-green-300",
       });
-      setSechduling((prevScheduling: any) => {
-        return prevScheduling.map((schedule: any) => {
-          return {
-            ...schedule,
-            data: schedule.data._id === id,
-          };
-        });
-      });
+
       queryAdmin.invalidateQueries({ queryKey: ["get-doctorSlot", id] });
     },
   });
@@ -247,35 +240,98 @@ export default function GetDocDetials() {
     if (!isLoadingslot) {
       const slot = getSlot?.data?.data?.data;
       console.log(getSlot?.data.data.data);
-      slot.map((s: any) => {
-        const date = new Date(s.slotTime);
+      // slot.map((s: any) => {
+      //   const date = new Date(s.slotTime);
 
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        const period = hours >= 12 ? "PM" : "AM";
-        const formattedHours = hours % 12 || 12;
-        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      //   const hours = date.getHours();
+      //   const minutes = date.getMinutes();
+      //   const period = hours >= 12 ? "PM" : "AM";
+      //   const formattedHours = hours % 12 || 12;
+      //   const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
 
-        const item = {
-          name: s.session,
-          timings: `${formattedHours}:${formattedMinutes} ${period}`,
-          data: s,
-        };
+      //   const item = {
+      //     name: s.session,
+      //     timings: `${formattedHours}:${formattedMinutes} ${period}`,
+      //     data: s,
+      //   };
 
-        setSechduling((prevScheduling: any) => {
-          return prevScheduling.map((schedule: any) => {
-            if (schedule.name.toLowerCase() === item.name) {
-              return {
-                ...schedule,
-                timings: [...schedule.timings, item.timings],
-                data: { ...schedule.data, ...item.data },
-              };
-            }
-            return schedule;
-          });
+      //   setSechduling((prevScheduling: any) => {
+      //     return prevScheduling.map((schedule: any) => {
+      //       if (schedule.name.toLowerCase() === item.name) {
+      //         return {
+      //           ...schedule,
+      //           timings: [item.timings],
+      //           data: item.data,
+      //         };
+      //       }
+      //       return schedule;
+      //     });
+      //   });
+      // });
+
+      let morning = slot.filter((s: any) => s.session === "morning");
+      let afternoon = slot.filter((s: any) => s.session === "afternoon");
+      let evening = slot.filter((s: any) => s.session === "evening");
+
+      setSechduling((prevScheduling: any) => {
+        return prevScheduling.map((schedule: any) => {
+          if (schedule.name.toLowerCase() === "morning") {
+            console.log(morning);
+            console.log(schedule);
+
+            return {
+              ...schedule,
+              timings: morning.map((m: any) => {
+                const date = new Date(m.slotTime);
+                const hours = date.getHours();
+                const minutes = date.getMinutes();
+                const period = hours >= 12 ? "PM" : "AM";
+                const formattedHours = hours % 12 || 12;
+                const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+                return {
+                  time: `${formattedHours}:${formattedMinutes} ${period}`,
+                  data: m,
+                };
+              }),
+            };
+          }
+          if (schedule.name.toLowerCase() === "afternoon") {
+            return {
+              ...schedule,
+              timings: afternoon.map((m: any) => {
+                const date = new Date(m.slotTime);
+                const hours = date.getHours();
+                const minutes = date.getMinutes();
+                const period = hours >= 12 ? "PM" : "AM";
+                const formattedHours = hours % 12 || 12;
+                const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+                return {
+                  time: `${formattedHours}:${formattedMinutes} ${period}`,
+                  data: m,
+                };
+              }),
+            };
+          }
+          if (schedule.name.toLowerCase() === "evening") {
+            return {
+              ...schedule,
+              timings: evening.map((m: any) => {
+                const date = new Date(m.slotTime);
+                const hours = date.getHours();
+                const minutes = date.getMinutes();
+                const period = hours >= 12 ? "PM" : "AM";
+                const formattedHours = hours % 12 || 12;
+                const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+                return {
+                  time: `${formattedHours}:${formattedMinutes} ${period}`,
+                  data: m,
+                };
+              }),
+            };
+          }
+          return schedule;
         });
       });
-      console.log(sechudling);
     }
   }, [isLoadingslot, getSlot]);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -957,11 +1013,11 @@ export default function GetDocDetials() {
                           >
                             <Chip
                               color="secondary"
-                              onClose={() => removeTime(s.data)}
+                              onClose={() => removeTime(t.data)}
                               radius="full"
                               variant="solid"
                             >
-                              {t}{" "}
+                              {t.time}{" "}
                             </Chip>
                           </div>
                         );
