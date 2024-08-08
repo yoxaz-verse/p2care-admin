@@ -11,6 +11,7 @@ import { queryAdmin } from "@/app/providers";
 import Page from "@/components/Page/PageAll";
 import { useAsyncList } from "@react-stately/data";
 import { list } from "postcss";
+import { ImageSingle } from "@/components/ImageUpload";
 
 const breadCrumps = [
   { name: "Dashboard", link: "/dashboard" },
@@ -24,10 +25,10 @@ export default function DepartmentDetails() {
   const { id } = useParams();
 
   const { data: getDepartment, isLoading, isError, isFetched } = useQuery({
-    queryKey: ["getDepartment", id],
-    queryFn: () => getData(Doctor.department, { id }),
+    queryKey: ["getDepartment"],
+    queryFn: () => getData(`${Doctor.department}/${id}`, {}),
   });
-
+  console.log(getDepartment?.data?.data.image.path);
   const [formData, setFormData] = useState<any>({
     name: "",
     description: "",
@@ -37,13 +38,14 @@ export default function DepartmentDetails() {
   });
 
   useEffect(() => {
-    if (getDepartment?.data?.data?.data[0]) {
+    console.log(getDepartment?.data.data)
+    if (getDepartment?.data?.data) {
       setFormData({
-        name: getDepartment.data.data.data[0].name,
-        description: getDepartment.data.data.data[0].description,
-        metaTitle: getDepartment.data.data.data[0].metaTitle,
-        metaDescription: getDepartment.data.data.data[0].metaDescription,
-        code: getDepartment.data.data.data[0].code,
+        name: getDepartment.data.data.name,
+        description: getDepartment.data.data.description,
+        metaTitle: getDepartment.data.data.metaTitle,
+        metaDescription: getDepartment.data.data.metaDescription,
+        code: getDepartment.data.data.code,
       });
     }
   }, [getDepartment]);
@@ -53,7 +55,7 @@ export default function DepartmentDetails() {
       return getData(Doctor.procedure, {});
     }
   })
-  console.log(getProceudre?.data.data);
+
   const updateData = useMutation({
     mutationKey: ["update-department"],
     mutationFn: (data: any) => patchData(`${Doctor.department}/${id}`, data, {}),
@@ -135,7 +137,7 @@ export default function DepartmentDetails() {
             </Breadcrumbs>
 
             <div className="flex flex-row justify-between items-center w-full">
-              <Title title={getDepartment?.data?.data?.data[0]?.name} />
+              <Title title={getDepartment?.data?.data?.name} />
               <div className="flex flex-row gap-4">
                 <Button color="primary" radius="full" onClick={() => setisEdit(true)}>Edit</Button>
                 <Button color="danger" radius="full" onClick={onOpen}>Delete</Button>
@@ -154,6 +156,10 @@ export default function DepartmentDetails() {
             <CardHeader className="text-xl font-bold">Department Details</CardHeader>
             <CardBody className="flex flex-row h-full items-center justify-center">
               <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
+                <ImageSingle id={id}
+                  getapikey="getDepartment"
+                  postapi={"/department/upload"}
+                  image={getDepartment?.data?.data?.image} />
                 <Input
                   name="name"
                   value={formData.name}
@@ -194,9 +200,9 @@ export default function DepartmentDetails() {
           </Card>
         </div>
       )}
-      <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title={`${getDepartment?.data?.data?.data[0]?.name} Enquiry`} />
-      <Page needAddModal={false} api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title={`${getDepartment?.data?.data?.data[0]?.name} Appointment`} />
-      <Page dropDownData={DropDownData} api={Doctor.procedure} apiKey="procedure" columns={procedureColumns} title={`${getDepartment?.data?.data?.data[0]?.name} Procedures`} />
+      <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title={`${getDepartment?.data?.data?.name} Enquiry`} />
+      <Page needAddModal={false} api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title={`${getDepartment?.data?.data?.name} Appointment`} />
+      <Page dropDownData={DropDownData} api={Doctor.procedure} apiKey="procedure" columns={procedureColumns} title={`${getDepartment?.data?.data?.name} Procedures`} />
     </div>
   );
 }
