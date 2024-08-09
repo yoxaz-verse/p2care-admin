@@ -16,6 +16,7 @@ import {
   Select,
   SelectItem,
   Spinner,
+  Switch,
   TimeInput,
   TimeInputValue,
   useDisclosure,
@@ -32,7 +33,7 @@ import DeleteModal from "@/components/Modals/DeleteModal";
 import { useState, useEffect, Fragment, use } from "react";
 import { FaEdit } from "react-icons/fa";
 import { Time } from "@internationalized/date";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import {
   deleteData,
   getData,
@@ -43,6 +44,7 @@ import {
 import { useAsyncList } from "@react-stately/data";
 import { toast } from "sonner";
 import { queryAdmin } from "@/app/providers";
+import { recordTraceEvents } from "next/dist/trace";
 
 export default function GetDocDetials() {
   const path = usePathname();
@@ -582,6 +584,27 @@ export default function GetDocDetials() {
         return new Time(24, 0);
     }
   };
+  const markAsTop = useMutation({
+    mutationKey: ["markAsTop"],
+    mutationFn: (data: any) => {
+      return postData(`/doctor/top/${id}`, data, {});
+    },
+    onSuccess: () => {
+      toast.success("Doctor is marked as top", {
+        position: "top-right",
+        className: "bg-green-300"
+      })
+      queryAdmin.invalidateQueries({ queryKey: ["doctorDetails", id] });
+    }
+  });
+  const handleChangeTop = (e: any) => {
+    e.preventDefault();
+    const item = {
+      isTop: !getDocDetails?.data.data.isMain
+    }
+    console.log(item);
+    markAsTop.mutate(item);
+  }
   return (
     <>
       {isLoading ? (
@@ -599,7 +622,8 @@ export default function GetDocDetials() {
           </Breadcrumbs>
           <div className="flex flex-row justify-between w-full gap-4">
             <Title title={getDocDetails?.data.data?.name} />
-            <div className="flex flex-row gap-4 justify-between">
+            <div className="flex flex-row gap-4 items-center justify-between">
+              <Switch onClick={(e) => handleChangeTop(e)} isSelected={getDocDetails?.data.data?.isMain} aria-label="Automatic updates" />
               <Button color="danger" radius="full" onPress={onOpen}>
                 Delete
               </Button>

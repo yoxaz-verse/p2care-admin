@@ -8,7 +8,7 @@ import React from "react";
 import { useState } from "react";
 import Page from "@/components/Page/PageAll";
 import { DesignationRoutes, Doctor, GenderRoutes } from "@/core/apiRoutes";
-import { Button, DateInput, DatePicker, TimeInput } from "@nextui-org/react";
+import { Button, DateInput, DatePicker, TimeInput, Switch } from "@nextui-org/react";
 import { Time } from "@internationalized/date";
 import DoctorComponent from "@/components/DoctorComponent";
 import { useQuery } from "@tanstack/react-query";
