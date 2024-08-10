@@ -55,7 +55,7 @@ export default function DataCard({
   const [avilDaysEdit, setavailEdit] = useState<boolean>(false);
   const [modesEdit, setmodesEdit] = useState<boolean>(false);
   const { data: getValue, isLoading, isSuccess } = useQuery({
-    queryKey: [getapikey],
+    queryKey: [getapikey, id],
     queryFn: async () => {
       return await getData(`${getapi}/${id}`, {});
     },

@@ -587,7 +587,7 @@ export default function GetDocDetials() {
   const markAsTop = useMutation({
     mutationKey: ["markAsTop"],
     mutationFn: (data: any) => {
-      return postData(`/doctor/top/${id}`, data, {});
+      return patchData(`/doctor/top/${id}`, data, {});
     },
     onSuccess: () => {
       toast.success("Doctor is marked as top", {
@@ -623,7 +623,14 @@ export default function GetDocDetials() {
           <div className="flex flex-row justify-between w-full gap-4">
             <Title title={getDocDetails?.data.data?.name} />
             <div className="flex flex-row gap-4 items-center justify-between">
-              <Switch onClick={(e) => handleChangeTop(e)} isSelected={getDocDetails?.data.data?.isMain} aria-label="Automatic updates" />
+              <Switch
+                size="lg"
+                color="success"
+                onClick={(e) => handleChangeTop(e)}
+                isSelected={getDocDetails?.data.data?.isMain}
+                aria-label="Automatic updates">
+                Mark the Doctor as top
+              </Switch>
               <Button color="danger" radius="full" onPress={onOpen}>
                 Delete
               </Button>

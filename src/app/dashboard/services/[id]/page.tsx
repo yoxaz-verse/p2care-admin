@@ -1,16 +1,19 @@
 "use client";
+import { queryAdmin } from "@/app/providers";
 import AttachCard from "@/components/AttachCard";
 import DataCard from "@/components/Cards/DataCard";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import Page from "@/components/Page/PageAll";
 import Title from "@/components/titles";
-import { getData } from "@/core/apiHandler";
+import { getData, patchData } from "@/core/apiHandler";
 import { Doctor, HospitalRoutes, serviceRoutes } from "@/core/apiRoutes";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Input, useDisclosure } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Input, Switch, useDisclosure } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams, usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function ServiceName() {
   const { id } = useParams();
@@ -58,6 +61,34 @@ export default function ServiceName() {
       };
     },
   });
+  const markAsTop = useMutation({
+    mutationKey: ["markAsTop"],
+    mutationFn: (data: any) => {
+      return patchData(`/service/top/${id}`, data, {});
+    },
+    onSuccess: () => {
+      toast.success("Service is marked as top", {
+        position: "top-right",
+        className: "bg-green-300"
+      })
+      queryAdmin.invalidateQueries({ queryKey: ["getservice", id] });
+    }
+  });
+  const { data: getservice, isLoading, isSuccess } = useQuery({
+    queryKey: ["getservice", id],
+    queryFn: async () => {
+      return await getData(`${serviceRoutes.service}/${id}`, {});
+    },
+  });
+  const handleChangeTop = (e: any) => {
+    e.preventDefault();
+    const item = {
+      isTop: !getservice?.data?.data?.isMain
+    }
+    console.log(item);
+    markAsTop.mutate(item);
+  }
+
   const hospitalList = useAsyncList<any>({
     async load() {
       let res = await getData(HospitalRoutes.hospital, {});
@@ -91,6 +122,12 @@ export default function ServiceName() {
         <div className="flex flex-row justify-between items-center w-full">
           <Title title="Service Details" />
           <div className="flex flex-row gap-4">
+            <Switch
+              size="lg"
+              color="success"
+              onClick={(e) => handleChangeTop(e)}
+              isSelected={getservice?.data.data?.isMain}
+              aria-label="Automatic updates" className="text-xl">Mark the Service as Top</Switch>
             <Button color="danger" radius="full" onClick={() => onOpen()}>Delete</Button>
           </div>
         </div>

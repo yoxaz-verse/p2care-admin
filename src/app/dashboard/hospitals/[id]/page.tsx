@@ -13,6 +13,7 @@ import {
   CardBody,
   CardHeader,
   Input,
+  Switch,
   useDisclosure,
 } from "@nextui-org/react";
 import { useParams, usePathname, useRouter } from "next/navigation";
@@ -21,8 +22,11 @@ import { Doctor, HospitalRoutes, LocationRoutes } from "@/core/apiRoutes";
 import Page from "@/components/Page/PageAll";
 import AttachCard from "@/components/AttachCard";
 import DataCard from "@/components/Cards/DataCard";
-import { getData } from "@/core/apiHandler";
+import { getData, patchData } from "@/core/apiHandler";
 import { useAsyncList } from "@react-stately/data";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { queryAdmin } from "@/app/providers";
 
 export default function HospitalDetail() {
   const path = usePathname();
@@ -116,6 +120,40 @@ export default function HospitalDetail() {
       };
     },
   });
+  const markAsTop = useMutation({
+    mutationKey: ["markAsTop"],
+    mutationFn: (data: any) => {
+      return patchData(`/hospital/top/${id}`, data, {});
+    },
+    onSuccess: () => {
+      toast.success("Hospital is marked as top", {
+        position: "top-right",
+        className: "bg-green-300"
+      })
+      queryAdmin.invalidateQueries({ queryKey: ["gethospital", id] });
+    },
+    onError: () => {
+      toast.success("Hospital is marked as top failed", {
+        position: "top-right",
+        className: "bg-red-300"
+      })
+    }
+  });
+  const { data: getHospital, isLoading, isSuccess } = useQuery({
+    queryKey: ["gethospital", id],
+    queryFn: async () => {
+      return await getData(`${HospitalRoutes.hospital}/${id}`, {});
+    },
+  });
+
+  const handleChangeTop = (e: any) => {
+    e.preventDefault();
+    const item = {
+      isTop: !getHospital?.data.data.isMain
+    }
+    console.log(item);
+    markAsTop.mutate(item);
+  }
   const doctorList = useAsyncList<any>({
     async load() {
       let res = await getData(Doctor.docotor, {});
@@ -156,7 +194,15 @@ export default function HospitalDetail() {
           </Breadcrumbs>
           <div className="flex flex-row justify-between w-full itms-center">
             <Title title="Hospital Detail" />
-            <Button radius="full" onClick={() => onOpen()} color="danger">Delete</Button>
+            <div className="flex flex-row items-center gap-2">
+              <Switch
+                size="lg"
+                color="success"
+                onClick={(e) => handleChangeTop(e)}
+                isSelected={getHospital?.data.data?.isMain}
+                aria-label="Automatic updates" className="text-xl">Mark the Hospital as Top</Switch>
+              <Button radius="full" onClick={() => onOpen()} color="danger">Delete</Button>
+            </div>
           </div>
           <DataCard
             getapikey="gethospital"
