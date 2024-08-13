@@ -24,6 +24,11 @@ const DepartmentTableColums = [
     type: "text"
   },
   {
+    name: "Message",
+    uid: "message",
+    type: "textbox"
+  },
+  {
     name: "Status",
     uid: "enquirystatus",
     type: "leadsStatus"
@@ -148,6 +153,7 @@ export default function Dev() {
       return getData("/enquiry-status", {});
     },
   });
+
   return (
     <div className="flex flex-col w-full">
       <Title title="Leads" />
@@ -159,13 +165,15 @@ export default function Dev() {
       <section className="w-full" id="department">
         <SubTitle title="Department" />
         <Tabs color="secondary" aria-label="Options">
-          {arr.map((a: any, index: any) => {
-            return <Tab key={index} name={a} title={a}>
+          {status?.data.data.map((a: any, index: any) => {
+            return <Tab key={a._id} name={a.name} title={a.name}>
               <Card shadow="none">
                 <Page
-                  api={"/enquiry"}
-                  apiKey="getdepartment"
-                  columns={DepartmentTableColums} title={a} needAddModal={false} />
+                  api={`/enquiry`}
+                  apiKey="get-department"
+                  columns={DepartmentTableColums}
+                  title={a.name}
+                  needAddModal={false} />
               </Card>
             </Tab>
           })}
@@ -174,22 +182,21 @@ export default function Dev() {
       <section className="w-full" id="doctors">
         <SubTitle title="Doctors" />
         <Tabs color="secondary" aria-label="Options">
-          {arr.map((a: any, index: any) => {
-            return <Tab key={index} name={a} title={a}>
+          {status?.data.data.map((a: any, index: any) => {
+            return <Tab key={index} name={a.name} title={a.name}>
               <Card shadow="none">
                 <Page
-                  api={Doctor.department}
-                  apiKey="getdepartment"
+                  api={`/enquiry/leads/?status=${a?.enquiryStatus?._id}&type=${a?.enquiryType?._id}`}
+                  apiKey="get-doctor"
                   columns={DepartmentTableColums}
-                  title={a}
+                  title={a.name}
                   needAddModal={false} />
                 <Page
                   api={Doctor.department}
-                  apiKey="getdepartment"
+                  apiKey="get-doctor"
                   columns={DepartmentTableColums}
-                  title={a}
+                  title={a.name}
                   needAddModal={false} />
-
               </Card>
             </Tab>
           })}

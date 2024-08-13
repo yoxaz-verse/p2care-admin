@@ -99,7 +99,7 @@ export default function CustomTable({
       case "complete_date":
         return <h3>{data?.completion_date}</h3>;
       case "enquiryType":
-        return <h3>{data.enquiryType.name}</h3>;
+        return <h3>{data?.enquiryType?.name}</h3>;
       case "project_link":
         return (
           <Link href={data.project_link} target="_blank" underline={"hover"}>
@@ -115,9 +115,9 @@ export default function CustomTable({
               defaultSelectedKeys={[data?.enquiryStatus?._id]}
               className="max-w-xs"
             >
-              {Statuses.map((status: any) => (
-                <SelectItem key={status._id} value={status._id}>
-                  {status.name}
+              {status?.data?.data?.map((status: any) => (
+                <SelectItem key={status?._id} value={status?._id}>
+                  {status?.name}
                 </SelectItem>
               ))}
             </Select>
