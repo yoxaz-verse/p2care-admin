@@ -439,19 +439,19 @@ export default function GetDocDetials() {
       setMemeberShips(getDocDetails?.data?.data?.memberships);
       setDepartment(getDocDetails?.data?.data?.department?._id);
       setGender(getDocDetails?.data?.data?.gender?._id);
-      console.log(getDocDetails?.data.data.department._id);
+      console.log(getDocDetails?.data?.data?.department?._id);
       setavailableDays(new Set(getDocDetails?.data?.data?.availableDays));
       console.log(getDocDetails?.data?.data);
 
       setVistingTime(getDocDetails?.data?.data?.visitingTime);
-      // setformData((prev) => ({
-      //   ...prev,
-      //   price: getDocDetails?.data?.data?.price,
-      //   department: getDocDetails?.data.data.department._id,
-      //   locationUrl: getDocDetails?.data?.data?.locationUrl,
-      //   address: getDocDetails?.data.data?.address,
-      //   experience: getDocDetails?.data.data.experience,
-      // }));
+      setformData((prev) => ({
+        ...prev,
+        price: getDocDetails?.data?.data?.price,
+        department: getDocDetails?.data.data.department._id,
+        locationUrl: getDocDetails?.data?.data?.locationUrl,
+        address: getDocDetails?.data.data?.address,
+        experience: getDocDetails?.data.data.experience,
+      }));
       setDesignation(getDocDetails?.data?.data.designation?._id);
     }
   }, [isFetched]);

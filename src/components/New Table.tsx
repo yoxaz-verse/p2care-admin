@@ -71,6 +71,7 @@ export default function CustomTable({
       return getData("/enquiry-status", {});
     },
   });
+
   const navigate = useRouter();
   const renderCell = React.useCallback((data: any, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof any];
@@ -97,26 +98,30 @@ export default function CustomTable({
         return <h3>{data?.name}</h3>;
       case "complete_date":
         return <h3>{data?.completion_date}</h3>;
+      case "enquiryType":
+        return <h3>{data.enquiryType.name}</h3>;
       case "project_link":
         return (
           <Link href={data.project_link} target="_blank" underline={"hover"}>
             {data.project_link}
           </Link>
         );
-      case "leadsStatus":
+      case "enquirystatus":
         return (
-          <Select
-            placeholder="Update the Status"
-            description="Update the status from here"
-            defaultSelectedKeys={[data.status]}
-            className="max-w-xs"
-          >
-            {Statuses.map((status: any) => (
-              <SelectItem key={status} value={status}>
-                {status.name}
-              </SelectItem>
-            ))}
-          </Select>
+          <>
+            <Select
+              placeholder="Update the Status"
+              description="Update the status from here"
+              defaultSelectedKeys={[data?.enquiryStatus?._id]}
+              className="max-w-xs"
+            >
+              {Statuses.map((status: any) => (
+                <SelectItem key={status._id} value={status._id}>
+                  {status.name}
+                </SelectItem>
+              ))}
+            </Select>
+          </>
         );
       case "password":
         return null;
@@ -149,19 +154,6 @@ export default function CustomTable({
             defaultValue={data.description}
             className="max-w-xs"
           />
-        );
-      case "enquiryStatus":
-        return (
-          <Select
-            isRequired
-            label="Status"
-            placeholder="Update Status"
-            className="max-w-full"
-          >
-            {status?.data.data.map((s: any) => (
-              <SelectItem key={s}>{s}</SelectItem>
-            ))}
-          </Select>
         );
       case "role":
         return (

@@ -141,12 +141,13 @@ const breadCrumbs = [
 export default function Dev() {
   const router = useRouter();
   const arr = ["Status 1", "Status 2", "Status 3"];
-  const getEnuiry = useQuery({
-    queryKey: ["getenuiry"],
+
+  const { data: status, isLoading } = useQuery({
+    queryKey: ["getstatus"],
     queryFn: () => {
-      return getData("/enquiry", {});
-    }
-  })
+      return getData("/enquiry-status", {});
+    },
+  });
   return (
     <div className="flex flex-col w-full">
       <Title title="Leads" />
