@@ -49,7 +49,7 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
       return postData(api, data, {});
     },
     onSuccess: (data: any) => {
-      console.log(data);
+
       toast.success("Data added successfully", {
         position: "top-right",
         className: "bg-green-300"
@@ -57,15 +57,16 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
       queryAdmin.invalidateQueries({ queryKey: apiKey });
       setSubmitting(false);
       onClose();
+      return;
     },
     onError: (error: any) => {
-      console.log(error);
       toast.error("Data added failed", {
         position: "top-right",
         className: "bg-red-300"
       })
       setSubmitting(false);
       onClose();
+      return;
     }
   })
   function toCamelCase(str: string) {

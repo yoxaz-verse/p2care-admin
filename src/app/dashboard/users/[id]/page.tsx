@@ -42,22 +42,15 @@ export default function UserName() {
     },
   ];
 
+
   const appointmentColumns = [
-    { name: "Doctor Name", uid: "name", type: "text" },
-    { name: "User Name", uid: "name", type: "text" },
-    { name: "Phone", uid: "phoneno", type: "text" },
-    { name: "Email", uid: "email", type: "text" },
+    { name: "Doctor Name", uid: "doctorName", type: "text" },
+    { name: "Patient Name", uid: "patientName", type: "text" },
     {
-      name: "Appointment Time",
-      uid: "appointment",
-      type: "appointmentTime",
+      name: "Appointment Time", uid: "doctorSlot", type: "doctorSlot"
     },
-    {
-      name: "Actions",
-      uid: "actions5",
-      type: "actions4",
-    },
-  ];
+
+  ]
   const enquiryColumns = [
     { name: "Name", uid: "name", type: "text" },
     { name: "Phone", uid: "phoneno", type: "text" },
@@ -172,10 +165,6 @@ export default function UserName() {
             onSubmit={(e) => handleSubmit(e)}
             className="w-full flex flex-col h-full gap-4 items-center"
           >
-            <Avatar
-              src="https://i.pravatar.cc/150?u=a04258114e29026708c"
-              className="w-[300px] h-[300px]"
-            />
             <Input
               label="Patient Name"
               onValueChange={(e) =>
@@ -232,7 +221,7 @@ export default function UserName() {
       />
       <Page
         needAddModal={false}
-        api={Doctor.enquiry}
+        api={`${Doctor.enquiry}/individual/${id}`}
         apiKey="enquiries"
         columns={enquiryColumns}
         title={`${getPateintData?.data.data.name}'s Enquiries`}

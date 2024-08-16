@@ -1,20 +1,14 @@
 "use client";
 import { useState } from "react";
-import { generateTabColumns } from "@/content/table-columns";
-import generateData from "@/content/tableData";
-import Title from "@/components/titles";
-import { generateTable } from "@/utilis/content";
+import Title, { SubTitle } from "@/components/titles";
 import React from "react";
 import Page from "@/components/Page/PageAll";
 import { Doctor, serviceRoutes } from "@/core/apiRoutes";
+import { Card, Tab, Tabs } from "@nextui-org/react";
+import { getData } from "@/core/apiHandler";
+import { useQuery } from "@tanstack/react-query";
 
 const Services = () => {
-  const [page, setPage] = useState<any>(1);
-  const [data, setData] = useState<any>();
-  const handlePageChange = (page: number) => {
-    setPage(page + 1);
-  };
-  const handleView = () => { };
   const enquiryColumns = [
     { name: "Name", uid: "name", type: "text" },
     { name: "Phone", uid: "phoneno", type: "text" },
@@ -34,6 +28,34 @@ const Services = () => {
     }
 
   ]
+  const HospitalTableColums = [
+    {
+      name: "Name",
+      uid: "name",
+      type: "text"
+    },
+    {
+      name: "Email",
+      uid: "email",
+      type: "text"
+    },
+    {
+      name: "Status",
+      uid: "status",
+      type: "leadsStatus"
+    },
+    {
+      name: "Actions",
+      uid: "action",
+      type: "action"
+    },
+  ];
+  const { data: status, isLoading } = useQuery({
+    queryKey: ["getstatus"],
+    queryFn: () => {
+      return getData("/enquiry-status", {});
+    },
+  });
   return (
     <div className="flex flex-col w-full gap-4">
       <Title title={"Services"} />
@@ -44,8 +66,21 @@ const Services = () => {
         title="Services"
         columns={servicesArr}
         needAddModal={true} />
-      <Page needAddModal={false} api={Doctor.enquiry}
-        apiKey="enquiryByHospital" columns={enquiryColumns} title="Enquiry" />
+      <SubTitle title="Services" />
+      <Tabs color="secondary" aria-label="Options">
+        {status?.data.data.map((a: any, index: any) => {
+          return <Tab key={index} name={a.name} title={a.name}>
+            <Card shadow="none">
+              <Page
+                api={`/enquiry/all/leads/?type=66a716539f1827dd38689202&status=${a?._id}`}
+                apiKey={`get-${a?.name}-services`}
+                columns={HospitalTableColums}
+                title={a.name}
+                needAddModal={false} />
+            </Card>
+          </Tab>
+        })}
+      </Tabs>
 
     </div>
   );

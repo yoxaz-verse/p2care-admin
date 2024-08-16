@@ -74,10 +74,12 @@ function CurdTable(props: ICurdTableProps) {
         search={props.search}
       >
         {(data) => {
+          console.log("Api", data);
           return (
             <CustomTable
               title={props.title}
               data={data}
+              getApi={props.queryKey}
               columns={props.columns}
               onOpenEdit={(data: any) => props.onOpenEdit(data)}
               onOpenView={(data: any) => props.onOpenView(data)}

@@ -30,8 +30,8 @@ const DepartmentTableColums = [
   },
   {
     name: "Status",
-    uid: "enquirystatus",
-    type: "leadsStatus"
+    uid: "enquiryStatus",
+    type: "enquiryStatus"
   },
   {
     name: "Actions",
@@ -39,6 +39,20 @@ const DepartmentTableColums = [
     type: "action"
   },
 ];
+const appointmentColumns = [
+  { name: "Doctor Name", uid: "doctorName", type: "text" },
+  { name: "Patient Name", uid: "patientName", type: "text" },
+  {
+    name: "Status",
+    uid: "appstatus",
+    type: "appstatus"
+  },
+  { name: "Price(in Rs)", uid: "price", type: "text" },
+  {
+    name: "Appointment Time", uid: "doctorSlot", type: "doctorSlot"
+  },
+
+]
 const HospitalTableColums = [
   {
     name: "Name",
@@ -46,11 +60,6 @@ const HospitalTableColums = [
     type: "text"
   },
   {
-    name: "Hospital Name",
-    uid: "name",
-    type: "text"
-  },
-  {
     name: "Email",
     uid: "email",
     type: "text"
@@ -66,68 +75,6 @@ const HospitalTableColums = [
     type: "action"
   },
 ];
-const ServiceCol = [
-  {
-    name: "Name",
-    uid: "name",
-    type: "text"
-  },
-  {
-    name: "Service Name",
-    uid: "name",
-    type: "text"
-  },
-  {
-    name: "Email",
-    uid: "Email",
-    type: "text"
-  },
-  {
-    name: "Status",
-    uid: "status",
-    type: "leadsStatus"
-  },
-  {
-    name: "Actions",
-    uid: "action",
-    type: "action"
-  },
-];
-
-const HospitalDoctorCol = [
-  {
-    name: "Name",
-    uid: "name",
-    type: "text"
-  },
-  {
-    name: "Hospital Name",
-    uid: "hospitalname",
-    type: "text"
-  },
-  {
-    name: "Doctor Name",
-    uid: "doctorname",
-    type: "text"
-  },
-  {
-    name: "Email",
-    uid: "email",
-    type: "text"
-  },
-  {
-    name: "Status",
-    uid: "Status",
-    type: "leadsStatus"
-  },
-  {
-    name: "Actions",
-    uid: "action",
-    type: "action"
-  },
-];
-
-
 const breadCrumbs = [
   {
     name: "Department",
@@ -154,114 +101,47 @@ export default function Dev() {
     },
   });
 
+  const { data: type, isLoading: isLoadingType } = useQuery({
+    queryKey: ["gettype"],
+    queryFn: () => {
+      return getData("/enquiry-type", {});
+    }
+  })
+  console.log(type?.data.data);
   return (
     <div className="flex flex-col w-full">
       <Title title="Leads" />
       <Breadcrumbs color="secondary">
-        {breadCrumbs.map((h: any, index: any) => {
-          return <BreadcrumbItem key={index} className="cursor-pointer" onClick={() => router.push(h.link)}>{h.name}</BreadcrumbItem>
+        {type?.data.data.map((h: any, index: any) => {
+          return <BreadcrumbItem key={index} className="cursor-pointer" onClick={() => router.push(h._id)}>{h.name}</BreadcrumbItem>
         })}
       </Breadcrumbs>
-      <section className="w-full" id="department">
-        <SubTitle title="Department" />
-        <Tabs color="secondary" aria-label="Options">
-          {status?.data.data.map((a: any, index: any) => {
-            return <Tab key={a._id} name={a.name} title={a.name}>
-              <Card shadow="none">
-                <Page
-                  api={`/enquiry`}
-                  apiKey="get-department"
-                  columns={DepartmentTableColums}
-                  title={a.name}
-                  needAddModal={false} />
-              </Card>
-            </Tab>
-          })}
-        </Tabs>
-      </section>
-      <section className="w-full" id="doctors">
-        <SubTitle title="Doctors" />
-        <Tabs color="secondary" aria-label="Options">
-          {status?.data.data.map((a: any, index: any) => {
-            return <Tab key={index} name={a.name} title={a.name}>
-              <Card shadow="none">
-                <Page
-                  api={`/enquiry/leads/?status=${a?.enquiryStatus?._id}&type=${a?.enquiryType?._id}`}
-                  apiKey="get-doctor"
-                  columns={DepartmentTableColums}
-                  title={a.name}
-                  needAddModal={false} />
-                <Page
-                  api={Doctor.department}
-                  apiKey="get-doctor"
-                  columns={DepartmentTableColums}
-                  title={a.name}
-                  needAddModal={false} />
-              </Card>
-            </Tab>
-          })}
-        </Tabs>
-      </section>
-      <section className="w-full" id="hospital">
-        <SubTitle title="Hospiatal" />
-        <Tabs color="secondary" aria-label="Options">
-          {arr.map((a: any, index: any) => {
-            return <Tab key={index} name={a} title={a}>
-              <Card shadow="none">
-                <Page api={Doctor.department} apiKey="getdepartment" columns={HospitalTableColums} title={a} needAddModal={false} />
-              </Card>
-            </Tab>
-          })}
-        </Tabs>
-      </section>
-      <section className="w-full" id="hospitalDoc">
-        <SubTitle title="Doctors by Hospital" />
-        <Tabs color="secondary" aria-label="Options">
-          {arr.map((a: any, index: any) => {
-            return <Tab key={index} name={a} title={a}>
-              <Card shadow="none">
-                <Page
-                  api={Doctor.department}
-                  apiKey="getdepartment" columns={HospitalDoctorCol} title={a} needAddModal={false} />
-              </Card>
-            </Tab>
-          })}
-        </Tabs>
-      </section>
-      <section className="w-full" id="services">
-        <SubTitle title="Services" />
-        <Tabs color="secondary" aria-label="Options">
-          {arr.map((a: any, index: any) => {
-            return <Tab key={index} name={a} title={a}>
-              <Card shadow="none">
-                <Page
-                  api={Doctor.department}
-                  apiKey="getdepartment"
-                  columns={ServiceCol}
-                  title={a}
-                  needAddModal={false} />
-              </Card>
-            </Tab>
-          })}
-        </Tabs>
-      </section>
-      <section className="w-full" id="contacts">
-        <SubTitle title="General Contacts" />
-        <Tabs color="secondary" aria-label="Options">
-          {arr.map((a: any, index: any) => {
-            return <Tab key={index} name={a} title={a}>
-              <Card shadow="none">
-                <Page
-                  api={Doctor.department}
-                  apiKey="getdepartment"
-                  columns={ServiceCol}
-                  title={a}
-                  needAddModal={false} />
-              </Card>
-            </Tab>
-          })}
-        </Tabs>
-      </section>
+      {type?.data.data.map((t: any, index: any) => {
+        return <section className="w-full" id="department">
+          <SubTitle title={t.name} />
+          <Tabs color="secondary" aria-label="Options">
+            {status?.data.data.map((a: any, index: any) => {
+              return <Tab key={a._id} name={a.name} title={a.name}>
+                <Card shadow="none">
+                  <Page
+                    api={`/enquiry/all/leads/?type=${t._id}&status=${a?._id}`}
+                    apiKey={`get-${a?.name}-${t?._id}`}
+                    columns={DepartmentTableColums}
+                    title={a.name}
+                    needAddModal={false} />
+                </Card>
+              </Tab>
+            })}
+          </Tabs>
+        </section>
+      })}
+      <Page
+        needAddModal={false}
+        api={Doctor.appointments}
+        apiKey="appointments"
+        columns={appointmentColumns}
+        title="Appointment" />
+
     </div>
   )
 }

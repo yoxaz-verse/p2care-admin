@@ -9,8 +9,8 @@ export const LocationRoutes = {
   district: "/district",
   districtAll: "/district/all"
 }
-export const offerRoute = "/offer";
-export const offerImageRoute = "/offer/upload"
+export const offerRoute = "/new-offer";
+export const offerImageRoute = "/new-offer/upload-image"
 export const offers = {
   doctor: "/offer/doctor",
   hospital: "/offer/hospital",

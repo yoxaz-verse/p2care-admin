@@ -1,4 +1,5 @@
 import { getData } from "@/core/apiHandler";
+import { HospitalRoutes } from "@/core/apiRoutes";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 

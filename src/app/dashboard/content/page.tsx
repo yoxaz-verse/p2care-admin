@@ -7,6 +7,7 @@ import Page from "@/components/Page/PageAll";
 import CityComponent from "@/components/citycomponent";
 import { useAsyncList } from "@react-stately/data";
 
+
 const Content = () => {
   const gendercolumns = [
     { name: "NAME", uid: "name", type: "text" },

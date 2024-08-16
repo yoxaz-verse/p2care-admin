@@ -35,7 +35,8 @@ export default function DeleteModal({
   const removeData = useMutation({
     mutationKey: [`delete-${queryKey}`],
     mutationFn: (data: any) => {
-      return deleteData(`${api}/${data?._id || data}`, {});
+      console.log("Delete", data);
+      return deleteData(`${api}/${data ? data : id}`, {});
     },
     onSuccess: (data: any) => {
       if (data.data) {

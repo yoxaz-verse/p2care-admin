@@ -80,7 +80,7 @@ export function ImageUploadMultiple({
   }, [images]);
 
   return (
-    <div>
+    <div className="flex flex-col w-full gap-4">
       <div className="flex flex-row w-full gap-4">
         {imageUrls.map((item, index) => (
           <div
@@ -130,7 +130,7 @@ export function ImageUploadMultiple({
           )
         }
       </div>
-      <Button onClick={handleUpload} color="primary">
+      <Button className="w-1/4" onClick={handleUpload} color="primary">
         Upload Images
       </Button>
     </div>
@@ -183,6 +183,7 @@ export function ImageSingle({
     };
     reader.readAsDataURL(file);
     const formData: FormData = new FormData();
+    formData.append("image", file);
     addImage.mutate(formData);
   };
   return (

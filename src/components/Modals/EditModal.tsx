@@ -13,13 +13,17 @@ import {
   Spinner,
   Autocomplete,
   AutocompleteItem,
+  TimeInput,
+  DateInput,
 } from "@nextui-org/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { patchData } from "@/core/apiHandler";
 import { toast } from "sonner";
 import MutationLoading from "../Loading/mutationLoading";
 import { queryAdmin } from "@/app/providers";
 import { LocationRoutes } from "@/core/apiRoutes";
+import { CalendarDate, getDayOfWeek, parseDate, Time } from "@internationalized/date";
+import { getData } from "@/core/apiHandler";
 
 interface EditModalProps {
   title: string;
@@ -46,15 +50,27 @@ export default function EditModal({
 }: EditModalProps) {
   const [currdata, setCurrData] = useState<any>({});
   const [submitting, setSubmitting] = useState<boolean>(false);
-
+  const [appointmentDate, setappointmentDate] = useState<any>("");
+  const [slotData, setSlotData] = useState<any>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [district, setDistrict] = useState<any>("");
+  const [appointmentTime, setappointmentTime] = useState<any>("");
   useEffect(() => {
     if (!data) return;
     setCurrData(data);
+    if (data?.doctorSlot) {
+      setappointmentDate(data?.doctorSlot?.slotTime);
+      const date = new Date(currdata?.doctorSlot?.slotTime);
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      setappointmentTime({
+        hours,
+        minutes
+      });
+    }
     setLoading(false);
   }, [data]);
-  console.log(data);
+
   const handleChangeCurrentData = (field: any, value: any) => {
     setCurrData((prev: any) => ({ ...prev, [field]: value }));
   };
@@ -66,10 +82,14 @@ export default function EditModal({
       return patchData(api + `/${data.id}`, data.data, {});
     },
     onSuccess: () => {
-      toast.success("Data updated successfully");
+      toast.success("Data updated successfully", {
+        position: "top-right",
+        className: "bg-green-300"
+      });
       queryAdmin.invalidateQueries({
         queryKey: apiKey,
       });
+      queryAdmin.invalidateQueries({ queryKey: queryKey })
       setSubmitting(false);
       close();
     },
@@ -83,11 +103,24 @@ export default function EditModal({
   const handleSubmit = async (e: React.FormEvent, close: () => void) => {
     e.preventDefault();
     setSubmitting(true);
-    console.log(currdata);
-    setSubmitting(true);
     try {
-      updateData.mutate({ data: currdata, id: data._id });
-      queryAdmin.invalidateQueries({ queryKey: queryKey })
+      if (api === "/appointment") {
+        const nDate = new Date(appointmentDate);
+        console.log(appointmentTime);
+        nDate.setHours(appointmentTime.hour);
+        console.log(slotData);
+        nDate.setMinutes(appointmentTime.minutes);
+        const d = {
+          date: nDate,
+          doctorSlotId: slotData._id,
+          startTime: slotData.slotTime,
+          isRescheduled: true
+        }
+        updateData.mutate({ data: d, id: data._id });
+        return;
+      } else {
+        updateData.mutate({ data: currdata, id: data._id });
+      }
     } catch (error) {
       console.error("Error updating data:", error);
       alert("An error occurred while updating data.");
@@ -97,6 +130,13 @@ export default function EditModal({
       close();
     }
   };
+  const { data: getDoctorSlot, isLoading: isLoadingslot } = useQuery({
+    queryKey: ["getSlots", appointmentDate],
+    queryFn: () => {
+      return getData(`/doctor-slot/${currdata?.doctor?._id}/?date=${appointmentDate}`, {});
+    },
+    enabled: !!currdata?.doctor?._id
+  });
 
   return (
     <Modal
@@ -117,7 +157,6 @@ export default function EditModal({
               {newCols
                 .filter((col: any) => col.name.toLowerCase() !== "actions")
                 .map((column: any, index: number) => {
-                  console.log(currdata["metaTitle"]);
                   if (column.uid === "metaTitle" || column.uid === "metaDescription") {
                     <Textarea
                       key={index}
@@ -133,6 +172,45 @@ export default function EditModal({
                       name={column.uid}
                       required
                     />
+                  }
+                  switch (column.uid) {
+                    case "doctorName":
+                      return (
+                        <Input
+                          key={index}
+                          label={column.name}
+                          placeholder={column.name}
+                          value={currdata?.doctor?.name || ""}
+                          readOnly={true}
+                          name={column.name.toLowerCase()}
+                          required
+                        />
+                      );
+                    case "price":
+                      return (
+                        <Input
+                          key={index}
+                          label={column.name}
+                          placeholder={column.name}
+                          value={currdata?.doctor?.price || ""}
+                          readOnly={true}
+                          name={column.name.toLowerCase()}
+                          required
+                        />
+                      );
+
+                    case "patientName":
+                      return (
+                        <Input
+                          key={index}
+                          label={column.name}
+                          placeholder={column.name}
+                          value={currdata?.patient?.name || ""}
+                          readOnly={true}
+                          name={column.name.toLowerCase()}
+                          required
+                        />
+                      );
                   }
                   switch (column.type) {
                     case "text":
@@ -249,6 +327,66 @@ export default function EditModal({
                           }
                           required
                         />
+                      );
+                    case "doctorSlot":
+                      const appdate = new Date(appointmentDate);
+                      const appyear = appdate.getUTCFullYear();
+                      const month = appdate.getUTCMonth() + 1;
+                      const paddedMonth = month >= 10 ? month : `0${month}`;
+                      const appday = appdate.getUTCDate();
+                      return (
+                        <div className="flex flex-col gap-4 w-full">
+                          <Input label="Session" readOnly value={currdata?.doctorSlot?.session.toUpperCase()} />
+                          <TimeInput
+                            label="Doctor Appointment"
+                            isReadOnly={true}
+                            labelPlacement="outside"
+                            color="primary"
+                            value={new Time(Number(appointmentTime.hour), Number(appointmentTime.minutes))}
+                          />
+                          {!isNaN(appdate.getTime()) && (
+                            <DateInput
+                              label="Appointment Date"
+                              onChange={(e: any) => {
+                                const { day, year, month } = e;
+                                const newDate = new Date(year, month - 1, day);
+                                setappointmentDate(newDate);
+                              }}
+                              defaultValue={parseDate(`${appyear}-${paddedMonth}-${appday}`)}
+                              labelPlacement="inside"
+                            />
+                          )}
+                          <h3 className="text-lg font-bold">Select the Time Slot</h3>
+                          <div className="flex flex-row gap-4 w-full">
+                            {getDoctorSlot?.data.data.length > 0 ? (
+                              getDoctorSlot?.data.data.map((data: any, index: any) => {
+                                const date = new Date(data.slotTime);
+                                const hours = String(date.getUTCHours()).padStart(2, '0');
+                                const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+                                const period = Number(hours) >= 12 ? "PM" : "AM";
+                                return (
+                                  <Chip
+                                    className="cursor-pointer"
+                                    onClick={() => {
+                                      setSlotData(data);
+                                      setappointmentTime({
+                                        hour: hours,
+                                        minutes
+                                      });
+                                      console.log(appointmentTime);
+                                    }}
+                                    key={index}
+                                    color="primary"
+                                  >
+                                    {`${hours}:${minutes} ${period}`}
+                                  </Chip>
+                                );
+                              })
+                            ) : (
+                              <p>No Slots available for this day</p>
+                            )}
+                          </div>
+                        </div>
                       );
 
                     default:

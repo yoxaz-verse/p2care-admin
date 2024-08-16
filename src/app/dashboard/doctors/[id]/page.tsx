@@ -45,6 +45,7 @@ import { useAsyncList } from "@react-stately/data";
 import { toast } from "sonner";
 import { queryAdmin } from "@/app/providers";
 import { recordTraceEvents } from "next/dist/trace";
+import { IoMdCloseCircleOutline } from "react-icons/io";
 
 export default function GetDocDetials() {
   const path = usePathname();
@@ -160,20 +161,19 @@ export default function GetDocDetials() {
   const [designation, setDesignation] = useState<any>("");
   const [gender, setGender] = useState<any>();
   const appointmentColumns = [
-    { name: "Name", uid: "name", type: "text" },
-    { name: "Phone", uid: "phoneno", type: "text" },
-    { name: "Email", uid: "email", type: "text" },
+    { name: "Doctor Name", uid: "doctorName", type: "text" },
+    { name: "Patient Name", uid: "patientName", type: "text" },
     {
-      name: "Appointment Time",
-      uid: "appointment",
-      type: "appointmentTime",
+      name: "Status",
+      uid: "appstatus",
+      type: "appstatus"
     },
+    { name: "Price(in Rs)", uid: "price", type: "text" },
     {
-      name: "Actions",
-      uid: "actions",
-      type: "actions",
+      name: "Appointment Time", uid: "doctorSlot", type: "doctorSlot"
     },
   ];
+
   const enquiryColumns = [
     { name: "Name", uid: "name", type: "text" },
     { name: "Phone", uid: "phoneno", type: "text" },
@@ -232,108 +232,80 @@ export default function GetDocDetials() {
       });
     },
   });
-  const { data: getSlot, isLoading: isLoadingslot } = useQuery({
+  const { data: getSlot, isLoading: isLoadingslot, isFetched: isFetchedSlot } = useQuery({
     queryKey: ["get-doctorSlot", id],
     queryFn: () => {
-      return getData("/doctor-slot", { id });
+      return getData(`/doctor-slot/${id}`, {});
     },
   });
+
   useEffect(() => {
     if (!isLoadingslot) {
-      const slot = getSlot?.data?.data?.data;
-      console.log(getSlot?.data.data.data);
-      // slot.map((s: any) => {
-      //   const date = new Date(s.slotTime);
 
-      //   const hours = date.getHours();
-      //   const minutes = date.getMinutes();
-      //   const period = hours >= 12 ? "PM" : "AM";
-      //   const formattedHours = hours % 12 || 12;
-      //   const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      const slot = getSlot?.data?.data;
+      console.log("slot", slot, getSlot?.data);
+      if (slot?.length > 0) {
+        let morning = slot?.filter((s: any) => s.session === "morning");
+        let afternoon = slot?.filter((s: any) => s.session === "afternoon");
+        let evening = slot?.filter((s: any) => s.session === "evening");
 
-      //   const item = {
-      //     name: s.session,
-      //     timings: `${formattedHours}:${formattedMinutes} ${period}`,
-      //     data: s,
-      //   };
-
-      //   setSechduling((prevScheduling: any) => {
-      //     return prevScheduling.map((schedule: any) => {
-      //       if (schedule.name.toLowerCase() === item.name) {
-      //         return {
-      //           ...schedule,
-      //           timings: [item.timings],
-      //           data: item.data,
-      //         };
-      //       }
-      //       return schedule;
-      //     });
-      //   });
-      // });
-
-      let morning = slot.filter((s: any) => s.session === "morning");
-      let afternoon = slot.filter((s: any) => s.session === "afternoon");
-      let evening = slot.filter((s: any) => s.session === "evening");
-
-      setSechduling((prevScheduling: any) => {
-        return prevScheduling.map((schedule: any) => {
-          if (schedule.name.toLowerCase() === "morning") {
-            console.log(morning);
-            console.log(schedule);
-
-            return {
-              ...schedule,
-              timings: morning.map((m: any) => {
-                const date = new Date(m.slotTime);
-                const hours = date.getHours();
-                const minutes = date.getMinutes();
-                const period = hours >= 12 ? "PM" : "AM";
-                const formattedHours = hours % 12 || 12;
-                const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-                return {
-                  time: `${formattedHours}:${formattedMinutes} ${period}`,
-                  data: m,
-                };
-              }),
-            };
-          }
-          if (schedule.name.toLowerCase() === "afternoon") {
-            return {
-              ...schedule,
-              timings: afternoon.map((m: any) => {
-                const date = new Date(m.slotTime);
-                const hours = date.getHours();
-                const minutes = date.getMinutes();
-                const period = hours >= 12 ? "PM" : "AM";
-                const formattedHours = hours % 12 || 12;
-                const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-                return {
-                  time: `${formattedHours}:${formattedMinutes} ${period}`,
-                  data: m,
-                };
-              }),
-            };
-          }
-          if (schedule.name.toLowerCase() === "evening") {
-            return {
-              ...schedule,
-              timings: evening.map((m: any) => {
-                const date = new Date(m.slotTime);
-                const hours = date.getHours();
-                const minutes = date.getMinutes();
-                const period = hours >= 12 ? "PM" : "AM";
-                const formattedHours = hours % 12 || 12;
-                const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-                return {
-                  time: `${formattedHours}:${formattedMinutes} ${period}`,
-                  data: m,
-                };
-              }),
-            };
-          }
-          return schedule;
+        setSechduling((prevScheduling: any) => {
+          return prevScheduling.map((schedule: any) => {
+            if (schedule.name.toLowerCase() === "morning") {
+              return {
+                ...schedule,
+                timings: morning.map((m: any) => {
+                  const date = new Date(m.slotTime);
+                  const hours = date.getHours();
+                  const minutes = date.getMinutes();
+                  const period = hours >= 12 ? "PM" : "AM";
+                  const formattedHours = hours % 12 || 12;
+                  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+                  return {
+                    time: `${formattedHours}:${formattedMinutes} ${period}`,
+                    data: m,
+                  };
+                }),
+              };
+            }
+            if (schedule.name.toLowerCase() === "afternoon") {
+              return {
+                ...schedule,
+                timings: afternoon.map((m: any) => {
+                  const date = new Date(m.slotTime);
+                  const hours = date.getHours();
+                  const minutes = date.getMinutes();
+                  const period = hours >= 12 ? "PM" : "AM";
+                  const formattedHours = hours % 12 || 12;
+                  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+                  return {
+                    time: `${formattedHours}:${formattedMinutes} ${period}`,
+                    data: m,
+                  };
+                }),
+              };
+            }
+            if (schedule.name.toLowerCase() === "evening") {
+              return {
+                ...schedule,
+                timings: evening.map((m: any) => {
+                  const date = new Date(m.slotTime);
+                  const hours = date.getHours();
+                  const minutes = date.getMinutes();
+                  const period = hours >= 12 ? "PM" : "AM";
+                  const formattedHours = hours % 12 || 12;
+                  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+                  return {
+                    time: `${formattedHours}:${formattedMinutes} ${period}`,
+                    data: m,
+                  };
+                }),
+              };
+            }
+            return schedule;
+          });
         });
-      });
+      }
     }
   }, [isLoadingslot, getSlot]);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -342,7 +314,7 @@ export default function GetDocDetials() {
       const date = new Date();
       date.setHours(valuetime.hour);
       date.setMinutes(valuetime.minute);
-      alert(date);
+
       const item = {
         session: type.toLowerCase(),
         slotTime: date,
@@ -447,10 +419,10 @@ export default function GetDocDetials() {
       setformData((prev) => ({
         ...prev,
         price: getDocDetails?.data?.data?.price,
-        department: getDocDetails?.data.data.department._id,
+        department: getDocDetails?.data?.data?.department?._id,
         locationUrl: getDocDetails?.data?.data?.locationUrl,
         address: getDocDetails?.data.data?.address,
-        experience: getDocDetails?.data.data.experience,
+        experience: getDocDetails?.data?.data?.experience,
       }));
       setDesignation(getDocDetails?.data?.data.designation?._id);
     }
@@ -605,6 +577,30 @@ export default function GetDocDetials() {
     console.log(item);
     markAsTop.mutate(item);
   }
+  const editService = useMutation({
+    mutationKey: ["doc"],
+    mutationFn: (data: any) => {
+      alert(data.isPublished);
+      return patchData(`${Doctor.docotor}/publish/test/${id}`, data, {});
+
+    },
+    onSuccess: (data: any) => {
+      toast.success("Doctor Published!", {
+        position: "top-right",
+        className: "bg-green-300"
+      });
+      queryAdmin.invalidateQueries({ queryKey: ["doctorDetails", id] });
+    },
+    onError: (error: any) => {
+      console.log(error);
+    }
+  })
+  const handlePublish = () => {
+    const item = {
+      isPublished: !getDocDetails?.data.data.isPublished
+    }
+    editService.mutate(item);
+  }
   return (
     <>
       {isLoading ? (
@@ -623,6 +619,12 @@ export default function GetDocDetials() {
           <div className="flex flex-row justify-between w-full gap-4">
             <Title title={getDocDetails?.data.data?.name} />
             <div className="flex flex-row gap-4 items-center justify-between">
+              <Switch
+                size="lg"
+                color="success"
+                onClick={() => handlePublish()}
+                isSelected={getDocDetails?.data.data?.isPublished}
+                aria-label="Automatic updates" className="text-md">Publish</Switch>
               <Switch
                 size="lg"
                 color="success"
@@ -647,7 +649,7 @@ export default function GetDocDetials() {
             <CardHeader className="text-[15px] md:text-[30px] font-bold">
               Basic Details
             </CardHeader>
-            <CardBody className="flex flex-col  gap-4 items-center  h-full">
+            <CardBody className="grid grid-cols-2  gap-4 items-center  h-full">
               <div className="flex items-center justify-center">
                 <label htmlFor="docImageInput" className="cursor-pointer">
                   <Avatar
@@ -742,8 +744,9 @@ export default function GetDocDetials() {
               </Autocomplete>
               <Input
                 label="Experince"
-                className="w-1/4"
-                value={String(formData?.experience)}
+                className="w-1/2"
+                type="number"
+                value={formData?.experience}
                 endContent={<h3 className="font-bold">Years</h3>}
                 onValueChange={(e) =>
                   setformData((prev: any) => ({
@@ -777,70 +780,6 @@ export default function GetDocDetials() {
               />
               */}
               <div className="grid grid-cols-1 lg:grid-cols-2 w-full gap-4">
-                <div className="flex flex-col gap-4 w-full">
-                  <h3 className="text-xl font-bold">Publications</h3>
-                  <div className="flex flex-row gap-4 w-full">
-                    {publishcations?.map((fruit: any, index: any) => (
-                      <Chip
-                        color="primary"
-                        key={index}
-                        onClose={() => removeValue(fruit, setPublications)}
-                        variant="flat"
-                      >
-                        {fruit}
-                      </Chip>
-                    ))}
-                  </div>
-                  <div className="flex flex-row gap-2 w-full">
-                    <Input
-                      className="w-1/2"
-                      value={pubVal}
-                      onValueChange={(e) => setpubVal(e)}
-                      placeholder="Add Publishcation"
-                    />
-                    <Button
-                      onClick={() => {
-                        push(pubVal, setPublications);
-                        setpubVal("");
-                      }}
-                      color="primary"
-                    >
-                      Add
-                    </Button>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-4 w-full">
-                  <h3 className="text-xl font-bold">Memeberships</h3>
-                  <div className="flex flex-row gap-4 w-full">
-                    {memeberships?.map((fruit: any, index: any) => (
-                      <Chip
-                        color="primary"
-                        key={index}
-                        onClose={() => removeValue(fruit, setMemeberShips)}
-                        variant="flat"
-                      >
-                        {fruit}
-                      </Chip>
-                    ))}
-                  </div>
-                  <div className="flex flex-row gap-2 w-full">
-                    <Input
-                      className="w-1/2"
-                      value={memeberVal}
-                      onValueChange={(e) => setmemeberVal(e)}
-                      placeholder="Add Memeberships"
-                    />
-                    <Button
-                      onClick={() => {
-                        push(memeberVal, setMemeberShips);
-                        setmemeberVal("");
-                      }}
-                      color="primary"
-                    >
-                      Add
-                    </Button>
-                  </div>
-                </div>
                 <div className="flex flex-col gap-4 w-full">
                   <h3 className="text-xl font-bold">Qualifications</h3>
                   <div className="flex flex-row gap-4 w-full">
@@ -1033,7 +972,7 @@ export default function GetDocDetials() {
                   <>
                     <div
                       key={index}
-                      className="flex flex-row items-center w-full md:w-1/2 justify-around"
+                      className="flex flex-row items-center w-full md:w-1/2 justify-between"
                     >
                       <h1 className="font-bold">{s.name}</h1>
                       {s?.timings.map((t: any, index: any) => {
@@ -1053,12 +992,14 @@ export default function GetDocDetials() {
                           </div>
                         );
                       })}
-                      <FaEdit
-                        className="cursor-pointer"
-                        onClick={() => setype(s)}
-                      />
+                      {s?.name !== type.name && (
+                        <FaEdit
+                          className="cursor-pointer"
+                          onClick={() => setype(s)}
+                        />
+                      )}
                       {s?.name === type.name && (
-                        <div className="flex items-center w-1/4">
+                        <div className="flex items-center w-1/2 gap-4">
                           <TimeInput
                             value={valuetime}
                             onChange={(e) => setValueTime(e)}
@@ -1067,10 +1008,13 @@ export default function GetDocDetials() {
                           />
                           <Button
                             color="secondary"
-                            onClick={() => handleUpdate(type.name)}
+                            onPress={() => handleUpdate(type.name)}
                           >
                             Update
                           </Button>
+                          <IoMdCloseCircleOutline fill="red"
+                            onClick={() => setype("")}
+                            className="cursor-pointer" size={40} />
                         </div>
                       )}
                     </div>
@@ -1079,11 +1023,11 @@ export default function GetDocDetials() {
               })}
             </CardBody>
           </Card>
-          <Card className="flex flex-col justify-ceneter items-center">
+          <Card className="grid grid-rows-1 justify-ceneter items-center">
             <CardHeader className="text-[15px] md:text-[30px] font-bold">
               Address
             </CardHeader>
-            <CardBody className="flex flex-col gap-4 items-center">
+            <CardBody className="grid grid-cols-2  gap-4 items-center">
               <Input
                 label="Location URL"
                 value={formData.locationUrl}
@@ -1094,37 +1038,35 @@ export default function GetDocDetials() {
                   }))
                 }
               />
-              <div className="flex flex-row gap-4 w-full">
-                <Input
-                  label="Address"
-                  value={formData.address}
-                  onValueChange={(e) =>
-                    setformData((prev) => ({
-                      ...prev,
-                      address: e,
-                    }))
-                  }
-                />
-                <Autocomplete
-                  label="Select an District"
-                  selectedKey={formData.district}
-                  isLoading={district.isLoading}
-                  items={district.items}
-                  onSelectionChange={(e) =>
-                    setformData((prev: any) => ({
-                      ...prev,
-                      district: e,
-                    }))
-                  }
-                  className="max-w-full"
-                >
-                  {district.items.map((d: any) => (
-                    <AutocompleteItem key={d._id} value={d._id}>
-                      {d.name}
-                    </AutocompleteItem>
-                  ))}
-                </Autocomplete>
-              </div>
+              <Input
+                label="Address"
+                value={formData.address}
+                onValueChange={(e) =>
+                  setformData((prev) => ({
+                    ...prev,
+                    address: e,
+                  }))
+                }
+              />
+              <Autocomplete
+                label="Select an District"
+                selectedKey={formData.district}
+                isLoading={district.isLoading}
+                items={district.items}
+                onSelectionChange={(e) =>
+                  setformData((prev: any) => ({
+                    ...prev,
+                    district: e,
+                  }))
+                }
+                className="max-w-full"
+              >
+                {district.items.map((d: any) => (
+                  <AutocompleteItem key={d._id} value={d._id}>
+                    {d.name}
+                  </AutocompleteItem>
+                ))}
+              </Autocomplete>
             </CardBody>
           </Card>
 
@@ -1135,7 +1077,8 @@ export default function GetDocDetials() {
             <CardBody className="flex flex-col gap-4 items-center">
               <Input
                 label="Pricing"
-                value={String(formData.price)}
+                type="number"
+                value={formData.price}
                 endContent={<h3 className="font-bold">Rs</h3>}
                 className="w-1/2"
                 onValueChange={(e) =>
@@ -1160,14 +1103,14 @@ export default function GetDocDetials() {
           )}
           <Page
             needAddModal={false}
-            api={Doctor.enquiry}
+            api={`${Doctor.enquiry}/individual/${id}`}
             apiKey="enquiryByHospital"
             columns={enquiryColumns}
             title={`${getDocDetails?.data.data?.name} Enquiry`}
           />
           <Page
             needAddModal={false}
-            api={Doctor.appointments}
+            api={`${Doctor.appointments}/doctor/${id}`}
             apiKey="appointments"
             columns={appointmentColumns}
             title={`${getDocDetails?.data.data?.name} Appointment`}

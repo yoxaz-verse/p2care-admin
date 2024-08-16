@@ -28,7 +28,7 @@ export default function DepartmentDetails() {
     queryKey: ["getDepartment"],
     queryFn: () => getData(`${Doctor.department}/${id}`, {}),
   });
-  console.log(getDepartment?.data?.data.image.path);
+
   const [formData, setFormData] = useState<any>({
     name: "",
     description: "",
@@ -75,16 +75,14 @@ export default function DepartmentDetails() {
       [name]: value,
     }));
   };
+
   const appointmentColumns = [
-    { name: "Name", uid: "name", type: "text" },
-    { name: "Phone", uid: "phoneno", type: "text" },
-    { name: "Email", uid: "email", type: "text" },
+    { name: "Doctor Name", uid: "doctorName", type: "text" },
+    { name: "Patient Name", uid: "patientName", type: "text" },
     {
-      name: "Appointment Time", uid: "appointment", type: "appointmentTime"
+      name: "Appointment Time", uid: "doctorSlot", type: "doctorSlot"
     },
-    {
-      name: "Actions", uid: "actions", type: "actions"
-    }
+
   ]
   const procedureColumns = [
     { name: "Name", uid: "name", type: "text" },
@@ -200,7 +198,12 @@ export default function DepartmentDetails() {
           </Card>
         </div>
       )}
-      <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title={`${getDepartment?.data?.data?.name} Enquiry`} />
+      <Page
+        needAddModal={false}
+        api={`${Doctor.enquiry}/individual/${id}`}
+        apiKey="enquiryByHospital"
+        columns={enquiryColumns}
+        title={`${getDepartment?.data?.data?.name} Enquiry`} />
       <Page needAddModal={false} api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title={`${getDepartment?.data?.data?.name} Appointment`} />
       <Page dropDownData={DropDownData} api={Doctor.procedure} apiKey="procedure" columns={procedureColumns} title={`${getDepartment?.data?.data?.name} Procedures`} />
     </div>

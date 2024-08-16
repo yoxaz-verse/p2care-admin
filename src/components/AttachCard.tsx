@@ -31,10 +31,10 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
     enabled: !!id
   });
 
-  console.log(id);
   const removeAttachData = useMutation({
     mutationKey: ["removeAttachData"],
     mutationFn: (id: any) => {
+      alert(id);
       return deleteData(`${api}/${id}`, {});
     },
     onSuccess: () => {
@@ -214,7 +214,7 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
     }
     else {
       console.log(index);
-      removeAttachData.mutate(index._id);
+      removeAttachData.mutate(index);
     }
   };
 
@@ -257,7 +257,7 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
           array.map((d: any, index: number) => (
             <Card shadow="sm" key={index} className="w-full lg:w-1/2 h-full">
               <CardBody className="flex flex-row items-center justify-around">
-                <Image src={d?.image?.path} width={300} height={300} radius="full" />
+                <Image src={d?.image?.path || d?.department?.image?.path} width={300} height={300} radius="full" />
                 <h3 className="text-md lg:text-xl font-bold">{d?.name || d?.department?.name}</h3>
                 <RxCross2 size={30} className="cursor-pointer" onClick={() => remove(d._id)} />
               </CardBody>

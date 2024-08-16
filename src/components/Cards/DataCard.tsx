@@ -15,7 +15,7 @@ import {
 } from "@nextui-org/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Title, { SubTitle } from "../titles";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { queryAdmin } from "@/app/providers";
 import { toast } from "sonner";
 import { ImageSingle, ImageUploadMultiple } from "../ImageUpload";
@@ -110,8 +110,9 @@ export default function DataCard({
     }
     setCity(getValue?.data?.data?.city?._id);
     setmodes(new Set(getValue?.data?.data?.modesOfPayment));
-    console.log(getValue);
+    console.log("vistingTime", getValue?.data?.data?.visitingTime);
     setavailableDays(new Set(getValue?.data?.data?.availableDays));
+    console.log(getValue?.data?.data?.vistingTime);
     setDistrict(getValue?.data?.data?.district?._id);
   }, [isSuccess, getValue]);
   const handleSubmit = (e: React.FormEvent) => {
@@ -128,12 +129,39 @@ export default function DataCard({
       setFormData((data: any) => ({
         ...data,
         availableDays: Array.from(avialableDays),
-        modesOfPayment: Array.from(modes)
+        modesOfPayment: Array.from(modes),
+        visitingTime: visitingTime
       }));
     }
     console.log(formData);
     handlePut.mutate(formData);
   };
+  interface VisitngTime {
+    from: string;
+    to: string;
+  }
+  const [visitingTime, setVistingTime] = useState<VisitngTime[]>([]);
+  const [valTime, setValTime] = useState<VisitngTime>({
+    from: "",
+    to: "",
+  });
+  const deleteVisiting = (index: number) => {
+    setVistingTime((prev) => prev.filter((_, i) => i !== index));
+  };
+  const [editVisit, seteditVisit] = useState<boolean>(false);
+  const pushVisting = (from: string, to: string) => {
+    const time: VisitngTime = {
+      from: from,
+      to: to,
+    };
+    setVistingTime((prev) => [...prev, time]);
+    seteditVisit(false);
+    setValTime({
+      from: "",
+      to: "",
+    });
+  };
+
 
   return isLoading ? (
     <>
@@ -173,7 +201,8 @@ export default function DataCard({
             onSubmit={handleSubmit}
             className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center justify-center p-[1rem]"
           >
-            {columns.map((c: any, index: number) => {
+            {columns?.map((c: any, index: number) => {
+              console.log(c);
               switch (c.type) {
                 case "images":
                   return postimagesapikey ? (
@@ -226,13 +255,14 @@ export default function DataCard({
                     <div className="flex flex-col gap-4 w-full">
                       <div className="flex flex-row items-center gap-4">
                         <h3 className="text-xl font-bold">Modes of Payment</h3>
-                        <Button
+                        {isEdit && <Button
                           color="primary"
                           radius="lg"
                           onClick={() => setmodesEdit(true)}
                         >
                           Edit
                         </Button>
+                        }
                       </div>
                       <div className="flex flex-row gap-4">
                         {Array.from(modes).map(
@@ -353,6 +383,71 @@ export default function DataCard({
                       label={c.name}
                     />
                   );
+                case "vistingTime":
+                  return (
+                    <div className="flex flex-col w-full">
+                      <div className="flex flex-row items-center gap-3">
+                        <h3 className="font-bold text-lg">Visitng Time</h3>
+                        {isEdit && <Button
+                          className="w-[20px]"
+                          color="primary"
+                          onClick={() => seteditVisit(true)}
+                        >
+                          Add
+                        </Button>
+                        }
+                      </div>
+                      <div className="flex flex-row w-1/2">
+                        <div className="flex flex-row w-1/2 gap-3">
+                          {visitingTime.map((v: VisitngTime, index: number) => (
+                            <Fragment key={index}>
+                              <Chip
+                                color="primary"
+                                variant="flat"
+                                className="w-20 h-10 border border-blue-300 text-md"
+                                onClose={() => deleteVisiting(index)}
+                              >
+                                {v.from} - {v.to}
+                              </Chip>
+                            </Fragment>
+                          ))}
+                        </div>
+                        {editVisit && (
+                          <div className="flex flex-col md:flex-row w-full gap-4">
+                            <Input
+                              label="From"
+                              type="time"
+                              onValueChange={(e) =>
+                                setValTime((prev: any) => ({
+                                  ...prev,
+                                  from: e,
+                                }))
+                              }
+                              value={valTime.from}
+                            />
+                            <Input
+                              label="To"
+                              type="time"
+                              onValueChange={(e) => {
+                                setValTime((prev: any) => ({
+                                  ...prev,
+                                  to: e,
+                                }));
+                              }}
+                              value={valTime.to}
+                            />
+
+                            <Button
+                              color="primary"
+                              onClick={() => pushVisting(valTime.from, valTime.to)}
+                            >
+                              Save
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
                 case "districtDropdown":
                   return (
                     isEdit ?
@@ -435,6 +530,6 @@ export default function DataCard({
           </form>
         </>
       </CardBody>
-    </Card>
+    </Card >
   );
 }

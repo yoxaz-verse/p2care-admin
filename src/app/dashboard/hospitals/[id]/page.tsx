@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { generateTabColumns } from "@/content/table-columns";
 import Title from "@/components/titles";
 import { generateTable } from "@/utilis/content";
@@ -12,6 +12,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Chip,
   Input,
   Switch,
   useDisclosure,
@@ -95,6 +96,7 @@ export default function HospitalDetail() {
   const HospitalDescriptionColums = [
     { name: "Hospital Description", uid: "description", type: "textbox" },
     { name: "About", uid: "about", type: "textbox" },
+    { name: "VistingTime", uid: "vistingTime", type: "vistingTime" },
     { name: "Avilable Days", uid: "availableDays", type: "array" },
     { name: "Modes of Payment", uid: "modesOfPayment", type: "array2" },
     { name: "No Of Beds", uid: "noOfBeds", type: "number" },
@@ -178,7 +180,29 @@ export default function HospitalDetail() {
     district: list,
     city: list2,
   };
-
+  const editService = useMutation({
+    mutationKey: ["hospital"],
+    mutationFn: (data: any) => {
+      return patchData(`${HospitalRoutes.hospital}/publish/test/${id}`, data, {});
+    },
+    onSuccess: (data: any) => {
+      console.log(data);
+      toast.success("Hospital Published!", {
+        position: "top-right",
+        className: "bg-green-300"
+      });
+      queryAdmin.invalidateQueries({ queryKey: ["gethospital", id] })
+    },
+    onError: (error: any) => {
+      console.log(error);
+    }
+  })
+  const handlePublish = () => {
+    const item = {
+      isPublished: !getHospital?.data.data.isPublished
+    }
+    editService.mutate(item);
+  }
   return (
     <>
       <div className="flex flex-col w-full">
@@ -195,6 +219,12 @@ export default function HospitalDetail() {
           <div className="flex flex-row justify-between w-full itms-center">
             <Title title="Hospital Detail" />
             <div className="flex flex-row items-center gap-2">
+              <Switch
+                size="lg"
+                color="success"
+                onClick={() => handlePublish()}
+                isSelected={getHospital?.data.data?.isPublished}
+                aria-label="Automatic updates" className="text-md">Publish</Switch>
               <Switch
                 size="lg"
                 color="success"
@@ -217,6 +247,9 @@ export default function HospitalDetail() {
             id={id}
             onOpen={onOpen}
           />
+
+
+
           <DataCard
             getapikey="gethospital"
             editApikey="edithospitaldescription"
@@ -248,20 +281,12 @@ export default function HospitalDetail() {
         </div>
         <Page
           needAddModal={false}
-          api={HospitalRoutes.enquiry}
+          api={`${HospitalRoutes.enquiry}/individual/${id}`}
           apiKey="enquiryforHospital"
           columns={enquiryColumns}
-
-          title={`Enquiries for Apollo Hospital`}
+          title={`Enquiries`}
         />
-        <Page
-          needAddModal={false}
-          api={HospitalRoutes.appointment}
-          apiKey="appointments"
 
-          columns={appointmentColumns}
-          title="Appointment for Apollo Hospital"
-        />
         <AttachCard id={id} getapi={HospitalRoutes.getdoctor} api={HospitalRoutes.adddoctor}
           title="Add Doctor"
           DropDown={doctorList} />

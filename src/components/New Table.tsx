@@ -23,6 +23,10 @@ import {
   SelectItem,
   TimeInput,
   DatePicker,
+  Input,
+  ModalBody,
+  ModalFooter,
+  useDisclosure,
 } from "@nextui-org/react";
 // import { getData } from "@/backend/Services/firestore";
 import Image from "next/image";
@@ -40,17 +44,17 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   paused: "danger",
   vacation: "warning",
 };
-import { motion } from "framer-motion";
-import { Statuses } from "@/utilis/content";
-import { useAsyncList } from "@react-stately/data";
-import { getData } from "@/core/apiHandler";
-import { useQuery } from "@tanstack/react-query";
+import { getData, patchData } from "@/core/apiHandler";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { queryAdmin } from "@/app/providers";
 interface CustomTableProps {
   title: string;
   data: any;
   columns: any;
   // generateRandomId: () => void;
   onOpenEdit: (data: any) => any;
+  getApi?: any;
   onOpenDelete: (data: any) => any;
   onOpenView: (data: any) => any;
   setPage: (page: number) => void;
@@ -62,6 +66,7 @@ export default function CustomTable({
   onOpenEdit,
   onOpenView,
   onOpenDelete,
+  getApi,
   setPage,
   limit,
 }: CustomTableProps) {
@@ -71,14 +76,68 @@ export default function CustomTable({
       return getData("/enquiry-status", {});
     },
   });
+  const appStatus = useMutation({
+    mutationKey: ["appointmentUpdate"],
+    mutationFn: (data: any) => {
+      return patchData(`/appointment/${data.id}`, data.item, {});
+    },
+    onSuccess: (data: any) => {
+      console.log(data);
+      toast.success("Updated the status", {
+        position: "top-right",
+        className: "bg-green-300"
+      })
+      queryAdmin.invalidateQueries({ queryKey: [getApi, data.id, ""] })
+    },
+    onError: (error: any) => {
+      toast.success("Updating the status failed", {
+        position: "top-right",
+        className: "bg-red-300"
+      })
 
-  const navigate = useRouter();
+    }
+  })
+
+  const enuiryStatus = useMutation({
+    mutationKey: ["enquiryUpdate"],
+    mutationFn: (data: any) => {
+      return patchData(`/enquiry/${data.id}`, data.item, {});
+    },
+    onSuccess: (data: any) => {
+      console.log(data);
+      toast.success("Updated the status", {
+        position: "top-right",
+        className: "bg-green-300"
+      })
+      queryAdmin.invalidateQueries({ queryKey: [getApi] })
+    },
+    onError: (error: any) => {
+      toast.success("Updating the status failed", {
+        position: "top-right",
+        className: "bg-red-300"
+      })
+
+    }
+  })
+
+  const handleUpdateApp = (st: any, data: any) => {
+    const item = {
+      enquiryStatus: st
+    }
+    const id = data._id
+    appStatus.mutate({ item, id });
+  }
+  const handleUpdate = (st: any, data: any) => {
+    const item = {
+      enquiryStatus: st
+    }
+    const id = data._id
+    enuiryStatus.mutate({ item, id });
+  }
   const renderCell = React.useCallback((data: any, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof any];
     console.log(cellValue);
     console.log(columnKey);
-    console.log(data);
-
     switch (columnKey) {
       case "meta Title":
         return <h3>{data?.metaTitle}</h3>;
@@ -106,12 +165,13 @@ export default function CustomTable({
             {data.project_link}
           </Link>
         );
-      case "enquirystatus":
+      case "enquiryStatus":
         return (
           <>
             <Select
               placeholder="Update the Status"
               description="Update the status from here"
+              onChange={(e: any) => handleUpdate(e.target.value, data)}
               defaultSelectedKeys={[data?.enquiryStatus?._id]}
               className="max-w-xs"
             >
@@ -123,23 +183,73 @@ export default function CustomTable({
             </Select>
           </>
         );
+      case "appstatus":
+        return (
+          <>
+            <Select
+              placeholder="Update the Status"
+              description="Update the status from here"
+              selectedKeys={[data?.enquiryStatus?._id]}
+              onChange={(e: any) => handleUpdateApp(e.target.value, data)}
+              className="max-w-xs"
+            >
+              {status?.data?.data?.map((status: any) => (
+                <SelectItem key={status?._id} value={status?._id}>
+                  {status?.name}
+                </SelectItem>
+              ))}
+            </Select>
+          </>
+        );
+
+      case "status":
+        return (
+          <>
+            <Select
+              placeholder="Update the Status"
+              description="Update the status from here"
+              selectedKeys={[data?.enquiryStatus?._id]}
+              onChange={(e: any) => handleUpdate(e.target.value, data)}
+              className="max-w-xs"
+            >
+              {status?.data?.data?.map((status: any) => (
+                <SelectItem key={status?._id} value={status?._id}>
+                  {status?.name}
+                </SelectItem>
+              ))}
+            </Select>
+          </>
+        );
+      case "patientName":
+        return data.patient.name;
+      case "doctorName":
+        return data.doctor.name;
       case "password":
         return null;
       case "heading":
         return <h3>{data?.heading}</h3>;
-      case "appointmentTime":
+      case "doctorSlot":
+        console.log(data.doctorSlot.slotTime);
+        const date = new Date(data?.doctorSlot?.slotTime);
+        const localeTimeString = date.toLocaleTimeString();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
         return (
-          <div className="flex flex-row justify-around bg-white gap-4 items-center ">
-            <TimeInput
-              label="Meeting time"
-              className="bg-white"
-              defaultValue={new Time(9)}
-            />
-            <DatePicker className="bg-white" />
-            <Button color="secondary" className="p-4">
-              Reschedule
-            </Button>
-          </div>
+          <>
+            <div className="flex flex-row justify-around bg-white gap-4 items-center ">
+              <TimeInput
+                label="Doctor Appointment"
+                isReadOnly={true}
+                color="primary"
+                defaultValue={new Time(Number(hours), Number(minutes))}
+              />
+              <Button color="secondary" onPress={() => {
+                onOpenEdit(data);
+              }}>
+                Reschedule
+              </Button>
+            </div>
+          </>
         );
       case "image":
         return <Image src={data.image} alt={"images"} width={50} height={50} />;
@@ -163,17 +273,6 @@ export default function CustomTable({
               {data.team}
             </p>
           </div>
-        );
-      case "status":
-        return (
-          <Chip
-            className="capitalize"
-            color={statusColorMap[data.status]}
-            size="sm"
-            variant="flat"
-          >
-            {cellValue}
-          </Chip>
         );
       case "action":
         return (
@@ -316,6 +415,7 @@ export default function CustomTable({
         );
 
       case "actions4":
+        console.log(data.doctor._id);
         return (
           <>
             <div className="flex items-center self-end w-fit">
@@ -323,7 +423,6 @@ export default function CustomTable({
                 isIconOnly
                 className="bg-inherit"
                 onClick={() => {
-                  onOpenView({ data: data, type: "doctor" });
                 }}
               >
                 {" "}
@@ -364,7 +463,8 @@ export default function CustomTable({
             </div>
           </>
         );
-
+      case "fullName":
+        return data?.fullName
       case "actions":
         return (
           <>
@@ -404,8 +504,7 @@ export default function CustomTable({
             </div>
           </>
         );
-      case "service_dropdown":
-        return data.services_provided;
+
       default:
         return cellValue;
     }

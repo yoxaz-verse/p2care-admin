@@ -72,7 +72,14 @@ export default function OffersPage() {
           return <BreadcrumbItem key={index} onClick={() => router.push(b.link)}>{b.name}</BreadcrumbItem>
         })}
       </Breadcrumbs>
-      <DataCard columns={cols} title={"Banner Details"} id={id} postimageapikey={offerImageRoute} getapikey="getbanner" getapi={offerRoute} editapi={offerRoute} editApikey="editbanner" />
+      <DataCard
+        columns={cols}
+        title={"Banner Details"}
+        id={id}
+        postimageapikey={offerImageRoute}
+        getapikey="getbanner"
+        getapi={offerRoute}
+        editapi={offerRoute} editApikey="editbanner" />
       <AttachCard id={id} getapi={offers.hospital} api={offers.hospital}
         title="Add Hospital"
         DropDown={hoapitalList} />

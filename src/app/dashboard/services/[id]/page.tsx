@@ -4,20 +4,19 @@ import AttachCard from "@/components/AttachCard";
 import DataCard from "@/components/Cards/DataCard";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import Page from "@/components/Page/PageAll";
-import Title from "@/components/titles";
+import Title, { SubTitle } from "@/components/titles";
 import { getData, patchData } from "@/core/apiHandler";
 import { Doctor, HospitalRoutes, serviceRoutes } from "@/core/apiRoutes";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Input, Switch, useDisclosure } from "@nextui-org/react";
+import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Input, Switch, Tab, Tabs, useDisclosure } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams, usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { toast } from "sonner";
 
 export default function ServiceName() {
   const { id } = useParams();
-  const [isEdit, setIsEdit] = useState(false);
+
   const path = usePathname();
   const router = useRouter();
   const header = [
@@ -109,7 +108,64 @@ export default function ServiceName() {
       };
     },
   });
+  const HospitalTableColums = [
+    {
+      name: "Name",
+      uid: "name",
+      type: "text"
+    },
+    {
+      name: "Email",
+      uid: "email",
+      type: "text"
+    },
+    {
+      name: "Status",
+      uid: "status",
+      type: "leadsStatus"
+    },
+    {
+      name: "Actions",
+      uid: "action",
+      type: "action"
+    },
+  ];
 
+  const { data: status } = useQuery({
+    queryKey: ["getstatus"],
+    queryFn: () => {
+      return getData("/enquiry-status", {});
+    },
+  });
+  const { data: getService } = useQuery({
+    queryKey: ["getService", id],
+    queryFn: () => {
+      return getData(serviceRoutes.service, { id });
+    }
+  })
+  const editService = useMutation({
+    mutationKey: ["service"],
+    mutationFn: (data: any) => {
+      return patchData(`${serviceRoutes.service}/${id}`, { data }, {});
+    },
+    onSuccess: (data: any) => {
+      console.log(data);
+      toast.success("Service Published!", {
+        position: "top-right",
+        className: "bg-green-300"
+      });
+      queryAdmin.invalidateQueries({ queryKey: ["getService", id] })
+    },
+    onError: (error: any) => {
+      console.log(error);
+    }
+  })
+  const handlePublish = () => {
+    const item = {
+      isPublished: !getService?.data.data.isPublished
+    }
+    editService.mutate(item);
+  }
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <div className="flex flex-col w-full">
@@ -122,6 +178,12 @@ export default function ServiceName() {
         <div className="flex flex-row justify-between items-center w-full">
           <Title title="Service Details" />
           <div className="flex flex-row gap-4">
+            <Switch
+              size="lg"
+              color="success"
+              onClick={() => handlePublish()}
+              isSelected={getservice?.data.data?.isPublished}
+              aria-label="Automatic updates" className="text-md">Publish</Switch>
             <Switch
               size="lg"
               color="success"
@@ -161,9 +223,14 @@ export default function ServiceName() {
         api={serviceRoutes.addDoctor}
         title="Add Doctor"
         DropDown={doctorList} />
-
-
-      <Page needAddModal={false} api={Doctor.enquiry} apiKey="enquiryByHospital" columns={enquiryColumns} title={`Enquiry`} />
+      <SubTitle title="Services" />
+      <Page
+        needAddModal={false}
+        api={`${HospitalRoutes.enquiry}/individual/${id}`}
+        apiKey="enquiryforHospital"
+        columns={enquiryColumns}
+        title={`Enquiries`}
+      />
     </div>
   )
 }

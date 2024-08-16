@@ -6,6 +6,7 @@ const Offers = () => {
   const offerColumns = [
     { name: "Percentage", uid: "percentage", type: "text" },
     { name: "Title", uid: "title", type: "text" },
+    { name: "Description", uid: "description", type: "textbox" },
     { name: "Actions", uid: "action", type: "action" },
   ]
   return (
