@@ -41,15 +41,17 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
   const [department, setDepartment] = useState<any>();
   const [gender, setGender] = useState<any>();
   const [designation, setDesignation] = useState<any>();
-  console.log(api, apiKey);
+
   const AddModalData = useMutation({
     mutationKey: [`add-${apiKey}`],
     mutationFn: (data: any) => {
-      console.log(data);
+      if (api === HospitalRoutes.hospital) {
+        api = HospitalRoutes.quick;
+      }
+      console.log(data, api);
       return postData(api, data, {});
     },
     onSuccess: (data: any) => {
-
       toast.success("Data added successfully", {
         position: "top-right",
         className: "bg-green-300"
@@ -60,12 +62,15 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
       return;
     },
     onError: (error: any) => {
-      toast.error("Data added failed", {
-        position: "top-right",
-        className: "bg-red-300"
-      })
-      setSubmitting(false);
-      onClose();
+      console.log(error);
+      if (error != null) {
+        toast.error("Data added failed", {
+          position: "top-right",
+          className: "bg-red-300"
+        })
+        setSubmitting(false);
+        onClose();
+      }
       return;
     }
   })
@@ -94,11 +99,9 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
       }
       if (name !== "" && name !== "main image") {
         const camelCaseName = toCamelCase(name);
-        console.log(camelCaseName);
         data[camelCaseName] = value;
       }
     });
-    console.log("data", data);
     if (api === Doctor.docotor) {
       api = Doctor.quick;
       const docInput = {
@@ -108,6 +111,7 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
         gender
       }
       AddModalData.mutate(docInput);
+      return;
     }
     if (api === HospitalRoutes.hospital) {
       api = HospitalRoutes.quick;
@@ -116,7 +120,9 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
         district,
         city
       }
+      alert(api);
       AddModalData.mutate(hosInput);
+      return;
     }
 
     if (api === Doctor.procedure) {
@@ -125,6 +131,7 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
         department
       }
       AddModalData.mutate(procedureData);
+      return;
     }
     if (api === LocationRoutes.city) {
       const cityInput = {
@@ -133,11 +140,10 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
       }
       console.log(data);
       AddModalData.mutate(cityInput);
+      return;
     } else {
-
       AddModalData.mutate(data);
     }
-    close();
   };
 
   return (

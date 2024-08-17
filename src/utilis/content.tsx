@@ -6,6 +6,8 @@ import { ImUsers } from "react-icons/im";
 import { FaUserDoctor } from "react-icons/fa6";
 import { FaHeartbeat } from "react-icons/fa";
 import CommonTable from "@/components/CommonTable";
+import { useQuery } from "@tanstack/react-query";
+import { getData } from "@/core/apiHandler";
 
 export interface SideBarLinkProps {
   name: string,
@@ -75,60 +77,77 @@ export const months = [
   { key: "november", label: "November" },
   { key: "december", label: "December" }
 ];
-export const CountCardsList: CountCardProps[] = [
-  {
-    title: "Hospitals",
-    count: 40689,
-    icon: (
-      <>
-        <PiHospitalThin fill="#3F8EFC" size={50} />
-      </>
-    )
-  },
-  {
-    title: "Departments",
-    count: 40689,
-    icon: (
-      <>
-        <FaHeartbeat
-          size={40} fill="#3F8EFC" />
-      </>
-    )
-  },
-  {
-    title: "Services",
-    count: 40689,
-    icon: (
-      <>
-        <FaHandHoldingHeart
-          fill="#3F8EFC"
-          size={40} />
-      </>
-    )
-  },
-  {
-    title: "Users",
-    count: 40689,
-    icon: (
-      <>
-        <ImUsers
-          fill="#3F8EFC"
-          size={40} />
-      </>
-    )
-  },
-  {
-    title: "Doctors",
-    count: 40689,
-    icon: (
-      <>
-        <FaUserDoctor
-          fill="#3F8EFC"
-          size={40} />
-      </>
-    )
+interface Card {
+  isLoading: boolean,
+  card: CountCardProps[]
+}
+export const CardCount = (): Card => {
+  const { data: getTotal, isLoading } = useQuery({
+    queryKey: ["getTotal"],
+    queryFn: () => {
+      return getData("/hospital/total/get", {});
+    }
+  });
+
+  return {
+    isLoading,
+    card: [
+      {
+        title: "Hospitals",
+        count: getTotal?.data?.data?.hospital,
+        icon: (
+          <>
+            <PiHospitalThin fill="#3F8EFC" size={50} />
+          </>
+        )
+      },
+      {
+        title: "Departments",
+        count: getTotal?.data?.data?.department,
+        icon: (
+          <>
+            <FaHeartbeat
+              size={40} fill="#3F8EFC" />
+          </>
+        )
+      },
+      {
+        title: "Services",
+        count: getTotal?.data?.data?.services,
+        icon: (
+          <>
+            <FaHandHoldingHeart
+              fill="#3F8EFC"
+              size={40} />
+          </>
+        )
+      },
+      {
+        title: "Users",
+        count: getTotal?.data?.data?.patient,
+        icon: (
+          <>
+            <ImUsers
+              fill="#3F8EFC"
+              size={40} />
+          </>
+        )
+      },
+      {
+        title: "Doctors",
+        count: getTotal?.data?.data?.doctors,
+        icon: (
+          <>
+            <FaUserDoctor
+              fill="#3F8EFC"
+              size={40} />
+          </>
+        )
+      }
+    ]
   }
-]
+}
+
 export const TableHeadings: string[] = [
   "Departments",
   "Doctors",

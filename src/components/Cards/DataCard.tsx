@@ -202,7 +202,6 @@ export default function DataCard({
             className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center justify-center p-[1rem]"
           >
             {columns?.map((c: any, index: number) => {
-              console.log(c);
               switch (c.type) {
                 case "images":
                   return postimagesapikey ? (
@@ -220,35 +219,65 @@ export default function DataCard({
                   ) : null;
                 case "text":
                   return (
-                    <Input
-                      key={index}
-                      type="text"
-                      onChange={(e) =>
-                        handleChange(e.target.value, c.uid)
-                      }
-                      value={
-                        formData[c.uid] ||
-                        getValue?.data?.data[c.uid] ||
-                        ""
-                      }
-                      label={c.name}
-                    />
+                    isEdit ? (
+                      <Input
+                        key={index}
+                        type="text"
+                        onChange={(e) =>
+                          handleChange(e.target.value, c.uid)
+                        }
+                        value={
+                          formData[c.uid] ||
+                          getValue?.data?.data[c.uid] ||
+                          ""
+                        }
+                        label={c.name}
+                      />
+                    ) : (
+                      <Input
+                        key={index}
+                        type="text"
+                        readOnly
+                        value={
+                          formData[c.uid] ||
+                          getValue?.data?.data[c.uid] ||
+                          ""
+                        }
+                        label={c.name}
+                      />
+
+                    )
                   );
                 case "number":
                   return (
-                    <Input
-                      key={index}
-                      type="number"
-                      onChange={(e) =>
-                        handleChange(e.target.value, c.uid)
-                      }
-                      value={
-                        formData[c.uid] ||
-                        getValue?.data?.data[c.uid] ||
-                        ""
-                      }
-                      label={c.name}
-                    />
+                    isEdit ? (
+                      <Input
+                        key={index}
+                        type="number"
+                        onChange={(e) =>
+                          handleChange(e.target.value, c.uid)
+                        }
+                        value={
+                          formData[c.uid] ||
+                          getValue?.data?.data[c.uid] ||
+                          ""
+                        }
+                        label={c.name}
+                      />
+                    )
+                      :
+                      (<Input
+                        key={index}
+                        readOnly
+                        type="number"
+                        value={
+                          formData[c.uid] ||
+                          getValue?.data?.data[c.uid] ||
+                          ""
+                        }
+                        label={c.name}
+                      />
+                      )
                   );
                 case "array2":
                   return (
@@ -370,18 +399,32 @@ export default function DataCard({
                   );
                 case "textbox":
                   return (
-                    <Textarea
-                      key={index}
-                      onChange={(e) =>
-                        handleChange(e.target.value, c.uid)
-                      }
-                      value={
-                        formData[c.uid] ||
-                        getValue?.data?.data[c.uid] ||
-                        ""
-                      }
-                      label={c.name}
-                    />
+                    isEdit ? (
+                      <Textarea
+                        key={index}
+                        onChange={(e) =>
+                          handleChange(e.target.value, c.uid)
+                        }
+                        value={
+                          formData[c.uid] ||
+                          getValue?.data?.data[c.uid] ||
+                          ""
+                        }
+                        label={c.name}
+                      />
+                    ) : (
+                      <Textarea
+                        key={index}
+                        readOnly
+                        value={
+                          formData[c.uid] ||
+                          getValue?.data?.data[c.uid] ||
+                          ""
+                        }
+                        label={c.name}
+                      />
+
+                    )
                   );
                 case "vistingTime":
                   return (

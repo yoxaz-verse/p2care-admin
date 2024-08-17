@@ -137,7 +137,14 @@ export default function DepartmentDetails() {
             <div className="flex flex-row justify-between items-center w-full">
               <Title title={getDepartment?.data?.data?.name} />
               <div className="flex flex-row gap-4">
-                <Button color="primary" radius="full" onClick={() => setisEdit(true)}>Edit</Button>
+
+                <Button color="primary"
+                  radius="full"
+                  onClick={() => setisEdit(true)}>
+                  Edit
+                </Button>
+
+
                 <Button color="danger" radius="full" onClick={onOpen}>Delete</Button>
               </div>
             </div>
@@ -204,7 +211,6 @@ export default function DepartmentDetails() {
         apiKey="enquiryByHospital"
         columns={enquiryColumns}
         title={`${getDepartment?.data?.data?.name} Enquiry`} />
-      <Page needAddModal={false} api={Doctor.appointments} apiKey="appointments" columns={appointmentColumns} title={`${getDepartment?.data?.data?.name} Appointment`} />
       <Page dropDownData={DropDownData} api={Doctor.procedure} apiKey="procedure" columns={procedureColumns} title={`${getDepartment?.data?.data?.name} Procedures`} />
     </div>
   );
