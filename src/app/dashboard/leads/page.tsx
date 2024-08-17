@@ -113,11 +113,13 @@ export default function Dev() {
       <Title title="Leads" />
       <Breadcrumbs color="secondary">
         {type?.data.data.map((h: any, index: any) => {
-          return <BreadcrumbItem key={index} className="cursor-pointer" onClick={() => router.push(h._id)}>{h.name}</BreadcrumbItem>
+          return <BreadcrumbItem key={index}
+            className="cursor-pointer"
+            onClick={() => router.push(h._id)}>{h.name}</BreadcrumbItem>
         })}
       </Breadcrumbs>
       {type?.data.data.map((t: any, index: any) => {
-        return <section className="w-full" id="department">
+        return <section key={t._id} className="w-full" id={t.name}>
           <SubTitle title={t.name} />
           <Tabs color="secondary" aria-label="Options">
             {status?.data.data.map((a: any, index: any) => {
