@@ -1,5 +1,5 @@
 "use client";
-import Title from "@/components/titles";
+import Title, { SubTitle } from "@/components/titles";
 import React from "react";
 import Page from "@/components/Page/PageAll";
 import { DesignationRoutes, Doctor, GenderRoutes, HospitalRoutes } from "@/core/apiRoutes";
@@ -77,6 +77,7 @@ const Doctors = () => {
       <div className="flex flex-col w-full p-[1rem] gap-4">
         <Title title={"Doctors"} />
         <DoctorComponent DesignationData={list} DepartmentData={list1} GenderData={genderList} />
+        <SubTitle title="All Doctors Enquiries" />
         <Tabs color="secondary" aria-label="Options">
           {status?.data.data.map((a: any, index: any) => {
             return <Tab key={index} name={a.name} title={a.name}>
@@ -91,6 +92,7 @@ const Doctors = () => {
             </Tab>
           })}
         </Tabs>
+        <SubTitle title="All Doctors Appointments" />
         <Page
           needAddModal={false}
           api={Doctor.appointments}

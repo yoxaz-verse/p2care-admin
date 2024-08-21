@@ -82,6 +82,7 @@ interface Card {
   card: CountCardProps[]
 }
 export const CardCount = (): Card => {
+  const name = "rohan";
   const { data: getTotal, isLoading } = useQuery({
     queryKey: ["getTotal"],
     queryFn: () => {

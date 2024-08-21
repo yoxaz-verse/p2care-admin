@@ -224,7 +224,7 @@ export default function UserName() {
         api={`${Doctor.enquiry}/individual/${id}`}
         apiKey="enquiries"
         columns={enquiryColumns}
-        title={`${getPateintData?.data.data.name}'s Enquiries`}
+        title={`${getPateintData?.data?.data?.name}'s Enquiries`}
       />
     </div>
   );

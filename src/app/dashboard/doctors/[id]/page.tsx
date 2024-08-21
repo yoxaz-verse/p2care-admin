@@ -1,6 +1,6 @@
 "use client";
 import generateData from "@/content/tableData";
-import Title from "@/components/titles";
+import Title, { SubTitle } from "@/components/titles";
 import {
   Autocomplete,
   AutocompleteItem,
@@ -150,7 +150,7 @@ export default function GetDocDetials() {
   ];
   const [achivementVal, setachivementVal] = useState<any>("");
   const [qualificationVal, setqualificationVal] = useState<any>("");
-  const [memeberVal, setmemeberVal] = useState<any>("");
+
   const push = (
     value: any,
     setValue: React.Dispatch<React.SetStateAction<any[]>>
@@ -1108,6 +1108,7 @@ export default function GetDocDetials() {
             columns={enquiryColumns}
             title={`${getDocDetails?.data.data?.name} Enquiry`}
           />
+          <SubTitle title="All Appointments" />
           <Page
             needAddModal={false}
             api={`${Doctor.appointments}/doctor/${id}`}

@@ -53,13 +53,14 @@ const Users = () => {
       <Title title="Users" />
       <Page api={AdminRoutes.admin} apiKey={"admin"} columns={adminColumns} title="Admin" />
       <Page needAddModal={false} api={patientRoutes.patient} apiKey={"users"} columns={userColumns} title="Patient" />
+      <SubTitle title="All Users Appointment" />
       <Page
         needAddModal={false}
         api={Doctor.appointments}
         apiKey="appointments"
         columns={appointmentColumns}
         title="Appointment" />
-      <SubTitle title="Enquiries" />
+      <SubTitle title="All Users Enquiries" />
       <Tabs color="secondary" aria-label="Options">
         {status?.data.data.map((a: any, index: any) => {
           return <Tab

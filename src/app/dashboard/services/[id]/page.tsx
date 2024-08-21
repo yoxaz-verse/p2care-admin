@@ -223,7 +223,7 @@ export default function ServiceName() {
         api={serviceRoutes.addDoctor}
         title="Add Doctor"
         DropDown={doctorList} />
-      <SubTitle title="Services" />
+
       <Page
         needAddModal={false}
         api={`${HospitalRoutes.enquiry}/individual/${id}`}

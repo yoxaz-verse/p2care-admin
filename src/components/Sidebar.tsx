@@ -1,7 +1,6 @@
 "use client";
 import { SideBarLink, SideBarLinkProps } from "@/utilis/content";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { IoIosSettings } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
@@ -25,7 +24,7 @@ export default function SideBar({ view, setView }: ViewProps) {
         transition={{ duration: 1, ease: "easeInOut" }}
         className={` w-[300px] relative  bg-white z-50 flex flex-col  justify-between rounded-lg shadow-md `}
       >
-        <div className="flex flex-col gap-4 w-full ">
+        <div className="flex flex-col gap-4 w-full h-[80%] fixed">
           {SideBarLink.map((s: SideBarLinkProps) => {
             return (
               <>
@@ -45,8 +44,8 @@ export default function SideBar({ view, setView }: ViewProps) {
                     // onClick={() =>  setView(true)}
                     transition={{ duration: 1, ease: "easeInOut" }}
                     className={`${s.link === pathname
-                        ? "bg-[#4880FF] text-white p-4 text-center rounded-lg  font-bold h-[50px]"
-                        : "h-[30px]"
+                      ? "bg-[#4880FF] text-white p-4 text-center rounded-lg  font-bold h-[50px]"
+                      : "h-[30px]"
                       } ms-2 me-4 max-w-[280px] select-none   text-lg  cursor-pointer`}
                   >
                     {s.name}

@@ -3,27 +3,27 @@ import { useState, useEffect } from "react";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import Title from "@/components/titles";
 import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Input, Spinner, Textarea, useDisclosure } from "@nextui-org/react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, usePathname } from "next/navigation";
 import { Doctor, HospitalRoutes } from "@/core/apiRoutes";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getData, patchData } from "@/core/apiHandler";
 import { queryAdmin } from "@/app/providers";
 import Page from "@/components/Page/PageAll";
 import { useAsyncList } from "@react-stately/data";
-import { list } from "postcss";
 import { ImageSingle } from "@/components/ImageUpload";
 
-const breadCrumps = [
-  { name: "Dashboard", link: "/dashboard" },
-  { name: "Department", link: "/dashboard/departments" },
-  { name: "Department Details", link: window.location.href },
-];
+
 
 export default function DepartmentDetails() {
   const router = useRouter();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const path = usePathname();
   const { id } = useParams();
-
+  const breadCrumps = [
+    { name: "Dashboard", link: "/dashboard" },
+    { name: "Department", link: "/dashboard/departments" },
+    { name: "Department Details", link: path },
+  ];
   const { data: getDepartment, isLoading, isError, isFetched } = useQuery({
     queryKey: ["getDepartment"],
     queryFn: () => getData(`${Doctor.department}/${id}`, {}),
@@ -76,14 +76,7 @@ export default function DepartmentDetails() {
     }));
   };
 
-  const appointmentColumns = [
-    { name: "Doctor Name", uid: "doctorName", type: "text" },
-    { name: "Patient Name", uid: "patientName", type: "text" },
-    {
-      name: "Appointment Time", uid: "doctorSlot", type: "doctorSlot"
-    },
 
-  ]
   const procedureColumns = [
     { name: "Name", uid: "name", type: "text" },
     { name: "Department", uid: "department", type: "departmentDropdown" },
@@ -153,7 +146,7 @@ export default function DepartmentDetails() {
               title="Hospital"
               data={id}
               isOpen={isOpen}
-              api={HospitalRoutes.hospital}
+              api={Doctor.department}
               queryKey={["Doctor"]}
             />
           </div>

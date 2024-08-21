@@ -66,7 +66,7 @@ const Services = () => {
         title="Services"
         columns={servicesArr}
         needAddModal={true} />
-      <SubTitle title="Services" />
+      <SubTitle title="All Services Enquiries" />
       <Tabs color="secondary" aria-label="Options">
         {status?.data.data.map((a: any, index: any) => {
           return <Tab key={index} name={a.name} title={a.name}>
