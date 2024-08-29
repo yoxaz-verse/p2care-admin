@@ -2,7 +2,6 @@
 import { SideBarLink, SideBarLinkProps } from "@/utilis/content";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { IoIosSettings } from "react-icons/io";
 import { FaPowerOff } from "react-icons/fa";
 import { Button, Divider, useDisclosure } from "@nextui-org/react";
 import LogoutModal from "./Modals/Logout";
@@ -22,9 +21,9 @@ export default function SideBar({ view, setView }: ViewProps) {
       <motion.div
         animate={{ width: view ? 0 : 300 }}
         transition={{ duration: 1, ease: "easeInOut" }}
-        className={` w-[300px] relative  bg-white z-50 flex flex-col  justify-between rounded-lg shadow-md `}
+        className={` w-[300px] relative h-[90vh] fixed  bg-white z-50 flex flex-col  justify-between rounded-lg shadow-md `}
       >
-        <div className="flex flex-col gap-4 w-full h-[80%] fixed">
+        <div className="flex flex-col gap-4 w-full">
           {SideBarLink.map((s: SideBarLinkProps) => {
             return (
               <>

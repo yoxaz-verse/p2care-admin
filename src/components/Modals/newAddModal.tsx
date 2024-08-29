@@ -125,7 +125,6 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
         district,
         city
       }
-      alert(api);
       AddModalData.mutate(hosInput);
       return;
     }
@@ -143,7 +142,6 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
         ...data,
         district
       }
-      console.log(data);
       AddModalData.mutate(cityInput);
       return;
     } else {

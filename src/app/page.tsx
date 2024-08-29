@@ -32,6 +32,7 @@ export default function Home() {
     },
     onSuccess: (data: any) => {
       console.log(data);
+      localStorage.setItem("currentAdmin", data?.data?.data?.accessToken);
       setLoading(false);
       toast.success(data.data.message, {
         position: "top-right",
