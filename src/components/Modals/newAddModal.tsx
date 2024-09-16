@@ -35,6 +35,7 @@ import {
   HospitalRoutes,
   LocationRoutes,
 } from "@/core/apiRoutes";
+import { log } from "console";
 
 export default function AddModal({
   title,
@@ -43,11 +44,11 @@ export default function AddModal({
   apiKey,
   DropDownData,
 }: AddModalProps) {
-  useEffect(() => {
-    if (api === "/city") {
-      if (!DropDownData.district) DropDownData.district.reload();
-    }
-  }, [api, DropDownData]);
+  // useEffect(() => {
+  //   if (api === "/city") {
+  //     if (!DropDownData.district) DropDownData.district.reload();
+  //   }
+  // }, [api, DropDownData]);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [submitting, setSubmitting] = useState(false);
   const [district, setDistrict] = useState<any>();
@@ -160,6 +161,10 @@ export default function AddModal({
     }
   };
 
+  console.log("ssssssssas");
+  console.log(DropDownData);
+  console.log("ssasasas");
+
   return (
     <>
       <Button
@@ -229,7 +234,7 @@ export default function AddModal({
                             onSelectionChange={(e) => setDistrict(e)}
                             className="max-w-full"
                           >
-                            {DropDownData?.district?.items.map((d: any) => (
+                            {DropDownData?.district?.items?.map((d: any) => (
                               <AutocompleteItem key={d._id} value={d._id}>
                                 {d.name}
                               </AutocompleteItem>

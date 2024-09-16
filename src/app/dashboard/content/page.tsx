@@ -27,6 +27,13 @@ const Content = () => {
     },
   });
 
+  const data = useQuery({
+    queryKey: ["district"],
+    queryFn: () => getData(LocationRoutes.district, {}),
+  });
+  console.log(data.data?.data.data.data);
+  console.log("List", list);
+
   return (
     <div className="flex flex-col w-full">
       <Title title="Content" />

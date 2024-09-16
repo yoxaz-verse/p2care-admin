@@ -95,10 +95,11 @@ export default function Page({
       router.push(`/dashboard/services/${data._id}`);
       return;
     }
-    if (api == LocationRoutes.city) {
-      router.push(`/dashboard/city/${data._id}`);
-      return;
-    } else {
+    // if (api == LocationRoutes.city) {
+    //   router.push(`/dashboard/city/${data._id}`);
+    //   return;
+    // }
+    else {
       onOpenView();
       setCurrData(data);
     }
