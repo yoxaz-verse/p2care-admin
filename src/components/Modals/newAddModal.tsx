@@ -34,11 +34,11 @@ import { toast } from "sonner";
 import { DesignationRoutes, Doctor, HospitalRoutes, LocationRoutes } from "@/core/apiRoutes";
 
 export default function AddModal({ title, columns, api, apiKey, DropDownData }: AddModalProps) {
-  useEffect(() => {
-    if (api === "/city") {
-      DropDownData.district.reload();
-    }
-  }, [api, DropDownData]);
+  // useEffect(() => {
+  //   if (api === "/city") {
+  //     DropDownData.district.reload();
+  //   }
+  // }, [api, DropDownData]);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [submitting, setSubmitting] = useState(false);
   const [district, setDistrict] = useState<any>();

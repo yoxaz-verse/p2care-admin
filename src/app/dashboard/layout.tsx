@@ -27,7 +27,7 @@ function NavBar(props: { view: boolean; setView: any }) {
       </div>
       <div className="hidden md:flex flex-row items-center gap-2">
         <FaBell fill="#3D42DF" size={30} />
-        <Select
+        {/* <Select
           placeholder="Select the languange"
           defaultSelectedKeys={["english"]}
           className="w-[150px] bg-white rounded-none"
@@ -35,11 +35,11 @@ function NavBar(props: { view: boolean; setView: any }) {
           {languange.map((animal: any) => (
             <SelectItem key={animal.key}>{animal.label}</SelectItem>
           ))}
-        </Select>
+        </Select> */}
         <Avatar name="Admin" src={profilelogo} />
         <div className="flex flex-col justify-center items-center">
-          <h3 className="text-[14px]">Admin</h3>
-          <p className="text-[12px]">Admin</p>
+          {/* <h3 className="text-[14px]">Admin</h3> */}
+          {/* <p className="text-[12px]">Admin</p> */}
         </div>
       </div>
     </div>

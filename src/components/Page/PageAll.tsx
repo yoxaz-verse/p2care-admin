@@ -3,7 +3,15 @@ import CurdTable from "@/components/Api/curdTable";
 import DeleteModal from "@/components/Modals/DeleteModal";
 import EditModal from "@/components/Modals/EditModal";
 import ViewModal from "@/components/Modals/newViewModal";
-import { Doctor, GenderRoutes, patientRoutes, offerRoute, HospitalRoutes, serviceRoutes } from "@/core/apiRoutes";
+import {
+  Doctor,
+  GenderRoutes,
+  patientRoutes,
+  offerRoute,
+  HospitalRoutes,
+  serviceRoutes,
+  LocationRoutes,
+} from "@/core/apiRoutes";
 import { useDisclosure } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,7 +21,7 @@ interface Page {
   title: string;
   columns: any[];
   apiKey: string;
-  needAddModal?: boolean
+  needAddModal?: boolean;
   dropDownData?: any;
   searchBy?: string[];
 }
@@ -34,6 +42,7 @@ export default function Page({
     onOpenChange: onOpenViewChange,
     onClose: onCloseView,
   } = useDisclosure();
+
   const {
     isOpen: isOpenEdit,
     onOpen: onOpenEdit,
@@ -66,7 +75,8 @@ export default function Page({
       if (data.type === "user") {
         router.push(`/dashboard/user/${data._id}`);
       }
-    } if (api == Doctor.department) {
+    }
+    if (api == Doctor.department) {
       router.push(`/dashboard/departments/${data._id}`);
       return;
     }
@@ -85,7 +95,10 @@ export default function Page({
       router.push(`/dashboard/services/${data._id}`);
       return;
     }
-    else {
+    if (api == LocationRoutes.city) {
+      router.push(`/dashboard/city/${data._id}`);
+      return;
+    } else {
       onOpenView();
       setCurrData(data);
     }
@@ -102,7 +115,7 @@ export default function Page({
         title={title}
         columns={columns}
         DropDownData={dropDownData}
-        onOpenCreate={() => { }}
+        onOpenCreate={() => {}}
         onOpenDelete={(data: any) => handleDeleteData(data)}
         onOpenEdit={(data: any) => handleEditData(data)}
         onOpenView={(data: any) => handleViewData(data)}

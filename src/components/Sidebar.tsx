@@ -33,19 +33,20 @@ export default function SideBar({ view, setView }: ViewProps) {
                       !view
                         ? { x: 0, width: 300, display: "block" }
                         : {
-                          x: -150,
-                          width: 0,
-                          transitionEnd: {
-                            display: "none",
-                          },
-                        }
+                            x: -150,
+                            width: 0,
+                            transitionEnd: {
+                              display: "none",
+                            },
+                          }
                     }
                     // onClick={() =>  setView(true)}
                     transition={{ duration: 1, ease: "easeInOut" }}
-                    className={`${s.link === pathname
-                      ? "bg-[#4880FF] text-white p-4 text-center rounded-lg  font-bold h-[50px]"
-                      : "h-[30px]"
-                      } ms-2 me-4 max-w-[280px] select-none   text-lg  cursor-pointer`}
+                    className={`${
+                      s.link === pathname
+                        ? "bg-[#4880FF] text-white p-4  rounded-lg  font-bold h-[50px]"
+                        : "h-[30px]"
+                    } ms-2 me-4 max-w-[280px] select-none p-4   text-lg  cursor-pointer`}
                   >
                     {s.name}
                   </motion.div>
@@ -59,12 +60,12 @@ export default function SideBar({ view, setView }: ViewProps) {
             !view
               ? { x: 0, width: 300, display: "block" }
               : {
-                x: -150,
-                width: 0,
-                transitionEnd: {
-                  display: "none",
-                },
-              }
+                  x: -150,
+                  width: 0,
+                  transitionEnd: {
+                    display: "none",
+                  },
+                }
           }
           transition={{ duration: 1, ease: "easeInOut" }}
           className="flex flex-col items-center justify-center gap-4 w-full"
