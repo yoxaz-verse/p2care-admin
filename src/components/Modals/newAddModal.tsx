@@ -18,27 +18,36 @@ import {
   Dropdown,
 } from "@nextui-org/react";
 
-
-
 interface AddModalProps {
   title: string;
   columns: any;
   DropDownData?: any;
-  api: string,
+  api: string;
   apiKey: string[];
 }
 import { getData, postData } from "@/core/apiHandler";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryAdmin } from "@/app/providers";
 import { toast } from "sonner";
-import { DesignationRoutes, Doctor, HospitalRoutes, LocationRoutes } from "@/core/apiRoutes";
+import {
+  DesignationRoutes,
+  Doctor,
+  HospitalRoutes,
+  LocationRoutes,
+} from "@/core/apiRoutes";
 
-export default function AddModal({ title, columns, api, apiKey, DropDownData }: AddModalProps) {
-  // useEffect(() => {
-  //   if (api === "/city") {
-  //     DropDownData.district.reload();
-  //   }
-  // }, [api, DropDownData]);
+export default function AddModal({
+  title,
+  columns,
+  api,
+  apiKey,
+  DropDownData,
+}: AddModalProps) {
+  useEffect(() => {
+    if (api === "/city") {
+      if (!DropDownData.district) DropDownData.district.reload();
+    }
+  }, [api, DropDownData]);
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
   const [submitting, setSubmitting] = useState(false);
   const [district, setDistrict] = useState<any>();
@@ -59,8 +68,8 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
     onSuccess: (data: any) => {
       toast.success("Data added successfully", {
         position: "top-right",
-        className: "bg-green-300"
-      })
+        className: "bg-green-300",
+      });
       queryAdmin.invalidateQueries({ queryKey: apiKey });
       setSubmitting(false);
       onClose();
@@ -71,19 +80,21 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
       if (error != null) {
         toast.error("Data added failed", {
           position: "top-right",
-          className: "bg-red-300"
-        })
+          className: "bg-red-300",
+        });
         setSubmitting(false);
         onClose();
       }
       return;
-    }
-  })
+    },
+  });
   function toCamelCase(str: string) {
     console.log(str);
-    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
-      return index === 0 ? word.toLowerCase() : word.toUpperCase();
-    }).replace(/\s+/g, '');
+    return str
+      .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+        return index === 0 ? word.toLowerCase() : word.toUpperCase();
+      })
+      .replace(/\s+/g, "");
   }
   const handleSubmit = async (e: any, close: () => void) => {
     e.preventDefault();
@@ -113,8 +124,8 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
         ...data,
         department,
         designation,
-        gender
-      }
+        gender,
+      };
       AddModalData.mutate(docInput);
       return;
     }
@@ -123,8 +134,8 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
       const hosInput = {
         ...data,
         district,
-        city
-      }
+        city,
+      };
       AddModalData.mutate(hosInput);
       return;
     }
@@ -132,16 +143,16 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
     if (api === Doctor.procedure) {
       const procedureData = {
         ...data,
-        department
-      }
+        department,
+      };
       AddModalData.mutate(procedureData);
       return;
     }
     if (api === LocationRoutes.city) {
       const cityInput = {
         ...data,
-        district
-      }
+        district,
+      };
       AddModalData.mutate(cityInput);
       return;
     } else {
@@ -151,7 +162,10 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
 
   return (
     <>
-      <Button onPress={onOpen} className="bg-violet-700 text-white">{`Add ${title}`}</Button>
+      <Button
+        onPress={onOpen}
+        className="bg-violet-700 text-white"
+      >{`Add ${title}`}</Button>
       <Modal
         isDismissable={false}
         isOpen={isOpen}
@@ -176,15 +190,34 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
                     switch (column.type) {
                       case "text":
                         return (
-                          <Input key={columnIndex} label={column.name} name={column.name.toLowerCase()} placeholder={column.name} required />
+                          <Input
+                            key={columnIndex}
+                            label={column.name}
+                            name={column.name.toLowerCase()}
+                            placeholder={column.name}
+                            required
+                          />
                         );
                       case "password":
                         return (
-                          <Input type="password" key={columnIndex} label={column.name} name={column.name.toLowerCase()} placeholder={column.name} required />
+                          <Input
+                            type="password"
+                            key={columnIndex}
+                            label={column.name}
+                            name={column.name.toLowerCase()}
+                            placeholder={column.name}
+                            required
+                          />
                         );
                       case "number":
                         return (
-                          <Input key={columnIndex} label={column.name} name={column.name.toLowerCase()} placeholder={column.name} required />
+                          <Input
+                            key={columnIndex}
+                            label={column.name}
+                            name={column.name.toLowerCase()}
+                            placeholder={column.name}
+                            required
+                          />
                         );
                       case "districtDropdown":
                         return (
@@ -208,19 +241,21 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
                           <Autocomplete
                             label="Select an city"
                             selectedKey={city}
-                            disabled={district !== ''}
+                            disabled={district !== ""}
                             isLoading={DropDownData.city.isLoading}
                             items={DropDownData.city.items}
                             onSelectionChange={(e) => setCity(e)}
                             className="max-w-full"
                           >
-                            {DropDownData?.city?.items.filter((item: any) => {
-                              return item.district._id === district
-                            }).map((d: any) => (
-                              <AutocompleteItem key={d._id} value={d._id}>
-                                {d.name}
-                              </AutocompleteItem>
-                            ))}
+                            {DropDownData?.city?.items
+                              .filter((item: any) => {
+                                return item.district._id === district;
+                              })
+                              .map((d: any) => (
+                                <AutocompleteItem key={d._id} value={d._id}>
+                                  {d.name}
+                                </AutocompleteItem>
+                              ))}
                           </Autocomplete>
                         );
                       case "genderDropdown":
@@ -275,7 +310,13 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
                         );
                       case "textbox":
                         return (
-                          <Textarea key={columnIndex} label={column.name} name={column.name.toLowerCase()} placeholder={column.name} required />
+                          <Textarea
+                            key={columnIndex}
+                            label={column.name}
+                            name={column.name.toLowerCase()}
+                            placeholder={column.name}
+                            required
+                          />
                         );
                       case "action":
                         return null;
@@ -285,12 +326,20 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
                   })}
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="danger" variant="flat" onPress={() => {
-                    onClose()
-                  }}>
+                  <Button
+                    color="danger"
+                    variant="flat"
+                    onPress={() => {
+                      onClose();
+                    }}
+                  >
                     Close
                   </Button>
-                  <Button isLoading={submitting} color="secondary" type="submit">
+                  <Button
+                    isLoading={submitting}
+                    color="secondary"
+                    type="submit"
+                  >
                     Submit
                   </Button>
                 </ModalFooter>
@@ -298,7 +347,7 @@ export default function AddModal({ title, columns, api, apiKey, DropDownData }: 
             </>
           )}
         </ModalContent>
-      </Modal >
+      </Modal>
     </>
   );
 }

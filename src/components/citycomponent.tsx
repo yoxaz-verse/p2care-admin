@@ -25,7 +25,7 @@ export default function CityComponent({ DistrictData }: CityComponentProps) {
         apiKey="cities"
         title="City"
         // searchBy={["name"]}
-        // dropDownData={DropDownData}
+        dropDownData={DropDownData}
         api={LocationRoutes.city}
         columns={countrycolumns}
       />

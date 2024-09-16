@@ -29,6 +29,7 @@ const Content = () => {
 
   return (
     <div className="flex flex-col w-full">
+      <Title title="Content" />
       <Page
         apiKey="gender"
         title="Gender"
