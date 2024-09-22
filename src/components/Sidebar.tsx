@@ -21,7 +21,7 @@ export default function SideBar({ view, setView }: ViewProps) {
       <motion.div
         animate={{ width: view ? 0 : 300 }}
         transition={{ duration: 1, ease: "easeInOut" }}
-        className={` w-[300px] relative h-[90vh] fixed  bg-white z-50 flex flex-col  justify-between rounded-lg shadow-md `}
+        className={` w-[300px]  h-[100%] fixed  bg-white z-50 flex flex-col  justify-between rounded-lg shadow-md `}
       >
         <div className="flex flex-col gap-4 w-full">
           {SideBarLink.map((s: SideBarLinkProps) => {
@@ -54,35 +54,14 @@ export default function SideBar({ view, setView }: ViewProps) {
               </>
             );
           })}
-        </div>
-        <motion.div
-          animate={
-            !view
-              ? { x: 0, width: 300, display: "block" }
-              : {
-                  x: -150,
-                  width: 0,
-                  transitionEnd: {
-                    display: "none",
-                  },
-                }
-          }
-          transition={{ duration: 1, ease: "easeInOut" }}
-          className="flex flex-col items-center justify-center gap-4 w-full"
-        >
-          <Divider orientation="horizontal" />
-          {/* <Button className="flex bg-inherit flex-row cursor-pointer gap-2 text-xl items-center">
-            <IoIosSettings size={20} />
-            <p>Settings</p>
-          </Button> */}
           <Button
             onPress={onOpen}
-            className=" flex flex-row bg-inherit cursor-pointer gap-2 text-xl items-center"
+            className=" flex flex-row bg-inherit cursor-pointer gap-2 bg-gray-100"
           >
             <FaPowerOff size={20} />
             <p>Logout</p>
           </Button>
-        </motion.div>
+        </div>
       </motion.div>
       <LogoutModal onOpenChange={onOpenChange} isOpen={isOpen} />
     </>

@@ -11,7 +11,7 @@ import { useState } from "react";
 
 function NavBar(props: { view: boolean; setView: any }) {
   return (
-    <div className="flex flex-row px-4  h-[70px] w-full justify-between  items-center">
+    <div className="flex flex-row px-4 fixed bg-[#F5F6FA] z-50 h-[70px] w-full justify-between  items-center">
       <IoIosMenu
         onClick={() => props.setView(!props.view)}
         className="cursor-pointer"
@@ -55,8 +55,10 @@ export default function DashboardLayout({
   return (
     <>
       <NavBar view={view} setView={setView}></NavBar>
+      <div className="h-[70px]"></div>
       <div className="flex bg-[#F5F6FA] h-full flex-row gap-4">
         <SideBar view={view} setView={setView} />
+        <div className="w-[350px]"></div>
         {children}
       </div>
     </>

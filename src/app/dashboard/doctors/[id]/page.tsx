@@ -166,11 +166,13 @@ export default function GetDocDetials() {
     {
       name: "Status",
       uid: "appstatus",
-      type: "appstatus"
+      type: "appstatus",
     },
     { name: "Price(in Rs)", uid: "price", type: "text" },
     {
-      name: "Appointment Time", uid: "doctorSlot", type: "doctorSlot"
+      name: "Appointment Time",
+      uid: "doctorSlot",
+      type: "doctorSlot",
     },
   ];
 
@@ -232,7 +234,11 @@ export default function GetDocDetials() {
       });
     },
   });
-  const { data: getSlot, isLoading: isLoadingslot, isFetched: isFetchedSlot } = useQuery({
+  const {
+    data: getSlot,
+    isLoading: isLoadingslot,
+    isFetched: isFetchedSlot,
+  } = useQuery({
     queryKey: ["get-doctorSlot", id],
     queryFn: () => {
       return getData(`/doctor-slot/${id}`, {});
@@ -241,7 +247,6 @@ export default function GetDocDetials() {
 
   useEffect(() => {
     if (!isLoadingslot) {
-
       const slot = getSlot?.data?.data;
       console.log("slot", slot, getSlot?.data);
       if (slot?.length > 0) {
@@ -260,7 +265,8 @@ export default function GetDocDetials() {
                   const minutes = date.getMinutes();
                   const period = hours >= 12 ? "PM" : "AM";
                   const formattedHours = hours % 12 || 12;
-                  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+                  const formattedMinutes =
+                    minutes < 10 ? `0${minutes}` : minutes;
                   return {
                     time: `${formattedHours}:${formattedMinutes} ${period}`,
                     data: m,
@@ -277,7 +283,8 @@ export default function GetDocDetials() {
                   const minutes = date.getMinutes();
                   const period = hours >= 12 ? "PM" : "AM";
                   const formattedHours = hours % 12 || 12;
-                  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+                  const formattedMinutes =
+                    minutes < 10 ? `0${minutes}` : minutes;
                   return {
                     time: `${formattedHours}:${formattedMinutes} ${period}`,
                     data: m,
@@ -294,7 +301,8 @@ export default function GetDocDetials() {
                   const minutes = date.getMinutes();
                   const period = hours >= 12 ? "PM" : "AM";
                   const formattedHours = hours % 12 || 12;
-                  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+                  const formattedMinutes =
+                    minutes < 10 ? `0${minutes}` : minutes;
                   return {
                     time: `${formattedHours}:${formattedMinutes} ${period}`,
                     data: m,
@@ -564,43 +572,42 @@ export default function GetDocDetials() {
     onSuccess: () => {
       toast.success("Doctor is marked as top", {
         position: "top-right",
-        className: "bg-green-300"
-      })
+        className: "bg-green-300",
+      });
       queryAdmin.invalidateQueries({ queryKey: ["doctorDetails", id] });
-    }
+    },
   });
   const handleChangeTop = (e: any) => {
     e.preventDefault();
     const item = {
-      isTop: !getDocDetails?.data.data.isMain
-    }
+      isTop: !getDocDetails?.data.data.isMain,
+    };
     console.log(item);
     markAsTop.mutate(item);
-  }
+  };
   const editService = useMutation({
     mutationKey: ["doc"],
     mutationFn: (data: any) => {
       alert(data.isPublished);
       return patchData(`${Doctor.docotor}/publish/test/${id}`, data, {});
-
     },
     onSuccess: (data: any) => {
       toast.success("Doctor Published!", {
         position: "top-right",
-        className: "bg-green-300"
+        className: "bg-green-300",
       });
       queryAdmin.invalidateQueries({ queryKey: ["doctorDetails", id] });
     },
     onError: (error: any) => {
       console.log(error);
-    }
-  })
+    },
+  });
   const handlePublish = () => {
     const item = {
-      isPublished: !getDocDetails?.data.data.isPublished
-    }
+      isPublished: !getDocDetails?.data.data.isPublished,
+    };
     editService.mutate(item);
-  }
+  };
   return (
     <>
       {isLoading ? (
@@ -624,13 +631,18 @@ export default function GetDocDetials() {
                 color="success"
                 onClick={() => handlePublish()}
                 isSelected={getDocDetails?.data.data?.isPublished}
-                aria-label="Automatic updates" className="text-md">Publish</Switch>
+                aria-label="Automatic updates"
+                className="text-md"
+              >
+                Publish
+              </Switch>
               <Switch
                 size="lg"
                 color="success"
                 onClick={(e) => handleChangeTop(e)}
                 isSelected={getDocDetails?.data.data?.isMain}
-                aria-label="Automatic updates">
+                aria-label="Automatic updates"
+              >
                 Mark the Doctor as top
               </Switch>
               <Button color="danger" radius="full" onPress={onOpen}>
@@ -649,112 +661,115 @@ export default function GetDocDetials() {
             <CardHeader className="text-[15px] md:text-[30px] font-bold">
               Basic Details
             </CardHeader>
-            <CardBody className="grid grid-cols-2  gap-4 items-center  h-full">
-              <div className="flex items-center justify-center">
-                <label htmlFor="docImageInput" className="cursor-pointer">
-                  <Avatar
-                    src={
-                      getDocDetails?.data.data?.image
-                        ? getDocDetails?.data.data?.image.path
-                        : data.docImage
-                    }
-                    alt="docImage"
-                    className="w-80 h-80 rounded-full"
+            <CardBody className="grid grid-cols-1  gap-4 items-center  h-full">
+              <div className="grid grid-cols-2 gap-2 items-center">
+                <div className="flex items-center justify-center">
+                  <label htmlFor="docImageInput" className="cursor-pointer">
+                    <Avatar
+                      src={
+                        getDocDetails?.data.data?.image
+                          ? getDocDetails?.data.data?.image.path
+                          : data.docImage
+                      }
+                      alt="docImage"
+                      className="w-80 h-80 rounded-full"
+                    />
+                    <input
+                      id="docImageInput"
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e: any) => {
+                        handleChange(e);
+                      }}
+                    />
+                  </label>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <Input
+                    label="Doctor Name"
+                    isReadOnly={isEdit}
+                    value={getDocDetails?.data.data?.name}
+                    placeholder="Docotor Name"
                   />
-                  <input
-                    id="docImageInput"
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e: any) => {
-                      handleChange(e);
+                  <Input
+                    label="Doctor Email"
+                    value={getDocDetails?.data.data?.email}
+                    isReadOnly={isEdit}
+                    placeholder="Docotor Email"
+                  />
+                  <Autocomplete
+                    label="Select an Department"
+                    selectedKey={formData.department}
+                    isLoading={list1.isLoading}
+                    items={list1.items}
+                    onSelectionChange={(e) => {
+                      if (e !== undefined) {
+                        setformData((prev: any) => ({
+                          ...prev,
+                          department: e,
+                        }));
+                        console.log("Selected value:", e);
+                      }
                     }}
+                    className="max-w-full"
+                  >
+                    {list1.items.map((d: any) => (
+                      <AutocompleteItem key={d._id} value={d._id}>
+                        {d.name}
+                      </AutocompleteItem>
+                    ))}
+                  </Autocomplete>
+                  <div className="flex flex-row w-full">
+                    <Input
+                      label="Doctor Phone"
+                      value={getDocDetails?.data.data?.phone}
+                      readOnly
+                      placeholder="Docotor Phone"
+                    />
+                  </div>
+                  <Autocomplete
+                    label="Select an Designation"
+                    selectedKey={designation}
+                    isLoading={list.isLoading}
+                    items={list.items}
+                    onSelectionChange={(e) => setDesignation(e)}
+                    className="max-w-full"
+                  >
+                    {list.items.map((d: any) => (
+                      <AutocompleteItem key={d._id} value={d._id}>
+                        {d.name}
+                      </AutocompleteItem>
+                    ))}
+                  </Autocomplete>
+                  <Autocomplete
+                    label="Select an Gender"
+                    selectedKey={gender}
+                    isLoading={genderList.isLoading}
+                    items={genderList.items}
+                    onSelectionChange={(e) => setGender(e)}
+                    className="max-w-full"
+                  >
+                    {genderList.items.map((d: any) => (
+                      <AutocompleteItem key={d._id} value={d._id}>
+                        {d.name}
+                      </AutocompleteItem>
+                    ))}
+                  </Autocomplete>
+                  <Input
+                    label="Experince"
+                    type="number"
+                    value={formData?.experience}
+                    endContent={<h3 className="font-bold">Years</h3>}
+                    onValueChange={(e) =>
+                      setformData((prev: any) => ({
+                        ...prev,
+                        experience: e,
+                      }))
+                    }
                   />
-                </label>
+                </div>
               </div>
-              <Input
-                label="Doctor Name"
-                isReadOnly={isEdit}
-                value={getDocDetails?.data.data?.name}
-                placeholder="Docotor Name"
-              />
-              <Input
-                label="Doctor Email"
-                value={getDocDetails?.data.data?.email}
-                isReadOnly={isEdit}
-                placeholder="Docotor Email"
-              />
-              <Autocomplete
-                label="Select an Department"
-                selectedKey={formData.department}
-                isLoading={list1.isLoading}
-                items={list1.items}
-                onSelectionChange={(e) => {
-                  if (e !== undefined) {
-                    setformData((prev: any) => ({
-                      ...prev,
-                      department: e,
-                    }));
-                    console.log("Selected value:", e);
-                  }
-                }}
-                className="max-w-full"
-              >
-                {list1.items.map((d: any) => (
-                  <AutocompleteItem key={d._id} value={d._id}>
-                    {d.name}
-                  </AutocompleteItem>
-                ))}
-              </Autocomplete>
-              <div className="flex flex-row w-full">
-                <Input
-                  label="Doctor Phone"
-                  value={getDocDetails?.data.data?.phone}
-                  readOnly
-                  placeholder="Docotor Phone"
-                />
-              </div>
-              <Autocomplete
-                label="Select an Designation"
-                selectedKey={designation}
-                isLoading={list.isLoading}
-                items={list.items}
-                onSelectionChange={(e) => setDesignation(e)}
-                className="max-w-full"
-              >
-                {list.items.map((d: any) => (
-                  <AutocompleteItem key={d._id} value={d._id}>
-                    {d.name}
-                  </AutocompleteItem>
-                ))}
-              </Autocomplete>
-              <Autocomplete
-                label="Select an Gender"
-                selectedKey={gender}
-                isLoading={genderList.isLoading}
-                items={genderList.items}
-                onSelectionChange={(e) => setGender(e)}
-                className="max-w-full"
-              >
-                {genderList.items.map((d: any) => (
-                  <AutocompleteItem key={d._id} value={d._id}>
-                    {d.name}
-                  </AutocompleteItem>
-                ))}
-              </Autocomplete>
-              <Input
-                label="Experince"
-                className="w-1/2"
-                type="number"
-                value={formData?.experience}
-                endContent={<h3 className="font-bold">Years</h3>}
-                onValueChange={(e) =>
-                  setformData((prev: any) => ({
-                    ...prev,
-                    experience: e,
-                  }))
-                }
-              />
               {/*
               <DatePicker
                 label="Date of Birth"
@@ -1012,9 +1027,12 @@ export default function GetDocDetials() {
                           >
                             Update
                           </Button>
-                          <IoMdCloseCircleOutline fill="red"
+                          <IoMdCloseCircleOutline
+                            fill="red"
                             onClick={() => setype("")}
-                            className="cursor-pointer" size={40} />
+                            className="cursor-pointer"
+                            size={40}
+                          />
                         </div>
                       )}
                     </div>
