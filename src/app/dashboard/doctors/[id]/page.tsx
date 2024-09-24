@@ -987,26 +987,30 @@ export default function GetDocDetials() {
                   <>
                     <div
                       key={index}
-                      className="flex flex-row items-center w-full md:w-1/2 justify-between"
+                      className="flex flex-row items-center w-full justify-between"
                     >
-                      <h1 className="font-bold">{s.name}</h1>
-                      {s?.timings.map((t: any, index: any) => {
-                        return (
-                          <div
-                            key={index}
-                            className="flex flex-row justify-start w-20"
-                          >
-                            <Chip
-                              color="secondary"
-                              onClose={() => removeTime(t.data)}
-                              radius="full"
-                              variant="solid"
-                            >
-                              {t.time}{" "}
-                            </Chip>
-                          </div>
-                        );
-                      })}
+                      <div>
+                        <h1 className="font-bold">{s.name}</h1>
+                        <div className="flex gap-5 flex-wrap">
+                          {s?.timings.map((t: any, index: any) => {
+                            return (
+                              <div
+                                key={index}
+                                className="flex flex-row justify-start w-20"
+                              >
+                                <Chip
+                                  color="secondary"
+                                  onClose={() => removeTime(t.data)}
+                                  radius="full"
+                                  variant="solid"
+                                >
+                                  {t.time}{" "}
+                                </Chip>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
                       {s?.name !== type.name && (
                         <FaEdit
                           className="cursor-pointer"

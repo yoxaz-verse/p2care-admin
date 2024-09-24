@@ -1,36 +1,24 @@
 "use client";
-import { generateTabColumns } from "@/content/table-columns";
-import generateData from "@/content/tableData";
-import Title from "@/components/titles";
-import { generateTable } from "@/utilis/content";
-import React, { useState } from "react";
+
+import React from "react";
+import Page from "@/components/Page/PageAll";
+import { GeneralRoutes } from "@/core/apiRoutes";
 
 const General = () => {
-  const [page, setPage] = useState<any>(1);
-  const [data, setData] = useState<any>();
-  const handleView = () => {};
-  const handlePageChange = (page: number) => {
-    setPage(page + 1);
-  };
+  const blogColumns = [
+    { name: "Title", uid: "title", type: "text" },
+    { name: "Description", uid: "description", type: "text" },
+    { name: "ACTIONS", uid: "actions", type: "action" },
+  ];
   return (
     <>
       <div className="w-full flex flex-col">
-        <Title title="General" />
-        {generateTable({
-          columns: generateTabColumns({
-            onView: () => handleView(),
-            setData: setData,
-            type: "Status 1",
-            tableName: "Doctors",
-          }),
-          isSuccess: true,
-          currentPage: page,
-          onPageChange: (currentPage: any) => handlePageChange(currentPage),
-          tableData: generateData({ tableName: "Doctors" }),
-          isLoading: false,
-          totalItems: generateData({ tableName: "Doctors" }).length,
-          isError: false,
-        })}
+        <Page
+          apiKey="blog"
+          title="Blog"
+          api={GeneralRoutes.blog}
+          columns={blogColumns}
+        />
       </div>
     </>
   );

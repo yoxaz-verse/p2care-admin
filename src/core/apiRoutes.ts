@@ -7,47 +7,47 @@ export const DesignationRoutes = {
 export const LocationRoutes = {
   city: "/city",
   district: "/district",
-  districtAll: "/district/all"
-}
+  districtAll: "/district/all",
+};
 export const offerRoute = "/new-offer";
-export const offerImageRoute = "/new-offer/upload-image"
+export const offerImageRoute = "/new-offer/upload-image";
 export const offers = {
   doctor: "/offer/doctor",
   hospital: "/offer/hospital",
-  department: "/offer/department"
-}
+  department: "/offer/department",
+};
 export const Doctor = {
   docotor: "/doctor",
   quick: "/doctor/quick",
   procedure: "/procedure",
   appointments: "/appointment",
   enquiry: "/enquiry",
-  department: "/department"
-}
+  department: "/department",
+};
 export const HospitalRoutes = {
   hospital: "/hospital",
   adddoctor: "/hospital-doctor",
   getdoctor: "/hospital-doctor/hospital",
   image: "/hospital/image",
-  address: '/hospital/address',
+  address: "/hospital/address",
   quick: "/hospital/quick",
   description: "/hospital/description",
-  enquiry: '/enquiry',
+  enquiry: "/enquiry",
   images: "/hospital/images",
-  department: '/hospital-department',
-  appointment: '/appointment'
-}
+  department: "/hospital-department",
+  appointment: "/appointment",
+};
 export const serviceRoutes = {
   service: "/service",
   addDoctor: "/service/doctor",
   addHospital: "/service/hospital",
   addDepartment: "/service/department",
-  image: "/service/image"
-}
+  image: "/service/image",
+};
 
 export const patientRoutes = {
-  patient: "/patient"
-}
+  patient: "/patient",
+};
 const admin = "/admin";
 export const AdminRoutes = {
   admin: "/admin",
@@ -63,4 +63,9 @@ export const AdminRoutes = {
   adminCreate: `${admin}/create`,
   adminUpdate: `${admin}/update`,
   adminDelete: `${admin}/delete`,
+};
+
+export const GeneralRoutes = {
+  blog: "/blog",
+  testimonial: "/testimonial",
 };

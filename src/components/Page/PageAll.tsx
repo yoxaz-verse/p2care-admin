@@ -11,6 +11,7 @@ import {
   HospitalRoutes,
   serviceRoutes,
   LocationRoutes,
+  GeneralRoutes,
 } from "@/core/apiRoutes";
 import { useDisclosure } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
@@ -93,6 +94,14 @@ export default function Page({
     }
     if (api == serviceRoutes.service) {
       router.push(`/dashboard/services/${data._id}`);
+      return;
+    }
+    if (api == GeneralRoutes.blog) {
+      router.push(`/dashboard/general/blog/${data._id}`);
+      return;
+    }
+    if (api == GeneralRoutes.testimonial) {
+      router.push(`/dashboard/general/testimonial/${data._id}`);
       return;
     }
     // if (api == LocationRoutes.city) {
