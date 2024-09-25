@@ -20,7 +20,7 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
-function page() {
+function Page() {
   const path = usePathname();
   const router = useRouter();
   const { id } = useParams();
@@ -155,4 +155,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;
