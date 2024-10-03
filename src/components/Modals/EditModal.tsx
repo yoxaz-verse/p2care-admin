@@ -22,7 +22,12 @@ import { toast } from "sonner";
 import MutationLoading from "../Loading/mutationLoading";
 import { queryAdmin } from "@/app/providers";
 import { LocationRoutes } from "@/core/apiRoutes";
-import { CalendarDate, getDayOfWeek, parseDate, Time } from "@internationalized/date";
+import {
+  CalendarDate,
+  getDayOfWeek,
+  parseDate,
+  Time,
+} from "@internationalized/date";
 import { getData } from "@/core/apiHandler";
 
 interface EditModalProps {
@@ -61,11 +66,11 @@ export default function EditModal({
     if (data?.doctorSlot) {
       setappointmentDate(data?.doctorSlot?.slotTime);
       const date = new Date(currdata?.doctorSlot?.slotTime);
-      const hours = String(date.getHours()).padStart(2, '0');
-      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
       setappointmentTime({
         hours,
-        minutes
+        minutes,
       });
     }
     setLoading(false);
@@ -84,12 +89,12 @@ export default function EditModal({
     onSuccess: () => {
       toast.success("Data updated successfully", {
         position: "top-right",
-        className: "bg-green-300"
+        className: "bg-green-300",
       });
       queryAdmin.invalidateQueries({
         queryKey: apiKey,
       });
-      queryAdmin.invalidateQueries({ queryKey: queryKey })
+      queryAdmin.invalidateQueries({ queryKey: queryKey });
       setSubmitting(false);
       close();
     },
@@ -114,8 +119,8 @@ export default function EditModal({
           date: nDate,
           doctorSlotId: slotData._id,
           startTime: slotData.slotTime,
-          isRescheduled: true
-        }
+          isRescheduled: true,
+        };
         updateData.mutate({ data: d, id: data._id });
         return;
       } else {
@@ -133,9 +138,12 @@ export default function EditModal({
   const { data: getDoctorSlot, isLoading: isLoadingslot } = useQuery({
     queryKey: ["getSlots", appointmentDate],
     queryFn: () => {
-      return getData(`/doctor-slot/${currdata?.doctor?._id}/?date=${appointmentDate}`, {});
+      return getData(
+        `/doctor-slot/${currdata?.doctor?._id}/?date=${appointmentDate}`,
+        {}
+      );
     },
-    enabled: !!currdata?.doctor?._id
+    enabled: !!currdata?.doctor?._id,
   });
 
   return (
@@ -157,21 +165,21 @@ export default function EditModal({
               {newCols
                 .filter((col: any) => col.name.toLowerCase() !== "actions")
                 .map((column: any, index: number) => {
-                  if (column.uid === "metaTitle" || column.uid === "metaDescription") {
+                  if (
+                    column.uid === "metaTitle" ||
+                    column.uid === "metaDescription"
+                  ) {
                     <Textarea
                       key={index}
                       label={column.name}
                       placeholder={column.name}
                       value={currdata[column.uid]}
                       onChange={(e) =>
-                        handleChangeCurrentData(
-                          column.uid,
-                          e.target.value
-                        )
+                        handleChangeCurrentData(column.uid, e.target.value)
                       }
                       name={column.uid}
                       required
-                    />
+                    />;
                   }
                   switch (column.uid) {
                     case "doctorName":
@@ -234,8 +242,15 @@ export default function EditModal({
                       return (
                         <Autocomplete
                           label="Select an District"
-                          defaultSelectedKey={currdata[column.name.toLowerCase()] || ""}
-                          onSelectionChange={(e) => handleChangeCurrentData(column.name.toLowerCase(), e)}
+                          defaultSelectedKey={
+                            currdata[column.name.toLowerCase()] || ""
+                          }
+                          onSelectionChange={(e) =>
+                            handleChangeCurrentData(
+                              column.name.toLowerCase(),
+                              e
+                            )
+                          }
                           className="max-w-full"
                         >
                           {DropDownData?.district?.items.map((d: any) => (
@@ -248,7 +263,9 @@ export default function EditModal({
                     case "departmentDropdown":
                       return (
                         <Autocomplete
-                          defaultSelectedKey={currdata[column.name.toLowerCase()]?._id || ""}
+                          defaultSelectedKey={
+                            currdata[column.name.toLowerCase()]?._id || ""
+                          }
                           isLoading={DropDownData.department.isLoading}
                           items={DropDownData.department.items}
                           label="Select an Department"
@@ -264,7 +281,9 @@ export default function EditModal({
                     case "genderDropdown":
                       return (
                         <Autocomplete
-                          defaultSelectedKey={currdata[column.name.toLowerCase()]?._id || ""}
+                          defaultSelectedKey={
+                            currdata[column.name.toLowerCase()]?._id || ""
+                          }
                           label="Select an Gender"
                           isLoading={DropDownData.gender.isLoading}
                           items={DropDownData.gender.items}
@@ -280,7 +299,9 @@ export default function EditModal({
                     case "designationDropdown":
                       return (
                         <Autocomplete
-                          defaultSelectedKey={currdata[column.name.toLowerCase()]._id || ""}
+                          defaultSelectedKey={
+                            currdata[column.name.toLowerCase()]._id || ""
+                          }
                           label="Select an Desigantion"
                           isLoading={DropDownData.designation.isLoading}
                           items={DropDownData.designation.items}
@@ -293,7 +314,6 @@ export default function EditModal({
                           ))}
                         </Autocomplete>
                       );
-
 
                     case "number":
                       return (
@@ -336,13 +356,22 @@ export default function EditModal({
                       const appday = appdate.getUTCDate();
                       return (
                         <div className="flex flex-col gap-4 w-full">
-                          <Input label="Session" readOnly value={currdata?.doctorSlot?.session.toUpperCase()} />
+                          <Input
+                            label="Session"
+                            readOnly
+                            value={currdata?.doctorSlot?.session.toUpperCase()}
+                          />
                           <TimeInput
                             label="Doctor Appointment"
                             isReadOnly={true}
                             labelPlacement="outside"
                             color="primary"
-                            value={new Time(Number(appointmentTime.hour), Number(appointmentTime.minutes))}
+                            value={
+                              new Time(
+                                Number(appointmentTime.hour),
+                                Number(appointmentTime.minutes)
+                              )
+                            }
                           />
                           {!isNaN(appdate.getTime()) && (
                             <DateInput
@@ -352,36 +381,47 @@ export default function EditModal({
                                 const newDate = new Date(year, month - 1, day);
                                 setappointmentDate(newDate);
                               }}
-                              defaultValue={parseDate(`${appyear}-${paddedMonth}-${appday}`)}
+                              defaultValue={parseDate(
+                                `${appyear}-${paddedMonth}-${appday}`
+                              )}
                               labelPlacement="inside"
                             />
                           )}
-                          <h3 className="text-lg font-bold">Select the Time Slot</h3>
+                          <h3 className="text-lg font-bold">
+                            Select the Time Slot
+                          </h3>
                           <div className="flex flex-row gap-4 w-full">
                             {getDoctorSlot?.data.data.length > 0 ? (
-                              getDoctorSlot?.data.data.map((data: any, index: any) => {
-                                const date = new Date(data.slotTime);
-                                const hours = String(date.getUTCHours()).padStart(2, '0');
-                                const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-                                const period = Number(hours) >= 12 ? "PM" : "AM";
-                                return (
-                                  <Chip
-                                    className="cursor-pointer"
-                                    onClick={() => {
-                                      setSlotData(data);
-                                      setappointmentTime({
-                                        hour: hours,
-                                        minutes
-                                      });
-                                      console.log(appointmentTime);
-                                    }}
-                                    key={index}
-                                    color="primary"
-                                  >
-                                    {`${hours}:${minutes} ${period}`}
-                                  </Chip>
-                                );
-                              })
+                              getDoctorSlot?.data.data.map(
+                                (data: any, index: any) => {
+                                  const date = new Date(data.slotTime);
+                                  const hours = String(
+                                    date.getUTCHours()
+                                  ).padStart(2, "0");
+                                  const minutes = String(
+                                    date.getUTCMinutes()
+                                  ).padStart(2, "0");
+                                  const period =
+                                    Number(hours) >= 12 ? "PM" : "AM";
+                                  return (
+                                    <Chip
+                                      className="cursor-pointer"
+                                      onClick={() => {
+                                        setSlotData(data);
+                                        setappointmentTime({
+                                          hour: hours,
+                                          minutes,
+                                        });
+                                        console.log(appointmentTime);
+                                      }}
+                                      key={index}
+                                      color="primary"
+                                    >
+                                      {`${hours}:${minutes} ${period}`}
+                                    </Chip>
+                                  );
+                                }
+                              )
                             ) : (
                               <p>No Slots available for this day</p>
                             )}
@@ -405,6 +445,6 @@ export default function EditModal({
           </form>
         )}
       </ModalContent>
-    </Modal >
+    </Modal>
   );
 }

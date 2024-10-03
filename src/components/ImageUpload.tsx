@@ -150,7 +150,7 @@ export function ImageSingle({
   postapi,
 }: ImageSingleProps) {
   const [File, setfile] = useState<any>(null);
-  const [uploadImageUrl, setUploadImageUrl] = useState<any>(null);
+  const [uploadImageUrl, setUploadImageUrl] = useState<any>(uploadLogo);
   const addImage = useMutation({
     mutationKey: ["post image"],
     mutationFn: (data: FormData) => {

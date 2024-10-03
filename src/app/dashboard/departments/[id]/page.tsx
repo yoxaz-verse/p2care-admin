@@ -66,12 +66,6 @@ export default function DepartmentDetails() {
       });
     }
   }, [getDepartment]);
-  const { data: getProceudre } = useQuery({
-    queryKey: ["get-prodcedure"],
-    queryFn: () => {
-      return getData(Doctor.procedure, {});
-    },
-  });
 
   const updateData = useMutation({
     mutationKey: ["update-department"],
@@ -96,28 +90,6 @@ export default function DepartmentDetails() {
     }));
   };
 
-  const procedureColumns = [
-    { name: "Name", uid: "name", type: "text" },
-    { name: "Department", uid: "department", type: "departmentDropdown" },
-    {
-      name: "Actions",
-      uid: "actions",
-      type: "actions",
-    },
-  ];
-  const list1 = useAsyncList<any>({
-    async load() {
-      let res = await getData(Doctor.department, {});
-      let json = await res.data.data.data;
-
-      return {
-        items: json,
-      };
-    },
-  });
-  const DropDownData = {
-    department: list1,
-  };
   const enquiryColumns = [
     { name: "Name", uid: "name", type: "text" },
     { name: "Phone", uid: "phoneno", type: "text" },
@@ -311,13 +283,6 @@ export default function DepartmentDetails() {
         apiKey="enquiryByHospital"
         columns={enquiryColumns}
         title={`${getDepartment?.data?.data?.name} Enquiry`}
-      />
-      <Page
-        dropDownData={DropDownData}
-        api={Doctor.procedure}
-        apiKey="procedure"
-        columns={procedureColumns}
-        title={`${getDepartment?.data?.data?.name} Procedures`}
       />
     </div>
   );

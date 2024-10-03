@@ -21,7 +21,7 @@ export default function SideBar({ view, setView }: ViewProps) {
       <motion.div
         animate={{ width: view ? 0 : 300 }}
         transition={{ duration: 1, ease: "easeInOut" }}
-        className={` w-[300px]  h-[100%] fixed  bg-white z-50 flex flex-col  justify-between rounded-lg shadow-md `}
+        className={` w-[24%]  h-[100%] fixed  bg-white z-50 flex flex-col  justify-between rounded-lg shadow-md `}
       >
         <div className="flex flex-col gap-4 w-full">
           {SideBarLink.map((s: SideBarLinkProps) => {

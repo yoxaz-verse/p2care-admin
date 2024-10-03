@@ -46,7 +46,7 @@ export default function DeleteModal({
           position: "top-right",
         });
         setisLoading(false);
-        route.push("/dashboard");
+        // route.push("/dashboard");
       }
     },
     onError: (error: any) => {

@@ -1,4 +1,4 @@
-import { CountCardProps } from "@/components/Cards/Count-Card"
+import { CountCardProps } from "@/components/Cards/Count-Card";
 import { FaBuilding } from "react-icons/fa";
 import { PiHospitalThin } from "react-icons/pi";
 import { FaHandHoldingHeart } from "react-icons/fa";
@@ -10,52 +10,57 @@ import { useQuery } from "@tanstack/react-query";
 import { getData } from "@/core/apiHandler";
 
 export interface SideBarLinkProps {
-  name: string,
-  link: string
+  name: string;
+  link: string;
 }
 
 export const SideBarLink = [
   {
     name: "Dashboard",
-    link: "/dashboard"
+    link: "/dashboard",
   },
   {
     name: "Hospitals",
-    link: "/dashboard/hospitals"
+    link: "/dashboard/hospitals",
   },
   {
     name: "Departments",
-    link: "/dashboard/departments"
+    link: "/dashboard/departments",
+  },
+  {
+    name: "Procedures",
+    link: "/dashboard/procedures",
   },
   {
     name: "Services",
-    link: "/dashboard/services"
+    link: "/dashboard/services",
   },
   {
     name: "Doctors",
-    link: "/dashboard/doctors"
+    link: "/dashboard/doctors",
   },
+
   {
     name: "Leads",
-    link: "/dashboard/leads"
+    link: "/dashboard/leads",
   },
   {
     name: "Users",
-    link: "/dashboard/users"
+    link: "/dashboard/users",
   },
-  {
-    name: "Offers",
-    link: "/dashboard/offers"
-  },
+  // {
+  //   name: "Offers",
+  //   link: "/dashboard/offers",
+  // },
   {
     name: "General",
-    link: "/dashboard/general"
+    link: "/dashboard/general",
   },
   {
     name: "Content",
-    link: "/dashboard/content"
-  }
-]
+    link: "/dashboard/content",
+  },
+];
 
 export const languange = [
   { key: "hindi", label: "Hindi" },
@@ -75,11 +80,11 @@ export const months = [
   { key: "september", label: "September" },
   { key: "october", label: "October" },
   { key: "november", label: "November" },
-  { key: "december", label: "December" }
+  { key: "december", label: "December" },
 ];
 interface Card {
-  isLoading: boolean,
-  card: CountCardProps[]
+  isLoading: boolean;
+  card: CountCardProps[];
 }
 export const CardCount = (): Card => {
   const name = "rohan";
@@ -87,7 +92,7 @@ export const CardCount = (): Card => {
     queryKey: ["getTotal"],
     queryFn: () => {
       return getData("/hospital/total/get", {});
-    }
+    },
   });
 
   return {
@@ -100,54 +105,47 @@ export const CardCount = (): Card => {
           <>
             <PiHospitalThin fill="#3F8EFC" size={50} />
           </>
-        )
+        ),
       },
       {
         title: "Departments",
         count: getTotal?.data?.data?.department,
         icon: (
           <>
-            <FaHeartbeat
-              size={40} fill="#3F8EFC" />
+            <FaHeartbeat size={40} fill="#3F8EFC" />
           </>
-        )
+        ),
       },
       {
         title: "Services",
         count: getTotal?.data?.data?.services,
         icon: (
           <>
-            <FaHandHoldingHeart
-              fill="#3F8EFC"
-              size={40} />
+            <FaHandHoldingHeart fill="#3F8EFC" size={40} />
           </>
-        )
+        ),
       },
       {
         title: "Users",
         count: getTotal?.data?.data?.patient,
         icon: (
           <>
-            <ImUsers
-              fill="#3F8EFC"
-              size={40} />
+            <ImUsers fill="#3F8EFC" size={40} />
           </>
-        )
+        ),
       },
       {
         title: "Doctors",
         count: getTotal?.data?.data?.doctors,
         icon: (
           <>
-            <FaUserDoctor
-              fill="#3F8EFC"
-              size={40} />
+            <FaUserDoctor fill="#3F8EFC" size={40} />
           </>
-        )
-      }
-    ]
-  }
-}
+        ),
+      },
+    ],
+  };
+};
 
 export const TableHeadings: string[] = [
   "Departments",
@@ -155,12 +153,8 @@ export const TableHeadings: string[] = [
   "Services",
   "Hospitals",
   "Doctors by Hospitals",
-]
-export const TabsNames: string[] = [
-  "Status 1",
-  "Status 2",
-  "Status 3"
-]
+];
+export const TabsNames: string[] = ["Status 1", "Status 2", "Status 3"];
 interface TableProps {
   columns: {
     key: string;
@@ -176,27 +170,37 @@ interface TableProps {
   isSuccess: boolean;
 }
 
-
 export const Statuses: string[] = [
   "Status 1",
   "Status 2",
   "Active",
-  "Inactive"
-]
+  "Inactive",
+];
 
 interface generateTable extends TableProps {
-  case: string
+  case: string;
 }
 
-export const generateTable = ({ totalItems, currentPage, columns, tableData, isLoading, isError, isSuccess, onPageChange }: TableProps) => {
-  return <CommonTable
-    totalItems={totalItems}
-    currentPage={currentPage}
-    isSuccess={isSuccess}
-    isError={isError}
-    columns={columns}
-    isLoading={isLoading}
-    tableData={tableData}
-    onPageChange={onPageChange} />
-}
-
+export const generateTable = ({
+  totalItems,
+  currentPage,
+  columns,
+  tableData,
+  isLoading,
+  isError,
+  isSuccess,
+  onPageChange,
+}: TableProps) => {
+  return (
+    <CommonTable
+      totalItems={totalItems}
+      currentPage={currentPage}
+      isSuccess={isSuccess}
+      isError={isError}
+      columns={columns}
+      isLoading={isLoading}
+      tableData={tableData}
+      onPageChange={onPageChange}
+    />
+  );
+};
