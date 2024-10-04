@@ -38,8 +38,9 @@ function CurdTable(props: ICurdTableProps) {
               type="text"
               label="Search"
               className="bg-white border rounded-sm"
-              placeholder={`Search by ${props.searchBy.map((item) => item).join(", ") || ""
-                }`}
+              placeholder={`Search by ${
+                props.searchBy.map((item) => item).join(", ") || ""
+              }`}
               labelPlacement="inside"
               onChange={(e) => {
                 const delayDebounceFn = setTimeout(() => {
@@ -54,7 +55,7 @@ function CurdTable(props: ICurdTableProps) {
               }
             />
           )}
-          {props.addModal &&
+          {props.addModal && (
             <AddModal
               title={props.title}
               columns={props.columns}
@@ -62,7 +63,7 @@ function CurdTable(props: ICurdTableProps) {
               api={props.api}
               apiKey={props.queryKey}
             />
-          }
+          )}
         </div>
       </div>
       <Spacer y={3} />

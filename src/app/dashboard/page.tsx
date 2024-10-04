@@ -8,8 +8,6 @@ import { useState } from "react";
 import { tablecolums } from "../../content/table-columns";
 import { DetailsData } from "../../content/tableData";
 
-
-
 export default function Dashboard() {
   const [page, setPage] = useState<number>(1);
   const handlePagination = (page: number) => {
@@ -21,9 +19,11 @@ export default function Dashboard() {
       <div className="flex flex-col gap-4 w-full">
         <h3 className="font-extrabold text-[20px] md:text-[44px]">Dashboard</h3>
         <div className="grid  grid-cols-2  gap-2 xl:grid-cols-5">
-          {isLoading ? <div className="h-[20vh] flex items-center justify-center">
-            <Spinner color="primary" title="Loading Dashboard..." />
-          </div> : (
+          {isLoading ? (
+            <div className="h-[20vh] flex items-center justify-center">
+              <Spinner color="primary" title="Loading Dashboard..." />
+            </div>
+          ) : (
             card.map((c: any, index: number) => (
               <CountCard
                 key={index}
