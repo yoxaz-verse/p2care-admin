@@ -54,7 +54,11 @@ export default function DataCard({
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [avilDaysEdit, setavailEdit] = useState<boolean>(false);
   const [modesEdit, setmodesEdit] = useState<boolean>(false);
-  const { data: getValue, isLoading, isSuccess } = useQuery({
+  const {
+    data: getValue,
+    isLoading,
+    isSuccess,
+  } = useQuery({
     queryKey: [getapikey, id],
     queryFn: async () => {
       return await getData(`${getapi}/${id}`, {});
@@ -62,7 +66,7 @@ export default function DataCard({
   });
   const [avialableDays, setavailableDays] = useState<any>(new Set());
   const [modes, setmodes] = useState<any>(new Set());
-  const mode = ["Credit Card", "UPI", "Debit Card", "Cash"]
+  const mode = ["Credit Card", "UPI", "Debit Card", "Cash"];
   const days = [
     "Monday",
     "Tuesday",
@@ -130,7 +134,7 @@ export default function DataCard({
         ...data,
         availableDays: Array.from(avialableDays),
         modesOfPayment: Array.from(modes),
-        visitingTime: visitingTime
+        visitingTime: visitingTime,
       }));
     }
     console.log(formData);
@@ -162,7 +166,17 @@ export default function DataCard({
     });
   };
 
-
+  useEffect(() => {
+    console.log(getValue?.data?.data);
+    if (getValue?.data?.data) {
+      columns?.map((c: any) => {
+        setFormData((prevFormData: any) => ({
+          ...prevFormData,
+          [c.uid]: getValue?.data?.data[c.uid],
+        }));
+      });
+    }
+  }, [getValue]);
   return isLoading ? (
     <>
       {" "}
@@ -205,7 +219,12 @@ export default function DataCard({
               switch (c.type) {
                 case "images":
                   return postimagesapikey ? (
-                    <ImageUploadMultiple postapi={postimagesapikey} images={getValue?.data?.data[c.uid]} id={id} getapikey={getapikey} />
+                    <ImageUploadMultiple
+                      postapi={postimagesapikey}
+                      images={getValue?.data?.data[c.uid]}
+                      id={id}
+                      getapikey={getapikey}
+                    />
                   ) : null;
 
                 case "image":
@@ -218,100 +237,77 @@ export default function DataCard({
                     />
                   ) : null;
                 case "text":
-                  return (
-                    isEdit ? (
-                      <Input
-                        key={index}
-                        type="text"
-                        onChange={(e) =>
-                          handleChange(e.target.value, c.uid)
-                        }
-                        value={
-                          formData[c.uid] ||
-                          getValue?.data?.data[c.uid] ||
-                          ""
-                        }
-                        label={c.name}
-                      />
-                    ) : (
-                      <Input
-                        key={index}
-                        type="text"
-                        readOnly
-                        value={
-                          formData[c.uid] ||
-                          getValue?.data?.data[c.uid] ||
-                          ""
-                        }
-                        label={c.name}
-                      />
-
-                    )
+                  return isEdit ? (
+                    <Input
+                      key={index}
+                      type="text"
+                      onChange={(e) => handleChange(e.target.value, c.uid)}
+                      value={formData[c.uid] || ""}
+                      label={c.name}
+                    />
+                  ) : (
+                    <Input
+                      key={index}
+                      type="text"
+                      readOnly
+                      value={formData[c.uid] || ""}
+                      label={c.name}
+                    />
                   );
                 case "number":
-                  return (
-                    isEdit ? (
-                      <Input
-                        key={index}
-                        type="number"
-                        onChange={(e) =>
-                          handleChange(e.target.value, c.uid)
-                        }
-                        value={
-                          formData[c.uid] ||
-                          getValue?.data?.data[c.uid] ||
-                          ""
-                        }
-                        label={c.name}
-                      />
-                    )
-                      :
-                      (<Input
-                        key={index}
-                        readOnly
-                        type="number"
-                        value={
-                          formData[c.uid] ||
-                          getValue?.data?.data[c.uid] ||
-                          ""
-                        }
-                        label={c.name}
-                      />
-                      )
+                  return isEdit ? (
+                    <Input
+                      key={index}
+                      type="number"
+                      onChange={(e) => handleChange(e.target.value, c.uid)}
+                      value={
+                        formData[c.uid] || getValue?.data?.data[c.uid] || ""
+                      }
+                      label={c.name}
+                    />
+                  ) : (
+                    <Input
+                      key={index}
+                      readOnly
+                      type="number"
+                      value={
+                        formData[c.uid] || getValue?.data?.data[c.uid] || ""
+                      }
+                      label={c.name}
+                    />
                   );
                 case "array2":
                   return (
                     <div className="flex flex-col gap-4 w-full">
                       <div className="flex flex-row items-center gap-4">
                         <h3 className="text-xl font-bold">Modes of Payment</h3>
-                        {isEdit && <Button
-                          color="primary"
-                          radius="lg"
-                          onClick={() => setmodesEdit(true)}
-                        >
-                          Edit
-                        </Button>
-                        }
+                        {isEdit && (
+                          <Button
+                            color="primary"
+                            radius="lg"
+                            onClick={() => setmodesEdit(true)}
+                          >
+                            Edit
+                          </Button>
+                        )}
                       </div>
                       <div className="flex flex-row gap-4">
-                        {Array.from(modes).map(
-                          (day: any, index: any) => (
-                            <Chip
-                              key={index}
-                              color="primary"
-                              variant="flat"
-                              onClose={() => {
-                                setmodes((prevDays: any) => {
-                                  const newDays = new Set(prevDays);
-                                  newDays.delete(day);
-                                  return newDays;
-                                });
-                              }}
-                            >
-                              {day}
-                            </Chip>
-                          )
-                        )}
+                        {Array.from(modes).map((day: any, index: any) => (
+                          <Chip
+                            key={index}
+                            color="primary"
+                            variant="flat"
+                            onClose={() => {
+                              setmodes((prevDays: any) => {
+                                const newDays = new Set(prevDays);
+                                newDays.delete(day);
+                                return newDays;
+                              });
+                            }}
+                          >
+                            {day}
+                          </Chip>
+                        ))}
                       </div>
                       {modesEdit && (
                         <Select
@@ -398,47 +394,35 @@ export default function DataCard({
                     </div>
                   );
                 case "textbox":
-                  return (
-                    isEdit ? (
-                      <Textarea
-                        key={index}
-                        onChange={(e) =>
-                          handleChange(e.target.value, c.uid)
-                        }
-                        value={
-                          formData[c.uid] ||
-                          getValue?.data?.data[c.uid] ||
-                          ""
-                        }
-                        label={c.name}
-                      />
-                    ) : (
-                      <Textarea
-                        key={index}
-                        readOnly
-                        value={
-                          formData[c.uid] ||
-                          getValue?.data?.data[c.uid] ||
-                          ""
-                        }
-                        label={c.name}
-                      />
-
-                    )
+                  return isEdit ? (
+                    <Textarea
+                      key={index}
+                      onChange={(e) => handleChange(e.target.value, c.uid)}
+                      value={formData[c.uid] || ""}
+                      label={c.name}
+                    />
+                  ) : (
+                    <Textarea
+                      key={index}
+                      readOnly
+                      value={formData[c.uid] || ""}
+                      label={c.name}
+                    />
                   );
                 case "vistingTime":
                   return (
                     <div className="flex flex-col w-full">
                       <div className="flex flex-row items-center gap-3">
                         <h3 className="font-bold text-lg">Visitng Time</h3>
-                        {isEdit && <Button
-                          className="w-[20px]"
-                          color="primary"
-                          onClick={() => seteditVisit(true)}
-                        >
-                          Add
-                        </Button>
-                        }
+                        {isEdit && (
+                          <Button
+                            className="w-[20px]"
+                            color="primary"
+                            onClick={() => seteditVisit(true)}
+                          >
+                            Add
+                          </Button>
+                        )}
                       </div>
                       <div className="flex flex-row w-1/2">
                         <div className="flex flex-row w-1/2 gap-3">
@@ -482,7 +466,9 @@ export default function DataCard({
 
                             <Button
                               color="primary"
-                              onClick={() => pushVisting(valTime.from, valTime.to)}
+                              onClick={() =>
+                                pushVisting(valTime.from, valTime.to)
+                              }
                             >
                               Save
                             </Button>
@@ -492,56 +478,57 @@ export default function DataCard({
                     </div>
                   );
                 case "districtDropdown":
-                  return (
-                    isEdit ?
-                      <Autocomplete
-                        disabled
-                        label="Select an District"
-                        defaultSelectedKey={district}
-                        isLoading={DropDownData?.district?.isLoading}
-                        items={DropDownData?.district?.items}
-                        className="max-w-full"
-                      >
-                        {DropDownData?.district?.items.map((d: any) => (
-                          <AutocompleteItem key={d._id} value={d._id}>
-                            {d.name}
-                          </AutocompleteItem>
-                        ))}
-                      </Autocomplete>
-                      : <Autocomplete
-                        label="Select an District"
-                        defaultSelectedKey={district}
-                        isLoading={DropDownData?.district?.isLoading}
-                        items={DropDownData?.district?.items}
-                        onSelectionChange={(e) => setDistrict(e)}
-                        className="max-w-full"
-                      >
-                        {DropDownData?.district?.items.map((d: any) => (
-                          <AutocompleteItem key={d._id} value={d._id}>
-                            {d.name}
-                          </AutocompleteItem>
-                        ))}
-                      </Autocomplete>
-
+                  return isEdit ? (
+                    <Autocomplete
+                      disabled
+                      label="Select an District"
+                      defaultSelectedKey={district}
+                      isLoading={DropDownData?.district?.isLoading}
+                      items={DropDownData?.district?.items}
+                      className="max-w-full"
+                    >
+                      {DropDownData?.district?.items.map((d: any) => (
+                        <AutocompleteItem key={d._id} value={d._id}>
+                          {d.name}
+                        </AutocompleteItem>
+                      ))}
+                    </Autocomplete>
+                  ) : (
+                    <Autocomplete
+                      label="Select an District"
+                      defaultSelectedKey={district}
+                      isLoading={DropDownData?.district?.isLoading}
+                      items={DropDownData?.district?.items}
+                      onSelectionChange={(e) => setDistrict(e)}
+                      className="max-w-full"
+                    >
+                      {DropDownData?.district?.items.map((d: any) => (
+                        <AutocompleteItem key={d._id} value={d._id}>
+                          {d.name}
+                        </AutocompleteItem>
+                      ))}
+                    </Autocomplete>
                   );
                 case "cityDropdown":
                   return (
                     <Autocomplete
                       label="Select an city"
-                      disabled={district === ''}
+                      disabled={district === ""}
                       defaultSelectedKey={city}
                       isLoading={DropDownData?.city?.isLoading}
                       items={DropDownData?.city?.items}
                       onSelectionChange={(e) => setCity(e)}
                       className="max-w-full"
                     >
-                      {DropDownData?.city?.items.filter((item: any) => {
-                        return item?.district?._id === district
-                      }).map((d: any) => (
-                        <AutocompleteItem key={d._id} value={d._id}>
-                          {d.name}
-                        </AutocompleteItem>
-                      ))}
+                      {DropDownData?.city?.items
+                        .filter((item: any) => {
+                          return item?.district?._id === district;
+                        })
+                        .map((d: any) => (
+                          <AutocompleteItem key={d._id} value={d._id}>
+                            {d.name}
+                          </AutocompleteItem>
+                        ))}
                     </Autocomplete>
                   );
 
@@ -573,6 +560,6 @@ export default function DataCard({
           </form>
         </>
       </CardBody>
-    </Card >
+    </Card>
   );
 }

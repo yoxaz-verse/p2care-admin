@@ -7,7 +7,19 @@ import Page from "@/components/Page/PageAll";
 import Title, { SubTitle } from "@/components/titles";
 import { getData, patchData } from "@/core/apiHandler";
 import { Doctor, HospitalRoutes, serviceRoutes } from "@/core/apiRoutes";
-import { BreadcrumbItem, Breadcrumbs, Button, Card, CardBody, CardHeader, Input, Switch, Tab, Tabs, useDisclosure } from "@nextui-org/react";
+import {
+  BreadcrumbItem,
+  Breadcrumbs,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Input,
+  Switch,
+  Tab,
+  Tabs,
+  useDisclosure,
+} from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams, usePathname } from "next/navigation";
@@ -22,34 +34,41 @@ export default function ServiceName() {
   const header = [
     {
       name: "Dashboard",
-      link: "/dashboard"
+      link: "/dashboard",
     },
     {
       name: "Service",
-      link: "/dashboard/services"
+      link: "/dashboard/services",
     },
     {
       name: "Service Detail",
-      link: path
-    }
-  ]
+      link: path,
+    },
+  ];
   const enquiryColumns = [
     { name: "Name", uid: "name", type: "text" },
     { name: "Phone", uid: "phoneno", type: "text" },
     { name: "Email", uid: "email", type: "text" },
     {
-      name: "Status", uid: "status", type: "enquirystatus"
+      name: "Status",
+      uid: "status",
+      type: "enquirystatus",
     },
     {
-      name: "Actions", uid: "actions", type: "actions"
-    }
-  ]
+      name: "Actions",
+      uid: "actions",
+      type: "actions",
+    },
+  ];
 
   const serviceCols = [
     { name: "Service Image", uid: "image", type: "image" },
     { name: "Service Name", uid: "title", type: "text" },
     { name: "Service Description", uid: "description", type: "textbox" },
-  ]
+    { name: "By Company", uid: "company", type: "text" },
+    { name: "Service Price", uid: "price", type: "number" },
+    { name: "Service Offer Price", uid: "offerPrice", type: "number" },
+  ];
   const departmentList = useAsyncList<any>({
     async load() {
       let res = await getData(Doctor.department, {});
@@ -68,12 +87,16 @@ export default function ServiceName() {
     onSuccess: () => {
       toast.success("Service is marked as top", {
         position: "top-right",
-        className: "bg-green-300"
-      })
+        className: "bg-green-300",
+      });
       queryAdmin.invalidateQueries({ queryKey: ["getservice", id] });
-    }
+    },
   });
-  const { data: getservice, isLoading, isSuccess } = useQuery({
+  const {
+    data: getservice,
+    isLoading,
+    isSuccess,
+  } = useQuery({
     queryKey: ["getservice", id],
     queryFn: async () => {
       return await getData(`${serviceRoutes.service}/${id}`, {});
@@ -82,11 +105,11 @@ export default function ServiceName() {
   const handleChangeTop = (e: any) => {
     e.preventDefault();
     const item = {
-      isTop: !getservice?.data?.data?.isMain
-    }
+      isTop: !getservice?.data?.data?.isMain,
+    };
     console.log(item);
     markAsTop.mutate(item);
-  }
+  };
 
   const hospitalList = useAsyncList<any>({
     async load() {
@@ -112,22 +135,22 @@ export default function ServiceName() {
     {
       name: "Name",
       uid: "name",
-      type: "text"
+      type: "text",
     },
     {
       name: "Email",
       uid: "email",
-      type: "text"
+      type: "text",
     },
     {
       name: "Status",
       uid: "status",
-      type: "leadsStatus"
+      type: "leadsStatus",
     },
     {
       name: "Actions",
       uid: "action",
-      type: "action"
+      type: "action",
     },
   ];
 
@@ -141,8 +164,8 @@ export default function ServiceName() {
     queryKey: ["getService", id],
     queryFn: () => {
       return getData(serviceRoutes.service, { id });
-    }
-  })
+    },
+  });
   const editService = useMutation({
     mutationKey: ["service"],
     mutationFn: (data: any) => {
@@ -152,27 +175,35 @@ export default function ServiceName() {
       console.log(data);
       toast.success("Service Published!", {
         position: "top-right",
-        className: "bg-green-300"
+        className: "bg-green-300",
       });
-      queryAdmin.invalidateQueries({ queryKey: ["getService", id] })
+      queryAdmin.invalidateQueries({ queryKey: ["getService", id] });
     },
     onError: (error: any) => {
       console.log(error);
-    }
-  })
+    },
+  });
   const handlePublish = () => {
     const item = {
-      isPublished: !getService?.data.data.isPublished
-    }
+      isPublished: !getService?.data.data.isPublished,
+    };
     editService.mutate(item);
-  }
+  };
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col w-full gap-4 p-[1rem]">
         <Breadcrumbs color="secondary">
           {header.map((h: any, index: any) => {
-            return <BreadcrumbItem key={index} className="text-xl font-bold cursor-pointer" onClick={() => router.push(h.link)}>{h.name}</BreadcrumbItem>
+            return (
+              <BreadcrumbItem
+                key={index}
+                className="text-xl font-bold cursor-pointer"
+                onClick={() => router.push(h.link)}
+              >
+                {h.name}
+              </BreadcrumbItem>
+            );
           })}
         </Breadcrumbs>
         <div className="flex flex-row justify-between items-center w-full">
@@ -183,17 +214,34 @@ export default function ServiceName() {
               color="success"
               onClick={() => handlePublish()}
               isSelected={getservice?.data.data?.isPublished}
-              aria-label="Automatic updates" className="text-md">Publish</Switch>
+              aria-label="Automatic updates"
+              className="text-md"
+            >
+              Publish
+            </Switch>
             <Switch
               size="lg"
               color="success"
               onClick={(e) => handleChangeTop(e)}
               isSelected={getservice?.data.data?.isMain}
-              aria-label="Automatic updates" className="text-xl">Mark the Service as Top</Switch>
-            <Button color="danger" radius="full" onClick={() => onOpen()}>Delete</Button>
+              aria-label="Automatic updates"
+              className="text-xl"
+            >
+              Mark the Service as Top
+            </Switch>
+            <Button color="danger" radius="full" onClick={() => onOpen()}>
+              Delete
+            </Button>
           </div>
         </div>
-        <DeleteModal onOpenChange={onOpenChange} title="Serivice" data={id} isOpen={isOpen} api={serviceRoutes.service} queryKey={["service"]} />
+        <DeleteModal
+          onOpenChange={onOpenChange}
+          title="Serivice"
+          data={id}
+          isOpen={isOpen}
+          api={serviceRoutes.service}
+          queryKey={["service"]}
+        />
       </div>
       <DataCard
         editApikey="servicename"
@@ -210,19 +258,22 @@ export default function ServiceName() {
         getapi={serviceRoutes.addDepartment}
         api={serviceRoutes.addDepartment}
         title="Add Department"
-        DropDown={departmentList} />
+        DropDown={departmentList}
+      />
       <AttachCard
         id={id}
         getapi={serviceRoutes.addHospital}
         api={serviceRoutes.addHospital}
         title="Add Hospital"
-        DropDown={hospitalList} />
+        DropDown={hospitalList}
+      />
       <AttachCard
         id={id}
         getapi={serviceRoutes.addDoctor}
         api={serviceRoutes.addDoctor}
         title="Add Doctor"
-        DropDown={doctorList} />
+        DropDown={doctorList}
+      />
 
       <Page
         needAddModal={false}
@@ -232,5 +283,5 @@ export default function ServiceName() {
         title={`Enquiries`}
       />
     </div>
-  )
+  );
 }
