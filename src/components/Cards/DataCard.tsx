@@ -242,7 +242,7 @@ export default function DataCard({
                       key={index}
                       type="text"
                       onChange={(e) => handleChange(e.target.value, c.uid)}
-                      value={formData[c.uid] || ""}
+                      defaultValue={formData[c.uid] || ""}
                       label={c.name}
                     />
                   ) : (
@@ -250,7 +250,7 @@ export default function DataCard({
                       key={index}
                       type="text"
                       readOnly
-                      value={formData[c.uid] || ""}
+                      defaultValue={formData[c.uid] || ""}
                       label={c.name}
                     />
                   );
@@ -260,7 +260,7 @@ export default function DataCard({
                       key={index}
                       type="number"
                       onChange={(e) => handleChange(e.target.value, c.uid)}
-                      value={
+                      defaultValue={
                         formData[c.uid] || getValue?.data?.data[c.uid] || ""
                       }
                       label={c.name}
@@ -270,7 +270,7 @@ export default function DataCard({
                       key={index}
                       readOnly
                       type="number"
-                      value={
+                      defaultValue={
                         formData[c.uid] || getValue?.data?.data[c.uid] || ""
                       }
                       label={c.name}
@@ -375,12 +375,12 @@ export default function DataCard({
                           label="Select an Available Day"
                           onChange={(e: any) => {
                             const selectedDay = e.target.value;
-                            if (selectedDay) {
-                              setavailableDays((prevDays: any) =>
-                                new Set(prevDays).add(selectedDay)
-                              );
-                              setavailEdit(false);
-                            }
+                            setavailableDays((prevDays: any) =>
+                              new Set(prevDays).add(selectedDay)
+                            );
+                            console.log(selectedDay);
+
+                            setavailEdit(false);
                           }}
                           className="max-w-sm"
                         >
@@ -461,7 +461,7 @@ export default function DataCard({
                                   to: e,
                                 }));
                               }}
-                              value={valTime.to}
+                              defaultValue={valTime.to}
                             />
 
                             <Button

@@ -2,8 +2,22 @@
 import Title, { SubTitle } from "@/components/titles";
 import React from "react";
 import Page from "@/components/Page/PageAll";
-import { DesignationRoutes, Doctor, GenderRoutes, HospitalRoutes } from "@/core/apiRoutes";
-import { Button, DateInput, DatePicker, TimeInput, Switch, Tabs, Card, Tab } from "@nextui-org/react";
+import {
+  DesignationRoutes,
+  Doctor,
+  GenderRoutes,
+  HospitalRoutes,
+} from "@/core/apiRoutes";
+import {
+  Button,
+  DateInput,
+  DatePicker,
+  TimeInput,
+  Switch,
+  Tabs,
+  Card,
+  Tab,
+} from "@nextui-org/react";
 import DoctorComponent from "@/components/DoctorComponent";
 import { useQuery } from "@tanstack/react-query";
 import { getData } from "@/core/apiHandler";
@@ -16,11 +30,13 @@ const Doctors = () => {
     {
       name: "Status",
       uid: "appstatus",
-      type: "appstatus"
+      type: "appstatus",
     },
     { name: "Price(in Rs)", uid: "price", type: "text" },
     {
-      name: "Appointment Time", uid: "doctorSlot", type: "doctorSlot"
+      name: "Appointment Time",
+      uid: "doctorSlot",
+      type: "doctorSlot",
     },
   ];
 
@@ -29,19 +45,23 @@ const Doctors = () => {
     { name: "Phone", uid: "phone", type: "text" },
     { name: "Email", uid: "email", type: "text" },
     {
-      name: "Status", uid: "status", type: "enquirystatus"
+      name: "Status",
+      uid: "status",
+      type: "enquirystatus",
     },
     {
-      name: "Actions", uid: "action", type: "action"
-    }
-  ]
+      name: "Actions",
+      uid: "action",
+      type: "action",
+    },
+  ];
   const list = useAsyncList<any>({
     async load() {
       let res = await getData(DesignationRoutes.desgination, {});
       let json = await res.data.data.data;
 
       return {
-        items: json
+        items: json,
       };
     },
   });
@@ -51,7 +71,7 @@ const Doctors = () => {
       let json = await res.data.data.data;
 
       return {
-        items: json
+        items: json,
       };
     },
   });
@@ -61,7 +81,7 @@ const Doctors = () => {
       let json = await res.data.data.data;
 
       return {
-        items: json
+        items: json,
       };
     },
   });
@@ -76,20 +96,27 @@ const Doctors = () => {
     <>
       <div className="flex flex-col w-full p-[1rem] gap-4">
         <Title title={"Doctors"} />
-        <DoctorComponent DesignationData={list} DepartmentData={list1} GenderData={genderList} />
+        <DoctorComponent
+          DesignationData={list}
+          DepartmentData={list1}
+          GenderData={genderList}
+        />
         <SubTitle title="All Doctors Enquiries" />
         <Tabs color="secondary" aria-label="Options">
           {status?.data.data.map((a: any, index: any) => {
-            return <Tab key={index} name={a.name} title={a.name}>
-              <Card shadow="none">
-                <Page
-                  api={`/enquiry/all/leads/?type=66a716539f1827dd38689205&status=${a?._id}`}
-                  apiKey={`get-${a?.name}-doctors`}
-                  columns={enquiryColumns}
-                  title={a.name}
-                  needAddModal={false} />
-              </Card>
-            </Tab>
+            return (
+              <Tab key={index} name={a.name} title={a.name}>
+                <Card shadow="none">
+                  <Page
+                    api={`/enquiry/all/leads/?type=66c0532b907dd1ab8cacd6b1&status=${a?._id}`}
+                    apiKey={`get-${a?.name}-doctors`}
+                    columns={enquiryColumns}
+                    title={a.name}
+                    needAddModal={false}
+                  />
+                </Card>
+              </Tab>
+            );
           })}
         </Tabs>
         <SubTitle title="All Doctors Appointments" />
@@ -98,7 +125,8 @@ const Doctors = () => {
           api={Doctor.appointments}
           apiKey="appointments"
           columns={appointmentColumns}
-          title="Appointment" />
+          title="Appointment"
+        />
       </div>
     </>
   );

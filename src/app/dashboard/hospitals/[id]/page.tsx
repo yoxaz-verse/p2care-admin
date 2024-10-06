@@ -130,18 +130,22 @@ export default function HospitalDetail() {
     onSuccess: () => {
       toast.success("Hospital is marked as top", {
         position: "top-right",
-        className: "bg-green-300"
-      })
+        className: "bg-green-300",
+      });
       queryAdmin.invalidateQueries({ queryKey: ["gethospital", id] });
     },
     onError: () => {
       toast.success("Hospital is marked as top failed", {
         position: "top-right",
-        className: "bg-red-300"
-      })
-    }
+        className: "bg-red-300",
+      });
+    },
   });
-  const { data: getHospital, isLoading, isSuccess } = useQuery({
+  const {
+    data: getHospital,
+    isLoading,
+    isSuccess,
+  } = useQuery({
     queryKey: ["gethospital", id],
     queryFn: async () => {
       return await getData(`${HospitalRoutes.hospital}/${id}`, {});
@@ -151,11 +155,11 @@ export default function HospitalDetail() {
   const handleChangeTop = (e: any) => {
     e.preventDefault();
     const item = {
-      isTop: !getHospital?.data.data.isMain
-    }
+      isTop: !getHospital?.data.data.isMain,
+    };
     console.log(item);
     markAsTop.mutate(item);
-  }
+  };
   const doctorList = useAsyncList<any>({
     async load() {
       let res = await getData(Doctor.docotor, {});
@@ -183,26 +187,30 @@ export default function HospitalDetail() {
   const editService = useMutation({
     mutationKey: ["hospital"],
     mutationFn: (data: any) => {
-      return patchData(`${HospitalRoutes.hospital}/publish/test/${id}`, data, {});
+      return patchData(
+        `${HospitalRoutes.hospital}/publish/test/${id}`,
+        data,
+        {}
+      );
     },
     onSuccess: (data: any) => {
       console.log(data);
       toast.success("Hospital Published!", {
         position: "top-right",
-        className: "bg-green-300"
+        className: "bg-green-300",
       });
-      queryAdmin.invalidateQueries({ queryKey: ["gethospital", id] })
+      queryAdmin.invalidateQueries({ queryKey: ["gethospital", id] });
     },
     onError: (error: any) => {
       console.log(error);
-    }
-  })
+    },
+  });
   const handlePublish = () => {
     const item = {
-      isPublished: !getHospital?.data.data.isPublished
-    }
+      isPublished: !getHospital?.data.data.isPublished,
+    };
     editService.mutate(item);
-  }
+  };
   return (
     <>
       <div className="flex flex-col w-full">
@@ -219,19 +227,33 @@ export default function HospitalDetail() {
           <div className="flex flex-row justify-between w-full itms-center">
             <Title title="Hospital Detail" />
             <div className="flex flex-row items-center gap-2">
-              <Switch
-                size="lg"
-                color="success"
-                onClick={() => handlePublish()}
-                isSelected={getHospital?.data.data?.isPublished}
-                aria-label="Automatic updates" className="text-md">Publish</Switch>
-              <Switch
-                size="lg"
-                color="success"
-                onClick={(e) => handleChangeTop(e)}
-                isSelected={getHospital?.data.data?.isMain}
-                aria-label="Automatic updates" className="text-xl">Mark the Hospital as Top</Switch>
-              <Button radius="full" onClick={() => onOpen()} color="danger">Delete</Button>
+              {getHospital?.data.data && (
+                <>
+                  <Switch
+                    size="lg"
+                    color="success"
+                    onClick={() => handlePublish()}
+                    defaultSelected={getHospital?.data.data?.isPublished}
+                    aria-label="Automatic updates"
+                    className="text-md"
+                  >
+                    Publish
+                  </Switch>
+                  <Switch
+                    size="lg"
+                    color="success"
+                    onClick={(e) => handleChangeTop(e)}
+                    defaultSelected={getHospital?.data.data?.isMain}
+                    aria-label="Automatic updates"
+                    className="text-xl"
+                  >
+                    Mark the Hospital as Top
+                  </Switch>
+                </>
+              )}
+              <Button radius="full" onClick={() => onOpen()} color="danger">
+                Delete
+              </Button>
             </div>
           </div>
           <DataCard
@@ -247,8 +269,6 @@ export default function HospitalDetail() {
             id={id}
             onOpen={onOpen}
           />
-
-
 
           <DataCard
             getapikey="gethospital"
@@ -287,12 +307,20 @@ export default function HospitalDetail() {
           title={`Enquiries`}
         />
 
-        <AttachCard id={id} getapi={HospitalRoutes.getdoctor} api={HospitalRoutes.adddoctor}
+        <AttachCard
+          id={id}
+          getapi={HospitalRoutes.getdoctor}
+          api={HospitalRoutes.adddoctor}
           title="Add Doctor"
-          DropDown={doctorList} />
-        <AttachCard id={id} getapi={HospitalRoutes.department} api={HospitalRoutes.department}
+          DropDown={doctorList}
+        />
+        <AttachCard
+          id={id}
+          getapi={HospitalRoutes.department}
+          api={HospitalRoutes.department}
           title="Add Department"
-          DropDown={departmentList} />
+          DropDown={departmentList}
+        />
       </div>
     </>
   );
