@@ -130,14 +130,20 @@ export default function DataCard({
       }));
     }
     if (editapi === HospitalRoutes.description) {
+      console.log("Handling description edit");
+      console.log("visitingTime:", visitingTime);
+      console.log("availableDays:", avialableDays);
+      console.log("modes:", modes);
+      console.log("current formData:", formData);
+
       setFormData((data: any) => ({
         ...data,
-        availableDays: Array.from(avialableDays),
-        modesOfPayment: Array.from(modes),
-        visitingTime: visitingTime,
+        // availableDays: Array.from(avialableDays),
+        // modesOfPayment: Array.from(modes),
+        // visitingTime: visitingTime,
       }));
     }
-    console.log(formData);
+    console.log("Updated formData:", formData);
     handlePut.mutate(formData);
   };
   interface VisitngTime {
@@ -242,7 +248,7 @@ export default function DataCard({
                       key={index}
                       type="text"
                       onChange={(e) => handleChange(e.target.value, c.uid)}
-                      defaultValue={formData[c.uid] || ""}
+                      value={formData[c.uid] || ""}
                       label={c.name}
                     />
                   ) : (
@@ -250,7 +256,7 @@ export default function DataCard({
                       key={index}
                       type="text"
                       readOnly
-                      defaultValue={formData[c.uid] || ""}
+                      value={formData[c.uid] || ""}
                       label={c.name}
                     />
                   );
@@ -482,7 +488,7 @@ export default function DataCard({
                     <Autocomplete
                       disabled
                       label="Select an District"
-                      defaultSelectedKey={district}
+                      selectedKey={district}
                       isLoading={DropDownData?.district?.isLoading}
                       items={DropDownData?.district?.items}
                       className="max-w-full"
@@ -496,11 +502,12 @@ export default function DataCard({
                   ) : (
                     <Autocomplete
                       label="Select an District"
-                      defaultSelectedKey={district}
+                      selectedKey={district}
                       isLoading={DropDownData?.district?.isLoading}
                       items={DropDownData?.district?.items}
                       onSelectionChange={(e) => setDistrict(e)}
                       className="max-w-full"
+                      isDisabled
                     >
                       {DropDownData?.district?.items.map((d: any) => (
                         <AutocompleteItem key={d._id} value={d._id}>
@@ -514,11 +521,12 @@ export default function DataCard({
                     <Autocomplete
                       label="Select an city"
                       disabled={district === ""}
-                      defaultSelectedKey={city}
+                      selectedKey={city}
                       isLoading={DropDownData?.city?.isLoading}
                       items={DropDownData?.city?.items}
                       onSelectionChange={(e) => setCity(e)}
                       className="max-w-full"
+                      isDisabled
                     >
                       {DropDownData?.city?.items
                         .filter((item: any) => {

@@ -152,12 +152,10 @@ export default function HospitalDetail() {
     },
   });
 
-  const handleChangeTop = (e: any) => {
-    e.preventDefault();
+  const handleChangeTop = () => {
     const item = {
       isTop: !getHospital?.data.data.isMain,
     };
-    console.log(item);
     markAsTop.mutate(item);
   };
   const doctorList = useAsyncList<any>({
@@ -242,7 +240,7 @@ export default function HospitalDetail() {
                   <Switch
                     size="lg"
                     color="success"
-                    onClick={(e) => handleChangeTop(e)}
+                    onClick={() => handleChangeTop()}
                     defaultSelected={getHospital?.data.data?.isMain}
                     aria-label="Automatic updates"
                     className="text-xl"
