@@ -12,6 +12,7 @@ import {
   Chip,
   Select,
   SelectItem,
+  Spacer,
 } from "@nextui-org/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Title, { SubTitle } from "../titles";
@@ -113,12 +114,14 @@ export default function DataCard({
       console.log("data", getValue.data.data);
     }
     setCity(getValue?.data?.data?.city?._id);
+    console.log(city);
+
     setmodes(new Set(getValue?.data?.data?.modesOfPayment));
     console.log("vistingTime", getValue?.data?.data?.visitingTime);
     setavailableDays(new Set(getValue?.data?.data?.availableDays));
     console.log(getValue?.data?.data?.vistingTime);
     setDistrict(getValue?.data?.data?.district?._id);
-  }, [isSuccess, getValue]);
+  }, [isSuccess, getValue, city]);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(editapi);
@@ -321,12 +324,15 @@ export default function DataCard({
                           label="Select Modes of Payment"
                           onChange={(e: any) => {
                             const selectedDay = e.target.value;
-                            if (selectedDay) {
+                            console.log(selectedDay);
+                            if (selectedDay)
                               setmodes((prevDays: any) =>
                                 new Set(prevDays).add(selectedDay)
                               );
-                              setmodesEdit(false);
-                            }
+                            console.log("mode");
+                            console.log(mode);
+
+                            setmodesEdit(false);
                           }}
                           className="max-w-sm"
                         >
@@ -430,8 +436,8 @@ export default function DataCard({
                           </Button>
                         )}
                       </div>
-                      <div className="flex flex-row w-1/2">
-                        <div className="flex flex-row w-1/2 gap-3">
+                      <div className="flex flex-wrap ">
+                        <div className="flex flex-wrap w-1/2 gap-3">
                           {visitingTime.map((v: VisitngTime, index: number) => (
                             <Fragment key={index}>
                               <Chip
@@ -545,7 +551,7 @@ export default function DataCard({
               }
             })}
             {isEdit && (
-              <>
+              <div className="w-full">
                 <Button
                   type="submit"
                   className="w-full place-self-center"
@@ -554,6 +560,7 @@ export default function DataCard({
                 >
                   Submit
                 </Button>
+                <Spacer y={3} />
                 <Button
                   onClick={() => setIsEdit(false)}
                   className="w-full place-self-center"
@@ -563,7 +570,7 @@ export default function DataCard({
                 >
                   Cancel
                 </Button>
-              </>
+              </div>
             )}
           </form>
         </>
