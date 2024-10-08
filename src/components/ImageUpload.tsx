@@ -80,12 +80,12 @@ export function ImageUploadMultiple({
   }, [images]);
 
   return (
-    <div className="flex flex-col w-full gap-4">
-      <div className="flex flex-row w-full gap-4">
+    <div className="flex flex-col w-full gap-4  overflow-hidden  ">
+      <div className="flex flex-row w-full py-4 overflow-auto gap-4 ">
         {imageUrls.map((item, index) => (
           <div
             key={index}
-            className="flex flex-row items-center justify-center"
+            className="flex flex-row items-center  justify-center"
           >
             <label htmlFor={`image-upload-${index}`} className="cursor-pointer">
               <Avatar
@@ -130,7 +130,7 @@ export function ImageUploadMultiple({
           )
         }
       </div>
-      <Button className="w-1/4" onClick={handleUpload} color="primary">
+      <Button onClick={handleUpload} color="primary">
         Upload Images
       </Button>
     </div>
@@ -187,7 +187,7 @@ export function ImageSingle({
     addImage.mutate(formData);
   };
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center h-full">
       <label htmlFor="imageinput" className="cursor-pointer">
         <Avatar
           src={image ? image?.path : uploadImageUrl || uploadLogo}
