@@ -120,13 +120,13 @@ const Doctors = () => {
           })}
         </Tabs>
         <SubTitle title="All Doctors Appointments" />
-        {/* <Page
+        <Page
           needAddModal={false}
           api={Doctor.appointments}
           apiKey="appointments"
           columns={appointmentColumns}
           title="Appointment"
-        /> */}
+        />
       </div>
     </>
   );
