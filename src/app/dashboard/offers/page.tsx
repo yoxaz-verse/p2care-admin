@@ -1,4 +1,3 @@
-
 import Page from "@/components/Page/PageAll";
 import { offerRoute } from "@/core/apiRoutes";
 

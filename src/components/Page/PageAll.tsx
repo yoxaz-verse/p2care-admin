@@ -5,12 +5,10 @@ import EditModal from "@/components/Modals/EditModal";
 import ViewModal from "@/components/Modals/newViewModal";
 import {
   Doctor,
-  GenderRoutes,
   patientRoutes,
   offerRoute,
   HospitalRoutes,
   serviceRoutes,
-  LocationRoutes,
   GeneralRoutes,
 } from "@/core/apiRoutes";
 import { useDisclosure } from "@nextui-org/react";
@@ -55,7 +53,6 @@ export default function Page({
   const handleDeleteData = (data: any) => {
     onOpen();
     setCurrData(data);
-    console.log(data);
   };
   const handleEditData = (data: any) => {
     onOpenEdit();
@@ -70,7 +67,6 @@ export default function Page({
     } else if (api == Doctor.enquiry || api == Doctor.appointments) {
       setCurrData(data.data);
       if (data.type === "doctor") {
-        console.log(currData);
         //router.push(`/dashboard/doctor/${currData._id}`);
       }
       if (data.type === "user") {

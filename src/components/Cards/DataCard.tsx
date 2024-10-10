@@ -117,21 +117,26 @@ export default function DataCard({
     console.log(city);
 
     setmodes(new Set(getValue?.data?.data?.modesOfPayment));
-    console.log("vistingTime", getValue?.data?.data?.visitingTime);
+    console.log("visitingTime", getValue?.data?.data?.visitingTime);
     setavailableDays(new Set(getValue?.data?.data?.availableDays));
-    console.log(getValue?.data?.data?.vistingTime);
     setDistrict(getValue?.data?.data?.district?._id);
+    setVistingTime(getValue?.data?.data?.visitingTime || []);
   }, [isSuccess, getValue, city]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(editapi);
+
+    let updatedData = { ...formData };
+
     if (editapi === HospitalRoutes.quick) {
-      setFormData((data: any) => ({
-        ...data,
+      updatedData = {
+        ...updatedData,
         district,
         city,
-      }));
+      };
     }
+
     if (editapi === HospitalRoutes.description) {
       console.log("Handling description edit");
       console.log("visitingTime:", visitingTime);
@@ -139,16 +144,18 @@ export default function DataCard({
       console.log("modes:", modes);
       console.log("current formData:", formData);
 
-      setFormData((data: any) => ({
-        ...data,
-        // availableDays: Array.from(avialableDays),
-        // modesOfPayment: Array.from(modes),
-        // visitingTime: visitingTime,
-      }));
+      updatedData = {
+        ...updatedData,
+        availableDays: Array.from(avialableDays),
+        modesOfPayment: Array.from(modes),
+        visitingTime: visitingTime,
+      };
     }
-    console.log("Updated formData:", formData);
-    handlePut.mutate(formData);
+
+    console.log("Updated formData:", updatedData);
+    handlePut.mutate(updatedData);
   };
+
   interface VisitngTime {
     from: string;
     to: string;
@@ -184,8 +191,10 @@ export default function DataCard({
           [c.uid]: getValue?.data?.data[c.uid],
         }));
       });
+      setVistingTime(getValue?.data?.data?.visitingTime || []);
     }
   }, [getValue]);
+
   return isLoading ? (
     <>
       {" "}
@@ -462,7 +471,7 @@ export default function DataCard({
                                   from: e,
                                 }))
                               }
-                              value={valTime.from}
+                              defaultValue={valTime.from}
                             />
                             <Input
                               label="To"

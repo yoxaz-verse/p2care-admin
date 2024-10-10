@@ -435,6 +435,7 @@ export default function GetDocDetials() {
       setDesignation(getDocDetails?.data?.data.designation?._id);
     }
   }, [isFetched]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
       alert("No file uploaded");

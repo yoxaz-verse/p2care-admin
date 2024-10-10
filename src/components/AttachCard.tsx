@@ -1,34 +1,62 @@
 "use client";
 
-import { deleteData, deleteDataBody, getData, postData } from "@/core/apiHandler";
-import { Button, Card, CardBody, Image, Autocomplete, AutocompleteItem, Spinner } from "@nextui-org/react";
+import {
+  deleteData,
+  deleteDataBody,
+  getData,
+  postData,
+} from "@/core/apiHandler";
+import {
+  Button,
+  Card,
+  CardBody,
+  Image,
+  Autocomplete,
+  AutocompleteItem,
+  Spinner,
+  Spacer,
+} from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import Subtitle, { SubTitle } from "./titles";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { queryAdmin } from "@/app/providers";
 import { toast } from "sonner";
-import { Doctor, HospitalRoutes, offers, serviceRoutes } from "@/core/apiRoutes";
+import {
+  Doctor,
+  HospitalRoutes,
+  offers,
+  serviceRoutes,
+} from "@/core/apiRoutes";
 import ServiceName from "@/app/dashboard/services/[id]/page";
 
 interface AttachCardProps {
-  DropDown: any,
-  id: any,
-  api: string,
-  title: string,
-  getapi: string
+  DropDown: any;
+  id: any;
+  api: string;
+  title: string;
+  getapi: string;
 }
 
-export default function AttachCard({ DropDown, id, api, getapi, title }: AttachCardProps) {
+export default function AttachCard({
+  DropDown,
+  id,
+  api,
+  getapi,
+  title,
+}: AttachCardProps) {
   const [data, setData] = useState<any>({});
   const [array, setArray] = useState<any[]>([]);
   const [add, setAdd] = useState<boolean>(false);
 
-
-  const { data: getAttachData, isLoading: isFetchingAttachData, isFetched } = useQuery({
+  const {
+    data: getAttachData,
+    isLoading: isFetchingAttachData,
+    isFetched,
+  } = useQuery({
     queryKey: [`get-${title}`, id],
     queryFn: () => getData(`${getapi}/${id}`, {}),
-    enabled: !!id
+    enabled: !!id,
   });
 
   const removeAttachData = useMutation({
@@ -38,16 +66,21 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
       return deleteData(`${api}/${id}`, {});
     },
     onSuccess: () => {
-      toast.success("Removed data", { position: "top-right", className: "bg-green-300" });
+      toast.success("Removed data", {
+        position: "top-right",
+        className: "bg-green-300",
+      });
       queryAdmin.invalidateQueries({ queryKey: [`get-${title}`, id] });
     },
     onError: (error: any) => {
       console.log(id, error);
 
-      toast.error("Error removing data", { position: "top-right", className: "bg-red-300" });
-    }
+      toast.error("Error removing data", {
+        position: "top-right",
+        className: "bg-red-300",
+      });
+    },
   });
-
 
   const removeAttach = useMutation({
     mutationKey: ["removeAttach", id],
@@ -55,25 +88,37 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
       return deleteDataBody(api, {}, data);
     },
     onSuccess: () => {
-      toast.success("Removed data", { position: "top-right", className: "bg-green-300" });
+      toast.success("Removed data", {
+        position: "top-right",
+        className: "bg-green-300",
+      });
       queryAdmin.invalidateQueries({ queryKey: [`get-${title}`, id] });
     },
     onError: (error: any) => {
       console.log(id, error);
 
-      toast.error("Error removing data", { position: "top-right", className: "bg-red-300" });
-    }
+      toast.error("Error removing data", {
+        position: "top-right",
+        className: "bg-red-300",
+      });
+    },
   });
   const attachData = useMutation({
     mutationKey: ["add-data"],
     mutationFn: (data: any) => postData(api, data, {}),
     onSuccess: () => {
-      toast.success("Attached data", { position: "top-right", className: "bg-green-300" });
+      toast.success("Attached data", {
+        position: "top-right",
+        className: "bg-green-300",
+      });
       queryAdmin.invalidateQueries({ queryKey: [`get-${title}`, id] });
     },
     onError: () => {
-      toast.error("Failed to attach data", { position: "top-right", className: "bg-red-300" });
-    }
+      toast.error("Failed to attach data", {
+        position: "top-right",
+        className: "bg-red-300",
+      });
+    },
   });
 
   useEffect(() => {
@@ -94,44 +139,47 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
         price: data[0].price,
         hospital: id,
         doctor: data[0]._id,
-        department: data[0].department._id
+        department: data[0].department._id,
       };
       const { price, doctor, department } = item;
 
       if (!price || !doctor || !department) {
-        return toast.error("Doctor data needs to be updated as price or department for the hospital", {
-          position: "top-right",
-          className: "bg-red-300"
-        });
+        return toast.error(
+          "Doctor data needs to be updated as price or department for the hospital",
+          {
+            position: "top-right",
+            className: "bg-red-300",
+          }
+        );
       }
       attachData.mutate(item);
     }
     if (api === offers.hospital) {
       const item = {
         hospitalId: data[0]._id,
-        offerId: id
-      }
+        offerId: id,
+      };
       attachData.mutate(item);
     }
     if (api === offers.doctor) {
       const item = {
         doctorId: data[0]._id,
-        offerId: id
-      }
+        offerId: id,
+      };
       attachData.mutate(item);
     }
     if (api === offers.department) {
       const item = {
         departmentId: data[0]._id,
-        offerId: id
-      }
+        offerId: id,
+      };
       attachData.mutate(item);
     }
     if (api === HospitalRoutes.department) {
       console.log(data);
       const item = {
         hospital: id,
-        department: data[0]._id
+        department: data[0]._id,
       };
 
       attachData.mutate(item);
@@ -139,93 +187,91 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
     if (api === serviceRoutes.addDepartment) {
       const item = {
         departmentId: data[0]._id,
-        serviceId: id
-      }
+        serviceId: id,
+      };
       attachData.mutate(item);
     }
     if (api === serviceRoutes.addDoctor) {
       const item = {
         doctorId: data[0]._id,
-        serviceId: id
-      }
+        serviceId: id,
+      };
       attachData.mutate(item);
     }
     if (api === serviceRoutes.addHospital) {
       const item = {
         hospitalId: data[0]._id,
-        serviceId: id
-      }
+        serviceId: id,
+      };
       attachData.mutate(item);
     }
   };
 
   const remove = (index: any) => {
     if (api == serviceRoutes.addDoctor) {
-
       const item = {
         doctorId: index,
-        serviceId: id
-      }
-      api = `${serviceRoutes.addDoctor}/test`
+        serviceId: id,
+      };
+      api = `${serviceRoutes.addDoctor}/test`;
       removeAttach.mutate(item);
       return;
     }
     if (api == serviceRoutes.addHospital) {
       const item = {
         hospitalId: index,
-        serviceId: id
-      }
-      api = `${serviceRoutes.addHospital}/test`
+        serviceId: id,
+      };
+      api = `${serviceRoutes.addHospital}/test`;
       removeAttach.mutate(item);
       return;
     }
     if (api == serviceRoutes.addDepartment) {
       const item = {
         departmentId: index,
-        serviceId: id
-      }
-      api = `${serviceRoutes.addDepartment}/test`
+        serviceId: id,
+      };
+      api = `${serviceRoutes.addDepartment}/test`;
       removeAttach.mutate(item);
       return;
     }
     if (api === offers.hospital) {
       const item = {
         hospitalId: index,
-        offerId: id
-      }
+        offerId: id,
+      };
       removeAttach.mutate(item);
       return;
     }
     if (api === offers.doctor) {
       const item = {
         doctorId: index,
-        offerId: id
-      }
+        offerId: id,
+      };
       removeAttach.mutate(item);
       return;
     }
     if (api === offers.department) {
       const item = {
         departmentId: index,
-        offerId: id
-      }
+        offerId: id,
+      };
       removeAttach.mutate(item);
       return;
-    }
-    else {
+    } else {
       console.log(index);
       removeAttachData.mutate(index);
     }
   };
-
-
 
   return (
     <>
       <div className="flex flex-col w-full gap-4">
         <div className="flex flex-row w-full justify-between p-[1rem] items-center gap-4">
           <SubTitle title={title} />
-          <Button color="secondary" onClick={() => setAdd(prev => !prev)}>Edit</Button>
+          <Button color="secondary" onClick={() => setAdd((prev) => !prev)}>
+            Edit
+          </Button>
         </div>
         {add && (
           <Autocomplete
@@ -242,9 +288,19 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
             variant="bordered"
           >
             {data?.items?.map((item: any) => (
-              <AutocompleteItem value={item._id} key={item._id} className="capitalize">
+              <AutocompleteItem
+                value={item._id}
+                key={item._id}
+                className="capitalize"
+              >
                 <div className="flex flex-row justify-around items-center w-full">
-                  <Image src={item.image} radius="full" width={100} height={100} />
+                  <Image
+                    src={item.image}
+                    radius="full"
+                    width={100}
+                    height={100}
+                    alt=""
+                  />
                   <h3 className="text-md font-bold">{item.name}</h3>
                 </div>
               </AutocompleteItem>
@@ -252,18 +308,35 @@ export default function AttachCard({ DropDown, id, api, getapi, title }: AttachC
           </Autocomplete>
         )}
       </div>
-      <div className="flex flex-col gap-4">
-        {isFetchingAttachData ? <Spinner /> : (
+      <Spacer y={2} />
+      <div className="flex flex-col gap-4 mx-5">
+        {isFetchingAttachData ? (
+          <Spinner />
+        ) : (
           array.map((d: any, index: number) => (
-            <Card shadow="sm" key={index} className="w-full lg:w-1/2 h-full">
+            <Card shadow="sm" key={index} className="w-full lg:w-1/2 h-full ">
               <CardBody className="flex flex-row items-center justify-around">
-                <Image src={d?.image?.path || d?.department?.image?.path} width={300} height={300} radius="full" />
-                <h3 className="text-md lg:text-xl font-bold">{d?.name || d?.department?.name}</h3>
-                <RxCross2 size={30} className="cursor-pointer" onClick={() => remove(d._id)} />
+                <Image
+                  src={d?.image?.path || d?.department?.image?.path}
+                  width={300}
+                  height={300}
+                  radius="full"
+                  alt=""
+                  className="w-[300px] h-[300px]"
+                />
+                <h3 className="text-md lg:text-xl font-bold">
+                  {d?.name || d?.department?.name}
+                </h3>
+                <RxCross2
+                  size={30}
+                  className="cursor-pointer"
+                  onClick={() => remove(d._id)}
+                />
               </CardBody>
             </Card>
           ))
         )}
+        <Spacer y={5} />
       </div>
     </>
   );
