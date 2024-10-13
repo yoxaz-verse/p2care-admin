@@ -125,17 +125,6 @@ export default function DataCard({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-<<<<<<< HEAD
-    console.log(editapi);
-
-    let updatedData = { ...formData };
-
-    if (editapi === HospitalRoutes.quick) {
-      updatedData = {
-        ...updatedData,
-        district,
-        city,
-=======
 
     console.log("Edit API:", editapi);
 
@@ -146,7 +135,6 @@ export default function DataCard({
         ...updatedFormData,
         // district: district, // Use latest district state
         // city: city, // Use latest city state
->>>>>>> d1403b31b3c3cd666f3e7aef48d70557f3012df7
       };
     }
 
@@ -157,18 +145,6 @@ export default function DataCard({
       console.log("modes:", modes);
       console.log("current formData:", formData);
 
-<<<<<<< HEAD
-      updatedData = {
-        ...updatedData,
-        availableDays: Array.from(avialableDays),
-        modesOfPayment: Array.from(modes),
-        visitingTime: visitingTime,
-      };
-    }
-
-    console.log("Updated formData:", updatedData);
-    handlePut.mutate(updatedData);
-=======
       updatedFormData = {
         ...updatedFormData,
         // availableDays: Array.from(avialableDays), // Use latest availableDays state
@@ -181,7 +157,6 @@ export default function DataCard({
 
     // Call mutate with the latest form data
     handlePut.mutate(updatedFormData);
->>>>>>> d1403b31b3c3cd666f3e7aef48d70557f3012df7
   };
 
   interface VisitngTime {
