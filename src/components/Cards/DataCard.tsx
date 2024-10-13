@@ -87,6 +87,7 @@ export default function DataCard({
   };
   const [district, setDistrict] = useState<any>();
   const [city, setCity] = useState<any>();
+  const [service, setService] = useState<any>();
   const handlePut = useMutation({
     mutationKey: [editApikey],
     mutationFn: (data: any) => {
@@ -527,6 +528,46 @@ export default function DataCard({
                       selectedKey={district}
                       isLoading={DropDownData?.district?.isLoading}
                       items={DropDownData?.district?.items}
+                      className="max-w-full"
+                      isDisabled
+                    >
+                      {DropDownData?.district?.items.map((d: any) => (
+                        <AutocompleteItem key={d._id} value={d._id}>
+                          {d.name}
+                        </AutocompleteItem>
+                      ))}
+                    </Autocomplete>
+                  );
+                case "servicedropdown":
+                  return isEdit ? (
+                    <Autocomplete
+                      disabled
+                      label="Select an Service"
+                      selectedKey={service}
+                      isLoading={DropDownData?.service?.isLoading}
+                      items={DropDownData?.service?.items}
+                      onSelectionChange={(e) => {
+                        setService(e);
+                        handleChange(e as string, "serviceId");
+                      }}
+                      className="max-w-full"
+                    >
+                      {DropDownData?.district?.items.map((d: any) => (
+                        <AutocompleteItem key={d._id} value={d._id}>
+                          {d.name}
+                        </AutocompleteItem>
+                      ))}
+                    </Autocomplete>
+                  ) : (
+                    <Autocomplete
+                      label="Select an District"
+                      selectedKey={service}
+                      isLoading={DropDownData?.service?.isLoading}
+                      items={DropDownData?.service?.items}
+                      // onSelectionChange={(e) => {
+                      //   setService(e);
+                      //   handleChange(e as string, "serviceId");
+                      // }}
                       className="max-w-full"
                       isDisabled
                     >
