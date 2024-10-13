@@ -125,6 +125,7 @@ export default function DataCard({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+<<<<<<< HEAD
     console.log(editapi);
 
     let updatedData = { ...formData };
@@ -134,6 +135,18 @@ export default function DataCard({
         ...updatedData,
         district,
         city,
+=======
+
+    console.log("Edit API:", editapi);
+
+    let updatedFormData = { ...formData }; // Copy the existing form data
+
+    if (editapi === HospitalRoutes.quick) {
+      updatedFormData = {
+        ...updatedFormData,
+        // district: district, // Use latest district state
+        // city: city, // Use latest city state
+>>>>>>> d1403b31b3c3cd666f3e7aef48d70557f3012df7
       };
     }
 
@@ -144,6 +157,7 @@ export default function DataCard({
       console.log("modes:", modes);
       console.log("current formData:", formData);
 
+<<<<<<< HEAD
       updatedData = {
         ...updatedData,
         availableDays: Array.from(avialableDays),
@@ -154,6 +168,20 @@ export default function DataCard({
 
     console.log("Updated formData:", updatedData);
     handlePut.mutate(updatedData);
+=======
+      updatedFormData = {
+        ...updatedFormData,
+        // availableDays: Array.from(avialableDays), // Use latest availableDays state
+        // modesOfPayment: Array.from(modes), // Use latest modes state
+        // visitingTime: visitingTime, // Use latest visitingTime state
+      };
+    }
+
+    console.log("Updated formData:", updatedFormData);
+
+    // Call mutate with the latest form data
+    handlePut.mutate(updatedFormData);
+>>>>>>> d1403b31b3c3cd666f3e7aef48d70557f3012df7
   };
 
   interface VisitngTime {
@@ -506,6 +534,10 @@ export default function DataCard({
                       selectedKey={district}
                       isLoading={DropDownData?.district?.isLoading}
                       items={DropDownData?.district?.items}
+                      onSelectionChange={(e) => {
+                        setDistrict(e);
+                        handleChange(e as string, "district");
+                      }}
                       className="max-w-full"
                     >
                       {DropDownData?.district?.items.map((d: any) => (
@@ -520,7 +552,6 @@ export default function DataCard({
                       selectedKey={district}
                       isLoading={DropDownData?.district?.isLoading}
                       items={DropDownData?.district?.items}
-                      onSelectionChange={(e) => setDistrict(e)}
                       className="max-w-full"
                       isDisabled
                     >
@@ -532,14 +563,41 @@ export default function DataCard({
                     </Autocomplete>
                   );
                 case "cityDropdown":
-                  return (
+                  return isEdit ? (
+                    <Autocomplete
+                      label="Select an city"
+                      disabled={district === ""}
+                      defaultSelectedKey={city}
+                      isLoading={DropDownData?.city?.isLoading}
+                      items={DropDownData?.city?.items}
+                      onSelectionChange={(e) => {
+                        setCity(e);
+                        handleChange(e as string, "city");
+                      }}
+                      className="max-w-full"
+                      // isDisabled
+                    >
+                      {DropDownData?.city?.items
+                        .filter((item: any) => {
+                          return item?.district?._id === district;
+                        })
+                        .map((d: any) => (
+                          <AutocompleteItem key={d._id} value={d._id}>
+                            {d.name}
+                          </AutocompleteItem>
+                        ))}
+                    </Autocomplete>
+                  ) : (
                     <Autocomplete
                       label="Select an city"
                       disabled={district === ""}
                       selectedKey={city}
                       isLoading={DropDownData?.city?.isLoading}
                       items={DropDownData?.city?.items}
-                      onSelectionChange={(e) => setCity(e)}
+                      onSelectionChange={(e) => {
+                        // alert(e);
+                        setCity(e);
+                      }}
                       className="max-w-full"
                       isDisabled
                     >

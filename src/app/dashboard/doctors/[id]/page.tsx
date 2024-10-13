@@ -706,6 +706,7 @@ export default function GetDocDetials() {
                     items={list1.items}
                     onSelectionChange={(e) => {
                       if (e !== undefined) {
+                        setDepartment(e);
                         setformData((prev: any) => ({
                           ...prev,
                           department: e,
@@ -734,7 +735,13 @@ export default function GetDocDetials() {
                     selectedKey={designation}
                     isLoading={list.isLoading}
                     items={list.items}
-                    onSelectionChange={(e) => setDesignation(e)}
+                    onSelectionChange={(e) => {
+                      setDesignation(e);
+                      setformData((prev: any) => ({
+                        ...prev,
+                        designation: e,
+                      }));
+                    }}
                     className="max-w-full"
                   >
                     {list.items.map((d: any) => (

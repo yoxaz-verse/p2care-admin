@@ -128,7 +128,7 @@ export default function HospitalDetail() {
       return patchData(`/hospital/top/${id}`, data, {});
     },
     onSuccess: () => {
-      toast.success("Hospital is marked as top", {
+      toast.success("Hospital's marked as top is updated", {
         position: "top-right",
         className: "bg-green-300",
       });

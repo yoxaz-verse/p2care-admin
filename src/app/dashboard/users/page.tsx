@@ -55,7 +55,7 @@ const Users = () => {
   return (
     <div className="w-full flex flex-col">
       <Title title="Users" />
-      {/* <Page
+      <Page
         api={AdminRoutes.admin}
         apiKey={"admin"}
         columns={adminColumns}
@@ -67,15 +67,15 @@ const Users = () => {
         apiKey={"users"}
         columns={userColumns}
         title="Patient"
-      /> */}
-      {/* <SubTitle title="All Users Appointment" /> */}
-      {/* <Page
+      />
+      <SubTitle title="All Users Appointment" />
+      <Page
         needAddModal={false}
         api={Doctor.appointments}
         apiKey="appointments"
         columns={appointmentColumns}
         title="Appointment"
-      /> */}
+      />
       <SubTitle title="All Users Enquiries" />
       <Tabs color="secondary" aria-label="Options">
         {status?.data.data.map((a: any, index: any) => {

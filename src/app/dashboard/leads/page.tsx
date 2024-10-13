@@ -155,12 +155,13 @@ export default function Dev() {
           </section>
         );
       })}
-      {/* <Page
+      <Page
         needAddModal={false}
         api={Doctor.appointments}
         apiKey="appointments"
         columns={appointmentColumns}
-        title="Appointment" /> */}
+        title="Appointment"
+      />
     </div>
   );
 }

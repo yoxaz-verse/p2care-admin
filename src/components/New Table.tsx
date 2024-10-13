@@ -85,18 +85,17 @@ export default function CustomTable({
       console.log(data);
       toast.success("Updated the status", {
         position: "top-right",
-        className: "bg-green-300"
-      })
-      queryAdmin.invalidateQueries({ queryKey: [getApi, data.id, ""] })
+        className: "bg-green-300",
+      });
+      queryAdmin.invalidateQueries({ queryKey: [getApi, data.id, ""] });
     },
     onError: (error: any) => {
       toast.success("Updating the status failed", {
         position: "top-right",
-        className: "bg-red-300"
-      })
-
-    }
-  })
+        className: "bg-red-300",
+      });
+    },
+  });
 
   const enuiryStatus = useMutation({
     mutationKey: ["enquiryUpdate"],
@@ -107,33 +106,32 @@ export default function CustomTable({
       console.log(data);
       toast.success("Updated the status", {
         position: "top-right",
-        className: "bg-green-300"
-      })
-      queryAdmin.invalidateQueries({ queryKey: [getApi] })
+        className: "bg-green-300",
+      });
+      queryAdmin.invalidateQueries({ queryKey: [getApi] });
     },
     onError: (error: any) => {
       toast.success("Updating the status failed", {
         position: "top-right",
-        className: "bg-red-300"
-      })
-
-    }
-  })
+        className: "bg-red-300",
+      });
+    },
+  });
 
   const handleUpdateApp = (st: any, data: any) => {
     const item = {
-      enquiryStatus: st
-    }
-    const id = data._id
+      enquiryStatus: st,
+    };
+    const id = data._id;
     appStatus.mutate({ item, id });
-  }
+  };
   const handleUpdate = (st: any, data: any) => {
     const item = {
-      enquiryStatus: st
-    }
-    const id = data._id
+      enquiryStatus: st,
+    };
+    const id = data._id;
     enuiryStatus.mutate({ item, id });
-  }
+  };
   const renderCell = React.useCallback((data: any, columnKey: React.Key) => {
     const cellValue = data[columnKey as keyof any];
     console.log(cellValue);
@@ -221,9 +219,9 @@ export default function CustomTable({
           </>
         );
       case "patientName":
-        return data.patient.name;
+        return data.patient?.name;
       case "doctorName":
-        return data.doctor.name;
+        return data.doctor?.name;
       case "password":
         return null;
       case "heading":
@@ -232,8 +230,8 @@ export default function CustomTable({
         console.log(data.doctorSlot.slotTime);
         const date = new Date(data?.doctorSlot?.slotTime);
         const localeTimeString = date.toLocaleTimeString();
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
         return (
           <>
             <div className="flex flex-row justify-around bg-white gap-4 items-center ">
@@ -243,9 +241,12 @@ export default function CustomTable({
                 color="primary"
                 defaultValue={new Time(Number(hours), Number(minutes))}
               />
-              <Button color="secondary" onPress={() => {
-                onOpenEdit(data);
-              }}>
+              <Button
+                color="secondary"
+                onPress={() => {
+                  onOpenEdit(data);
+                }}
+              >
                 Reschedule
               </Button>
             </div>
@@ -419,12 +420,7 @@ export default function CustomTable({
         return (
           <>
             <div className="flex items-center self-end w-fit">
-              <Button
-                isIconOnly
-                className="bg-inherit"
-                onClick={() => {
-                }}
-              >
+              <Button isIconOnly className="bg-inherit" onClick={() => {}}>
                 {" "}
                 <FaUserDoctor />
               </Button>
@@ -464,7 +460,7 @@ export default function CustomTable({
           </>
         );
       case "fullName":
-        return data?.fullName
+        return data?.fullName;
       case "actions":
         return (
           <>
