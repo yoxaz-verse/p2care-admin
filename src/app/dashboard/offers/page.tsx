@@ -30,7 +30,7 @@ const Offers = () => {
       columns={offerColumns}
       api={offerRoute}
       dropDownData={{
-        ServiceDropdownData : "ServiceDropdown" ,
+         "ServiceDropdown":ServiceDropdownData,
       }}
       title="Offers"
       apiKey="offers"
