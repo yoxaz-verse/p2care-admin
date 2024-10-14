@@ -1,15 +1,40 @@
+"use client";
 import Page from "@/components/Page/PageAll";
-import { offerRoute } from "@/core/apiRoutes";
+import { getData } from "@/core/apiHandler";
+import { offerRoute, serviceRoutes } from "@/core/apiRoutes";
+import { useAsyncList } from "@react-stately/data";
 
 const Offers = () => {
+  const ServiceDropdownData = useAsyncList<any>({
+    async load() {
+      let res = await getData(serviceRoutes.service, {});
+      let json = await res.data.data.data;
+
+      return {
+        items: json,
+      };
+    },
+  });
   const offerColumns = [
     { name: "Percentage", uid: "percentage", type: "text" },
     { name: "Title", uid: "title", type: "text" },
-    { name: "Description", uid: "description", type: "textbox" },
     { name: "Actions", uid: "action", type: "action" },
-  ]
+    {
+      name: "Service",
+      uid: "serviceId",
+      type: "ServiceDropdown",
+    },
+  ];
   return (
-    <Page columns={offerColumns} api={offerRoute} title="Offers" apiKey="offers" />
+    <Page
+      columns={offerColumns}
+      api={offerRoute}
+      dropDownData={{
+        ServiceDropdownData : "ServiceDropdown" ,
+      }}
+      title="Offers"
+      apiKey="offers"
+    />
   );
 };
 

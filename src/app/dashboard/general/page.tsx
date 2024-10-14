@@ -11,11 +11,13 @@ const General = () => {
     { name: "ACTIONS", uid: "actions", type: "action" },
   ];
   const testimonialColumns = [
-    { name: "Name", uid: "uuid", type: "text" },
+    { name: "Name", uid: "name", type: "text" },
     { name: "Designation", uid: "designation", type: "text" },
+
     { name: "Message", uid: "message", type: "text" },
     { name: "ACTIONS", uid: "actions", type: "action" },
   ];
+
   return (
     <>
       <div className="w-full flex flex-col">

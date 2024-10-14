@@ -48,10 +48,10 @@ export const SideBarLink = [
     name: "Users",
     link: "/dashboard/users",
   },
-  // {
-  //   name: "Offers",
-  //   link: "/dashboard/offers",
-  // },
+  {
+    name: "Offers",
+    link: "/dashboard/offers",
+  },
   {
     name: "General",
     link: "/dashboard/general",
