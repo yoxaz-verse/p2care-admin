@@ -2,12 +2,12 @@
 import axios from "axios";
 import { authToken } from "./localStorageKeys";
 
-const baseUrlExport = "http://localhost:5000/api/v1/web";
+// const baseUrlExport = "http://localhost:5000/api/v1/web";
 const ngrokurl = "https://fe7f-106-210-33-52.ngrok-free.app/api/v1/web";
-// const serverUrl = "https://backend.p2care.com/api/v1/web";
+const serverUrl = "https://backend.p2care.com/api/v1/web";
 
 const instance = axios.create({
-  baseURL: baseUrlExport,
+  baseURL: serverUrl,
   headers: {
     "Content-Type": "application/json",
     IDENTIFIER: "A2hG9tE4rB6kY1sN",
