@@ -14,7 +14,7 @@ const General = () => {
     { name: "Name", uid: "name", type: "text" },
     { name: "Designation", uid: "designation", type: "text" },
 
-    { name: "Message", uid: "message", type: "text" },
+    { name: "Message", uid: "message", type: "textbox" },
     { name: "ACTIONS", uid: "actions", type: "action" },
   ];
 

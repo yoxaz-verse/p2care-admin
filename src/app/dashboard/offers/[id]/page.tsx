@@ -1,117 +1,133 @@
 "use client";
 
-import AttachCard from "@/components/AttachCard";
-import DataCard from "@/components/Cards/DataCard";
-import { getData } from "@/core/apiHandler";
+import { queryAdmin } from "@/app/providers";
+import { uploadLogo } from "@/content/assets";
+import { getData, postMultipart } from "@/core/apiHandler";
+import { offerRoute } from "@/core/apiRoutes";
 import {
-  Doctor,
-  HospitalRoutes,
-  offerImageRoute,
-  offerRoute,
-  offers,
-  serviceRoutes,
-} from "@/core/apiRoutes";
-import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
-import { useAsyncList } from "@react-stately/data";
-import { useParams, usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { off } from "process";
+  Avatar,
+  BreadcrumbItem,
+  Breadcrumbs,
+  Card,
+  CardBody,
+  Input,
+  Spacer,
+} from "@nextui-org/react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function OffersPage() {
   const path = usePathname();
   const router = useRouter();
   const { id } = useParams();
-  const departmentList = useAsyncList<any>({
-    async load() {
-      let res = await getData(Doctor.department, {});
-      let json = await res.data.data.data;
-
-      return {
-        items: json,
-      };
-    },
-  });
-  const serviceList = useAsyncList<any>({
-    async load() {
-      let res = await getData(serviceRoutes.service, {});
-      let json = await res.data.data.data;
-
-      return {
-        items: json,
-      };
-    },
-  });
-  const doctorList = useAsyncList<any>({
-    async load() {
-      let res = await getData(Doctor.docotor, {});
-      let json = await res.data.data.data;
-
-      return {
-        items: json,
-      };
-    },
-  });
-  const hoapitalList = useAsyncList<any>({
-    async load() {
-      let res = await getData(HospitalRoutes.hospital, {});
-      let json = await res.data.data.data;
-
-      return {
-        items: json,
-      };
-    },
-  });
 
   const breadCrumps = [
-    {
-      name: "Dashboard",
-      link: "/dashboard",
-    },
-    {
-      name: "Offer",
-      link: "/dashboard/offers",
-    },
-    {
-      name: "Offer Details",
-      link: path,
-    },
+    { name: "Dashboard", link: "/dashboard" },
+    { name: "Offer", link: "/dashboard/offers" },
+    { name: "Offer Details", link: path },
   ];
-  const cols = [
-    { name: "Banner", uid: "image", type: "image" },
-    { name: "Percentage", uid: "percentage", type: "text" },
-    { name: "Title", uid: "title", type: "text" },
-    { name: "Service", uid: "serviceId", type: "servicedropdown" },
-  ];
+
+  const [uploadImageUrl, setUploadImageUrl] = useState<string>(uploadLogo);
+
+  const { data: offerDetails } = useQuery({
+    queryKey: ["offerDetails", id],
+    queryFn: () => getData(`${offerRoute}/${id}`, {}),
+  });
+
+  const addImage = useMutation({
+    mutationKey: ["addImage-offer"],
+    mutationFn: (data: FormData) =>
+      postMultipart(`/offer/upload/${id}`, {}, data),
+    onSuccess: () => {
+      toast.success("Image uploaded successfully", {
+        position: "top-right",
+        className: "bg-green-300",
+      });
+      queryAdmin.invalidateQueries({ queryKey: ["offerDetails", id] });
+    },
+    onError: (error: any) => {
+      console.error(error);
+      toast.error(error.response?.data || "Image upload failed", {
+        position: "top-right",
+        className: "bg-red-500",
+      });
+    },
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) {
+      toast.error("No file selected", {
+        position: "top-right",
+        className: "bg-red-500",
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setUploadImageUrl(reader.result as string);
+    };
+    reader.readAsDataURL(selectedFile);
+
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+    addImage.mutate(formData);
+  };
+
   return (
-    <div className="flex flex-col w-full gap-4 p-[1rem]">
+    <div className="flex flex-col w-full gap-4 p-4">
       <Breadcrumbs color="secondary" className="text-xl font-bold">
-        {breadCrumps.map((b: any, index: any) => {
-          return (
-            <BreadcrumbItem key={index} onClick={() => router.push(b.link)}>
-              {b.name}
-            </BreadcrumbItem>
-          );
-        })}
+        {breadCrumps.map((crumb, index) => (
+          <BreadcrumbItem key={index} onClick={() => router.push(crumb.link)}>
+            {crumb.name}
+          </BreadcrumbItem>
+        ))}
       </Breadcrumbs>
-      <DataCard
-        columns={cols}
-        title={"Banner Details"}
-        id={id}
-        postimageapikey={offerImageRoute}
-        getapikey="getbanner"
-        getapi={offerRoute}
-        editapi={offerRoute}
-        editApikey="editbanner"
-      />
-      {/* <AttachCard id={id} getapi={offers.hospital} api={offers.hospital}
-        title="Add Hospital"
-        DropDown={hoapitalList} />
-      <AttachCard id={id} getapi={offers.doctor} api={offers.doctor}
-        title="Add Doctor"
-        DropDown={doctorList} />
-      <AttachCard id={id} getapi={offers.department} api={offers.department}
-        title="Add Department"
-        DropDown={departmentList} /> */}
+
+      <Card>
+        <CardBody className="grid grid-cols-1 gap-4 items-center h-full">
+          <div className="gap-2 items-center">
+            <div className="flex items-center justify-center">
+              <label htmlFor="offerImageInput" className="cursor-pointer">
+                <Avatar
+                  src={
+                    offerDetails?.data.data?.image
+                      ? offerDetails.data.data.image.path
+                      : uploadImageUrl
+                  }
+                  alt="Offer Image"
+                  className="w-full h-full rounded-xl"
+                />
+                <input
+                  id="offerImageInput"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
+            <Spacer y={2} />
+            <div className="flex flex-col gap-2">
+              <Input
+                label="Title"
+                isReadOnly
+                value={offerDetails?.data.data?.title || ""}
+                placeholder="Title"
+              />
+              <Input
+                label="Link"
+                isReadOnly
+                value={offerDetails?.data.data?.link || ""}
+                placeholder="Link"
+              />
+            </div>
+          </div>
+        </CardBody>
+      </Card>
     </div>
   );
 }

@@ -55,7 +55,7 @@ export default function DashboardLayout({
   return (
     <>
       <NavBar view={view} setView={setView}></NavBar>
-      <div className="flex  bg-[#F5F6FA] min-h-[100vh] pt-[50px] flex-row gap-4">
+      <div className="flex  bg-[#F5F6FA] min-h-[100vh] overflow-auto pt-[50px] flex-row gap-4">
         <SideBar view={view} setView={setView} />
         {children}
       </div>

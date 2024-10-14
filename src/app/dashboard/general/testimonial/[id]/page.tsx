@@ -139,19 +139,19 @@ function Page() {
                   <Input
                     label="Testimonial Name"
                     isReadOnly={true}
-                    value={getTestimonialDetails?.data.data?.name}
+                    defaultValue={getTestimonialDetails?.data.data?.name}
                     placeholder="Testimonial Name"
                   />
                   <Textarea
                     label="Testimonial Message"
-                    value={getTestimonialDetails?.data.data?.message}
+                    defaultValue={getTestimonialDetails?.data.data?.message}
                     isReadOnly={true}
                     placeholder="Testimonial Message"
                   />
                   <Input
                     label="Testimonial Designation"
                     isReadOnly={true}
-                    value={getTestimonialDetails?.data.data?.designation}
+                    defaultValue={getTestimonialDetails?.data.data?.designation}
                     placeholder="Testimonial Designation"
                   />
                 </div>
