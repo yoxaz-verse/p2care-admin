@@ -148,9 +148,9 @@ export default function DataCard({
 
       updatedFormData = {
         ...updatedFormData,
-        // availableDays: Array.from(avialableDays), // Use latest availableDays state
-        // modesOfPayment: Array.from(modes), // Use latest modes state
-        // visitingTime: visitingTime, // Use latest visitingTime state
+        availableDays: Array.from(avialableDays), // Use latest availableDays state
+        modesOfPayment: Array.from(modes), // Use latest modes state
+        visitingTime: visitingTime, // Use latest visitingTime state
       };
     }
 

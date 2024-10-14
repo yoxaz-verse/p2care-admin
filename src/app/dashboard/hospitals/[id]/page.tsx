@@ -267,7 +267,6 @@ export default function HospitalDetail() {
             id={id}
             onOpen={onOpen}
           />
-
           <DataCard
             getapikey="gethospital"
             editApikey="edithospitaldescription"
