@@ -1131,18 +1131,18 @@ export default function GetDocDetials() {
               Submit
             </Button>
           )}
-          <Page
+          {/* <Page
             needAddModal={false}
             api={`${Doctor.enquiry}/individual/${id}`}
             apiKey="enquiryByHospital"
             columns={enquiryColumns}
             title={`${getDocDetails?.data.data?.name} Enquiry`}
-          />
+          /> */}
           <SubTitle title="All Appointments" />
           <Page
             needAddModal={false}
             api={`${Doctor.appointments}/doctor/${id}`}
-            apiKey="appointments"
+            apiKey="doctorappointments"
             columns={appointmentColumns}
             title={`${getDocDetails?.data.data?.name} Appointment`}
           />

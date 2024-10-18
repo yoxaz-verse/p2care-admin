@@ -1,0 +1,52 @@
+[{
+  "_id": {
+    "$oid": "66c0532c907dd1ab8cacd6bd"
+  },
+  "name": "New",
+  "createdAt": {
+    "$date": "2024-08-17T07:37:16.427Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-17T07:37:16.427Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c0532c907dd1ab8cacd6c0"
+  },
+  "name": "In Progress",
+  "createdAt": {
+    "$date": "2024-08-17T07:37:16.493Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-17T07:37:16.493Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c0532c907dd1ab8cacd6c3"
+  },
+  "name": "Converted",
+  "createdAt": {
+    "$date": "2024-08-17T07:37:16.557Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-17T07:37:16.557Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c0532c907dd1ab8cacd6c6"
+  },
+  "name": "Junk",
+  "createdAt": {
+    "$date": "2024-08-17T07:37:16.626Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-17T07:37:16.626Z"
+  },
+  "__v": 0
+}]

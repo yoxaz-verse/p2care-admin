@@ -45,9 +45,10 @@ const statusColorMap: Record<string, ChipProps["color"]> = {
   vacation: "warning",
 };
 import { getData, patchData } from "@/core/apiHandler";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { queryAdmin } from "@/app/providers";
+import { AxiosResponse } from "axios";
 interface CustomTableProps {
   title: string;
   data: any;
@@ -60,6 +61,10 @@ interface CustomTableProps {
   setPage: (page: number) => void;
   limit: number;
 }
+interface AxiosResponseWithCache<T = any> extends AxiosResponse<T> {
+  cacheTime?: number;
+}
+
 export default function CustomTable({
   data,
   columns,
@@ -70,12 +75,6 @@ export default function CustomTable({
   setPage,
   limit,
 }: CustomTableProps) {
-  const { data: status, isLoading } = useQuery({
-    queryKey: ["getstatus"],
-    queryFn: () => {
-      return getData("/enquiry-status", {});
-    },
-  });
   const appStatus = useMutation({
     mutationKey: ["appointmentUpdate"],
     mutationFn: (data: any) => {
@@ -117,7 +116,35 @@ export default function CustomTable({
       });
     },
   });
+  const { data: statusFetched } = useQuery({
+    queryKey: ["getStatus"],
+    queryFn: () => getData("/enquiry-status", {}),
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+  });
 
+  const appStatusData = [
+    {
+      _id: "66c0532c907dd1ab8cacd6bd",
+
+      name: "New",
+    },
+    {
+      _id: "66c0532c907dd1ab8cacd6c0",
+
+      name: "In Progress",
+    },
+    {
+      _id: "66c0532c907dd1ab8cacd6c3",
+
+      name: "Converted",
+    },
+    {
+      _id: "66c0532c907dd1ab8cacd6c6",
+
+      name: "Junk",
+    },
+  ];
   const handleUpdateApp = (st: any, data: any) => {
     const item = {
       enquiryStatus: st,
@@ -173,7 +200,7 @@ export default function CustomTable({
               defaultSelectedKeys={[data?.enquiryStatus?._id]}
               className="max-w-xs"
             >
-              {status?.data?.data?.map((status: any) => (
+              {statusFetched?.data?.data?.map((status: any) => (
                 <SelectItem key={status?._id} value={status?._id}>
                   {status?.name}
                 </SelectItem>
@@ -182,18 +209,23 @@ export default function CustomTable({
           </>
         );
       case "appstatus":
+        // if (!status || !status.data) {
+        //   console.log("Status is undefined or missing data property");
+        //   console.log([data?.enquiryStatus?._id]);
+        //   return <div>No status available</div>;
+        // }
         return (
           <>
             <Select
               placeholder="Update the Status"
               description="Update the status from here"
-              selectedKeys={[data?.enquiryStatus?._id]}
+              defaultSelectedKeys={[data?.enquiryStatus?._id]}
               onChange={(e: any) => handleUpdateApp(e.target.value, data)}
               className="max-w-xs"
             >
-              {status?.data?.data?.map((status: any) => (
-                <SelectItem key={status?._id} value={status?._id}>
-                  {status?.name}
+              {appStatusData.map((dropDown: any) => (
+                <SelectItem key={dropDown?._id} value={dropDown?._id}>
+                  {dropDown?.name}
                 </SelectItem>
               ))}
             </Select>
@@ -206,11 +238,11 @@ export default function CustomTable({
             <Select
               placeholder="Update the Status"
               description="Update the status from here"
-              selectedKeys={[data?.enquiryStatus?._id]}
+              defaultSelectedKeys={[data?.enquiryStatus?._id]}
               onChange={(e: any) => handleUpdate(e.target.value, data)}
               className="max-w-xs"
             >
-              {status?.data?.data?.map((status: any) => (
+              {statusFetched?.data?.data?.map((status: any) => (
                 <SelectItem key={status?._id} value={status?._id}>
                   {status?.name}
                 </SelectItem>

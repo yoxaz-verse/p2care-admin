@@ -15,6 +15,7 @@ import {
   AutocompleteItem,
   TimeInput,
   DateInput,
+  DatePicker,
 } from "@nextui-org/react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { patchData } from "@/core/apiHandler";
@@ -65,11 +66,11 @@ export default function EditModal({
     setCurrData(data);
     if (data?.doctorSlot) {
       setappointmentDate(data?.doctorSlot?.slotTime);
-      const date = new Date(currdata?.doctorSlot?.slotTime);
+      const date = new Date(data.doctorSlot.slotTime);
       const hours = String(date.getHours()).padStart(2, "0");
       const minutes = String(date.getMinutes()).padStart(2, "0");
       setappointmentTime({
-        hours,
+        hour: hours,
         minutes,
       });
     }
@@ -109,32 +110,46 @@ export default function EditModal({
     e.preventDefault();
     setSubmitting(true);
     try {
-      if (api === "/appointment") {
+      // Extract the base API endpoint
+      let baseApi = api;
+      let isDoctorSpecific = false;
+  
+      // Check if the API includes the doctor ID
+      const apiParts = api.split('/');
+      const doctorIndex = apiParts.indexOf('doctor');
+  
+      if (doctorIndex !== -1 && apiParts.length > doctorIndex + 1) {
+        // The API includes 'doctor' and a doctor ID
+        isDoctorSpecific = true;
+        // Remove '/doctor/{id}' from the API endpoint
+        baseApi = apiParts.slice(0, doctorIndex + 1).join('/');
+      }
+  
+      if (baseApi.includes('/appointment')) {
+        // Handle appointment update
         const nDate = new Date(appointmentDate);
-        console.log(appointmentTime);
         nDate.setHours(appointmentTime.hour);
-        console.log(slotData);
         nDate.setMinutes(appointmentTime.minutes);
-        const d = {
+        const updateDataPayload = {
           date: nDate,
           doctorSlotId: slotData._id,
           startTime: slotData.slotTime,
           isRescheduled: true,
         };
-        updateData.mutate({ data: d, id: data._id });
-        return;
+        updateData.mutate({ data: updateDataPayload, id: data._id, api: '/appointment' });
       } else {
-        updateData.mutate({ data: currdata, id: data._id });
+        // For other cases, use the base API
+        updateData.mutate({ data: currdata, id: data._id, api: baseApi });
       }
     } catch (error) {
       console.error("Error updating data:", error);
-      alert("An error occurred while updating data.");
-      close();
+      toast.error("An error occurred while updating data.");
     } finally {
       setSubmitting(false);
       close();
     }
   };
+  
   const { data: getDoctorSlot, isLoading: isLoadingslot } = useQuery({
     queryKey: ["getSlots", appointmentDate],
     queryFn: () => {
@@ -349,11 +364,15 @@ export default function EditModal({
                         />
                       );
                     case "doctorSlot":
+                      // Ensure appointmentDate is correctly formatted
                       const appdate = new Date(appointmentDate);
-                      const appyear = appdate.getUTCFullYear();
-                      const month = appdate.getUTCMonth() + 1;
-                      const paddedMonth = month >= 10 ? month : `0${month}`;
-                      const appday = appdate.getUTCDate();
+                      const appyear = appdate.getFullYear();
+                      const appmonth = String(appdate.getMonth() + 1).padStart(
+                        2,
+                        "0"
+                      );
+                      const appday = String(appdate.getDate()).padStart(2, "0");
+
                       return (
                         <div className="flex flex-col gap-4 w-full">
                           <Input
@@ -374,15 +393,21 @@ export default function EditModal({
                             }
                           />
                           {!isNaN(appdate.getTime()) && (
-                            <DateInput
+                            <DatePicker
                               label="Appointment Date"
                               onChange={(e: any) => {
                                 const { day, year, month } = e;
                                 const newDate = new Date(year, month - 1, day);
-                                setappointmentDate(newDate);
+                                const formattedDate = `${year}-${String(
+                                  month
+                                ).padStart(2, "0")}-${String(day).padStart(
+                                  2,
+                                  "0"
+                                )}`;
+                                setappointmentDate(formattedDate);
                               }}
                               defaultValue={parseDate(
-                                `${appyear}-${paddedMonth}-${appday}`
+                                `${appyear}-${appmonth}-${appday}`
                               )}
                               labelPlacement="inside"
                             />
@@ -391,23 +416,29 @@ export default function EditModal({
                             Select the Time Slot
                           </h3>
                           <div className="flex flex-row gap-4 w-full">
-                            {getDoctorSlot?.data.data.length > 0 ? (
+                            {isLoadingslot ? (
+                              <p>Loading slots...</p>
+                            ) : getDoctorSlot?.data?.data?.length > 0 ? (
                               getDoctorSlot?.data.data.map(
-                                (data: any, index: any) => {
-                                  const date = new Date(data.slotTime);
+                                (slot: any, index: any) => {
+                                  const date = new Date(slot.slotTime);
                                   const hours = String(
-                                    date.getUTCHours()
+                                    date.getHours()
                                   ).padStart(2, "0");
                                   const minutes = String(
-                                    date.getUTCMinutes()
+                                    date.getMinutes()
                                   ).padStart(2, "0");
                                   const period =
                                     Number(hours) >= 12 ? "PM" : "AM";
                                   return (
                                     <Chip
-                                      className="cursor-pointer"
+                                      className={`cursor-pointer ${
+                                        slotData?._id === slot._id
+                                          ? "bg-blue-500 text-white"
+                                          : ""
+                                      }`}
                                       onClick={() => {
-                                        setSlotData(data);
+                                        setSlotData(slot);
                                         setappointmentTime({
                                           hour: hours,
                                           minutes,
@@ -428,7 +459,6 @@ export default function EditModal({
                           </div>
                         </div>
                       );
-
                     default:
                       return null;
                   }

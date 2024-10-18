@@ -21,7 +21,7 @@ export default function SideBar({ view, setView }: ViewProps) {
       <motion.div
         animate={{ width: view ? 0 : 300 }}
         transition={{ duration: 1, ease: "easeInOut" }}
-        className={` w-[24%]  h-[100%] mt-[50px] pt-5  bg-white z-50 flex flex-col  justify-between rounded-lg shadow-md `}
+        className={` w-[24%]  h-[90%] pb-10 md:overflow-y-auto md:overflow-x-hidden mt-[5%] pt-5  bg-white z-50 flex flex-col  justify-between rounded-lg shadow-md `}
       >
         <div className="flex flex-col gap-4 w-full">
           {SideBarLink.map((s: SideBarLinkProps) => {
@@ -46,7 +46,7 @@ export default function SideBar({ view, setView }: ViewProps) {
                       s.link === pathname
                         ? "bg-[#4880FF] text-white   rounded-lg  font-bold "
                         : ""
-                    } ms-2 me-2 max-w-[280px] select-none p-2  h-[40px] text-lg  cursor-pointer`}
+                    } ms-2 me-2 max-w-[280px] select-none p-1  h-[40px] text-lg  cursor-pointer`}
                   >
                     {s.name}
                   </motion.div>
